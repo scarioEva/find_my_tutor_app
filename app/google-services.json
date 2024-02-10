@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "366332365961",
+    "project_id": "findmytutorapp-dda11",
+    "storage_bucket": "findmytutorapp-dda11.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366332365961:android:51601424df183afec8ca58",
+        "android_client_info": {
+          "package_name": "com.example.assignment"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiqtnKw-m0Oc4vfTmsQD6qM-LNwW0fX38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

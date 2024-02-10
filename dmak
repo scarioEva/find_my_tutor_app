@@ -1,0 +1,11 @@
+[33mcommit 87505cde704f9f7033de3a3288573b34367371cf[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Akhil Ashok <akhilashok.37@gmail.com>
+Date:   Tue Jan 30 14:57:54 2024 +0000
+
+    git config name test
+
+[33mcommit a1361cdc09339ae9ab917d26c9ce621b0727290c[m
+Author: Akhil Ashok <akhil@chainflux.com>
+Date:   Tue Jan 30 14:53:31 2024 +0000
+
+    Initial commit
