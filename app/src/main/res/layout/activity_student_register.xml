@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="78dp"
         android:layout_marginTop="132dp"
-        android:text="Name"
+        android:text="Course"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/studentNameId"
+        android:id="@+id/studentCourseId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -30,10 +30,10 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="75dp"
-        android:text="Submit"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="116dp"
         android:onClick="onSubmit"
+        android:text="Submit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/studentNameId" />
+        app:layout_constraintTop_toBottomOf="@+id/studentCourseId" />
 </androidx.constraintlayout.widget.ConstraintLayout>

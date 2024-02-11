@@ -20,6 +20,8 @@ import java.util.Map;
 public class StudentRegisterActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userId = "";
+    String documentId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,23 +29,24 @@ public class StudentRegisterActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
+        documentId = getIntent().getStringExtra("docId");
     }
 
     public void onSubmit(View view) {
-        EditText nameId = findViewById(R.id.studentNameId);
-        String nameInput = nameId.getText().toString();
+        EditText courseId = findViewById(R.id.studentCourseId);
+        String courseInput = courseId.getText().toString();
 
         Map<String, Object> userData = new HashMap<>();
-        userData.put("name", nameInput);
-        userData.put("uId", userId);
+        userData.put("course", courseInput);
 
-        db.collection("student").add(userData)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+
+        db.collection("student").document(documentId).update(userData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
-                        Intent intent = new Intent(StudentRegisterActivity.this,StudentMainActivity.class);
-                        intent.putExtra("uId",userId);
+                    public void onSuccess(Void Void) {
+//                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
+                        Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
+                        intent.putExtra("uId", userId);
                         startActivity(intent);
                     }
                 })

@@ -13,14 +13,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    public final static String userIdValue="";
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public final static String userIdValue = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,18 +56,43 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void redirectPage(String user, String userId) {
+    private void redirectPage(String user, String userId, String documentId) {
         Intent intent = new Intent(RegisterActivity.this, user.equals("Tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
         intent.putExtra(userIdValue, userId);
+        intent.putExtra("docId",documentId);
         startActivity(intent);
     }
 
 
-    public void onSignIn(View view){
+    public void onSignIn(View view) {
         Intent intentLogin = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intentLogin);
     }
-    public void signup(String email, String password, String uType) {
+
+    private void addDb(String uid, String type, String sName) {
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("name", sName);
+        userData.put("uId", uid);
+        String path=type.toLowerCase();
+
+        db.collection(path).add(userData)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
+                        String documentId=documentReference.getId();
+                        redirectPage(type, uid, documentId);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("MainActivity", "Error adding document", e);
+                    }
+                });
+    }
+
+    private void signup(String email, String password, String uType, String name) {
 
 
         Log.w("MainActivity", "called" + email + ", " + password);
@@ -74,8 +109,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             //user has been signed in, use an intent to move to the next activity
                             setErrorMessage("");
+                            addDb(user.getUid(), uType, name);
 
-                            redirectPage(uType, user.getUid());
                         } else {
                             // If sign in fails, display a message to the user.
                             setErrorMessage(task.getException().getMessage());
@@ -92,6 +127,8 @@ public class RegisterActivity extends AppCompatActivity {
         TextView email = findViewById(R.id.emailId);
         TextView password = findViewById(R.id.passId);
         TextView confirmPassword = findViewById(R.id.cnfPassId);
+        TextView name = findViewById(R.id.nameId);
+        String sName = name.getText().toString();
 
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -101,6 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String userType = radioButton.getText().toString();
 
+
         String sEmail = email.getText().toString();
         String sPassword = password.getText().toString();
         String cPassword = confirmPassword.getText().toString();
@@ -108,9 +146,9 @@ public class RegisterActivity extends AppCompatActivity {
         Log.w("MainAct", sEmail);
 
 
-        if (!sEmail.equals("") && !sPassword.equals("") && !cPassword.equals("")) {
+        if (!sEmail.equals("") && !sPassword.equals("") && !cPassword.equals("") && !sName.equals("")) {
             if (sPassword.equals(cPassword)) {
-                signup(sEmail, sPassword, userType);
+                signup(sEmail, sPassword, userType, sName);
             } else {
                 setErrorMessage("Password and Confirm Password did not match.");
             }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -21,6 +22,10 @@ import java.util.Map;
 public class TutorRegisterActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String userId = "";
+    String documentId = "";
+
+    private ImageView mImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,28 +33,29 @@ public class TutorRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tutor_register);
         Intent intent = getIntent();
         this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
+        documentId = getIntent().getStringExtra("docId");
+
+        mImageView = (ImageView) findViewById(R.id.imageView2);
+        mImageView.setImageResource(R.drawable.user);
+
     }
 
     public void onSubmit(View view) {
         EditText departmentId = findViewById(R.id.departmentId);
         EditText subjectId = findViewById(R.id.subjectId);
-        EditText nameId = findViewById(R.id.nameId);
 
         String departmentInput = departmentId.getText().toString();
         String subjectInput = subjectId.getText().toString();
-        String nameInput = nameId.getText().toString();
 
         Map<String, Object> userData = new HashMap<>();
-        userData.put("uId", userId);
-        userData.put("name", nameInput);
         userData.put("department", departmentInput);
         userData.put("subject", subjectInput);
 
-        db.collection("tutor").add(userData)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("tutor").document(documentId).update(userData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
+                    public void onSuccess(Void Void) {
+//                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
                         Intent intent = new Intent(TutorRegisterActivity.this,TutorMainActivity.class);
                         intent.putExtra("uId",userId);
                         startActivity(intent);
