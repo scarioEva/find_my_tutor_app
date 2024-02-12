@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -24,7 +25,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
     String userId = "";
     String documentId = "";
 
-    private ImageView mImageView;
+//    private ImageView mImageView;
 
 
     @Override
@@ -35,17 +36,17 @@ public class TutorRegisterActivity extends AppCompatActivity {
         this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
         documentId = getIntent().getStringExtra("docId");
 
-        mImageView = (ImageView) findViewById(R.id.imageView2);
-        mImageView.setImageResource(R.drawable.user);
+//        mImageView = (ImageView) findViewById(R.id.imageView2);
+//        mImageView.setImageResource(R.drawable.user);
 
     }
 
     public void onSubmit(View view) {
-        EditText departmentId = findViewById(R.id.departmentId);
-        EditText subjectId = findViewById(R.id.subjectId);
+        TextInputLayout departmentId = findViewById(R.id.departmentId);
+        TextInputLayout subjectId = findViewById(R.id.subjectId);
 
-        String departmentInput = departmentId.getText().toString();
-        String subjectInput = subjectId.getText().toString();
+        String departmentInput = departmentId.getEditText().getText().toString();
+        String subjectInput = subjectId.getEditText().getText().toString();
 
         Map<String, Object> userData = new HashMap<>();
         userData.put("department", departmentInput);

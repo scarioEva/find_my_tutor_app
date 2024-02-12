@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -124,11 +125,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void signupButtonClicked(View view) {
-        TextView email = findViewById(R.id.emailId);
-        TextView password = findViewById(R.id.passId);
-        TextView confirmPassword = findViewById(R.id.cnfPassId);
-        TextView name = findViewById(R.id.nameId);
-        String sName = name.getText().toString();
+        TextInputLayout email = findViewById(R.id.emailId);
+        TextInputLayout password = findViewById(R.id.passId);
+        TextInputLayout confirmPassword = findViewById(R.id.cnfPassId);
+        TextInputLayout name = findViewById(R.id.nameId);
+        String sName = name.getEditText().getText().toString();
 
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int selectedId = radioGroup.getCheckedRadioButtonId();
@@ -139,9 +140,9 @@ public class RegisterActivity extends AppCompatActivity {
         String userType = radioButton.getText().toString();
 
 
-        String sEmail = email.getText().toString();
-        String sPassword = password.getText().toString();
-        String cPassword = confirmPassword.getText().toString();
+        String sEmail = email.getEditText().getText().toString();
+        String sPassword = password.getEditText().getText().toString();
+        String cPassword = confirmPassword.getEditText().getText().toString();
 
         Log.w("MainAct", sEmail);
 

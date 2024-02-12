@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,8 +34,8 @@ public class StudentRegisterActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
-        EditText courseId = findViewById(R.id.studentCourseId);
-        String courseInput = courseId.getText().toString();
+        TextInputLayout courseId = findViewById(R.id.studentCourseId);
+        String courseInput = courseId.getEditText().getText().toString();
 
         Map<String, Object> userData = new HashMap<>();
         userData.put("course", courseInput);

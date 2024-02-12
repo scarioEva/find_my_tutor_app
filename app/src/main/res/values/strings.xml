@@ -2,4 +2,6 @@
     <string name="app_name">Assignment</string>
     <string name="student">Student</string>
     <string name="tutor">Tutor</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
