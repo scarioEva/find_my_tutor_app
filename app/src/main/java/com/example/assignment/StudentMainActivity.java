@@ -2,30 +2,39 @@ package com.example.assignment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.MenuItem;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class StudentMainActivity extends AppCompatActivity {
+public class StudentMainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String userId;
+    String data;
+
+    BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_main);
 
 
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+
         userId = getIntent().getStringExtra("uId");
 
-        TextView tw = findViewById(R.id.textView10);
 
         db.collection("student").whereEqualTo("uId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -34,8 +43,8 @@ public class StudentMainActivity extends AppCompatActivity {
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
                                 Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
-                                String name="Welcome student "+ document.getDocuments().get(0).get("name");
-                                tw.setText(name);
+                                data = "Welcome student " + document.getDocuments().get(0).get("name");
+                                loadFragment(new StudentHomeFragment());
                             } else {
                                 Log.d("MainActivity", "No such document");
 
@@ -50,4 +59,29 @@ public class StudentMainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            Bundle mBundle = new Bundle();
+            mBundle.putString("studentData",data);
+            fragment.setArguments(mBundle);
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment fragment = null;
+        int id = item.getItemId();
+
+        if (id == R.id.home) {
+            fragment = new StudentHomeFragment();
+        } else if (id == R.id.profile) {
+            fragment = new StudentProfileFragment();
+        }
+        return loadFragment(fragment);
+    }
+
 }

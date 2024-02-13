@@ -9,11 +9,13 @@
     tools:context=".StudentRegisterActivity">
 
     <ImageView
-        android:id="@+id/logoImage"
+        android:id="@+id/profileImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
+        android:onClick="imageUpload"
         android:src="@drawable/_184159_3094350" />
+
 
     <TextView
         android:layout_width="wrap_content"

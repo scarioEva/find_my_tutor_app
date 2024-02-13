@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
-                                Intent intent = new Intent(LoginActivity.this,type.equals("Tutor")? TestActivity.class:StudentMainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this,type.equals("Tutor")? TutorMainActivity.class:StudentMainActivity.class);
                                 intent.putExtra("uId",uid);
                                 startActivity(intent);
                             } else {
