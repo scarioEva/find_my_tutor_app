@@ -41,9 +41,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
     private Uri ImageUri;
     private Bitmap bitmap;
     ImageView imageView;
-
     StorageReference storageRef = storage.getReference();
-
     String imageUrl = "";
 
     @Override
@@ -131,7 +129,6 @@ public class StudentRegisterActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult( Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
         launcher.launch(intent);
     }
 
@@ -146,7 +143,6 @@ public class StudentRegisterActivity extends AppCompatActivity {
                     );
                 } catch (IOException e) {
                     e.printStackTrace();
-                    ;
                 }
             }
             if (ImageUri != null) {
