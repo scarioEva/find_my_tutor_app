@@ -64,6 +64,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
         if (fragment != null) {
             Bundle mBundle = new Bundle();
             mBundle.putString("studentData",data);
+            mBundle.putInt("layoutId",R.id.frameLayout);
             fragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
         }
@@ -79,7 +80,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
         if (id == R.id.home) {
             fragment = new StudentHomeFragment();
         } else if (id == R.id.profile) {
-            fragment = new StudentProfileFragment();
+            fragment = new StudentSearchFragment();
         }
         return loadFragment(fragment);
     }

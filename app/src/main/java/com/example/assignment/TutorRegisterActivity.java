@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -42,8 +43,10 @@ import org.checkerframework.checker.units.qual.C;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TutorRegisterActivity extends AppCompatActivity {
@@ -58,8 +61,8 @@ public class TutorRegisterActivity extends AppCompatActivity {
     Bitmap bitmap;
     ShapeableImageView imageView;
 
-    CommonClass commonClass=new CommonClass();
-
+    CommonClass commonClass = new CommonClass();
+    List<String> locationList = new ArrayList<>();
 
 
     @Override
@@ -71,8 +74,31 @@ public class TutorRegisterActivity extends AppCompatActivity {
         documentId = getIntent().getStringExtra("docId");
 
         imageView = findViewById(R.id.imageView);
+        getLocationList();
 
+    }
 
+    private void getLocationList() {
+        db.collection("campus_buildings").document("building_list").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Map<String, Object> campusLocations = documentSnapshot.getData();
+                    for (Map.Entry<String, Object> entry : campusLocations.entrySet()) {
+//                        String key = entry.getKey();
+                        Object value = entry.getValue();
+                        locationList.add(value.toString());
+                    }
+                    Log.d("MainAct","location:"+ locationList.toString());
+
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+//                Log.w(TAG, "Error getting document", e);
+            }
+        });
     }
 
     public void openDrawer(View view) {
@@ -112,7 +138,12 @@ public class TutorRegisterActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
-        uploadImageStorage();
+        Log.d("MainAct", "uri:" + ImageUri);
+        if (ImageUri != null) {
+            uploadImageStorage();
+        } else {
+            updateDatabase("");
+        }
     }
 
     private void updateDatabase(String fileUrl) {

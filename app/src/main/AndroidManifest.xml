@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -21,9 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment"
         tools:targetApi="31">
-<!--        <activity-->
-<!--            android:name=".CameraActivity"-->
-<!--            android:exported="false" />-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -32,18 +30,27 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_path"/>
-        </provider> <!-- <activity -->
+                android:resource="@xml/provider_path" />
+        </provider>
+        <!-- <activity -->
         <!-- android:name=".TestActivity" -->
         <!-- android:exported="false" /> -->
+        <!--        <activity-->
+        <!--            android:name=".StudentMainActivity"-->
+        <!--            android:exported="false" />-->
         <activity
-            android:name=".StudentMainActivity"
-            android:exported="false" />
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            tools:replace="android:screenOrientation" />
         <activity
             android:name=".StudentRegisterActivity"
             android:exported="false" />
         <activity
             android:name=".TutorMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".StudentMainActivity"
             android:exported="false" />
         <activity
             android:name=".TutorRegisterActivity"

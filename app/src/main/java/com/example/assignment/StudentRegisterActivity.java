@@ -43,6 +43,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class StudentRegisterActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -107,7 +108,12 @@ public class StudentRegisterActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
-        uploadImageStorage();
+        Log.d("MainAct", "uri:" + ImageUri);
+        if (ImageUri != null) {
+            uploadImageStorage();
+        } else {
+            updateDatabase("");
+        }
     }
 
     private void updateDatabase(String profileUrl) {
@@ -127,7 +133,8 @@ public class StudentRegisterActivity extends AppCompatActivity {
         userData.put("phone", phoneInput);
         userData.put("bio", bioInput);
 
-        userData.put("profileImage", profileUrl);
+        userData.put("profile_pic", profileUrl);
+
         Log.d("MainAct", "uploadSuccess");
         db.collection("student").document(documentId).update(userData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
