@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -93,15 +94,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void onLogin(View view) {
-        TextView email = findViewById(R.id.lognMailId);
-        TextView password = findViewById(R.id.loginPassId);
+
+        TextInputLayout email = findViewById(R.id.loginMailId);
+        TextInputLayout password = findViewById(R.id.loginPassId);
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int selectedId = radioGroup.getCheckedRadioButtonId();
         RadioButton radioButton = findViewById(selectedId);
 
         String userType = radioButton.getText().toString();
-        String sEmail = email.getText().toString();
-        String sPassword = password.getText().toString();
+        String sEmail = email.getEditText().getText().toString();
+
+        Log.d("MainAct","test :"+ sEmail);
+
+        String sPassword = password.getEditText().getText().toString();
 
         if (!sEmail.equals("") && !sPassword.equals("")) {
             login(sEmail, sPassword, userType);
