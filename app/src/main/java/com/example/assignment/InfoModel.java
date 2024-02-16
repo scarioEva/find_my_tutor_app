@@ -2,13 +2,13 @@ package com.example.assignment;
 
 public class InfoModel {
     private String name;
-    private String bio;
+    private String location;
     private String department;
     private String profileUrl;
 
-    public InfoModel(String name, String bio,String department,String profileUrl){
+    public InfoModel(String name, String location,String department,String profileUrl){
         this.name=name;
-        this.bio=bio;
+        this.location=location;
         this.department=department;
         this.profileUrl=profileUrl;
 
@@ -18,8 +18,8 @@ public class InfoModel {
         return name;
     }
 
-    public String getBio(){
-       return bio;
+    public String getLocation(){
+       return location;
     }
 
     public String getDepartment(){

@@ -1,15 +1,343 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TutorProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/uuid"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/_184159_3094350"
+                    app:shapeAppearanceOverlay="@style/Circular" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nameId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Full name"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/departmentId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:text="Department"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="20dp">
+
+                    <TextView
+                        android:id="@+id/statusId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-5dp"
+                        android:text="Department"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/statusI"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="-5dp"-->
+<!--                        android:text="Department"-->
+<!--                        android:textColor="@color/grey"-->
+<!--                        android:textSize="13sp" />-->
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/locationTextId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Current Location"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/locationId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Location"
+                android:textColor="@color/grey"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Main Office Location"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/officeId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Office Location"
+                android:textColor="@color/grey"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/bioHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Bio"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/bioId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bio"
+                android:textColor="@color/grey"
+                android:textSize="13sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Availability"
+                android:textColor="@color/black"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="0"
+                        android:layout_marginEnd="30dp"
+                        android:text="Monday"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/monFromId"
+                        android:layout_column="1"
+                        android:text="09:00"
+                        android:textColor="@color/grey"
+
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="-"
+                        android:textColor="@color/grey" />
+
+                    <TextView
+                        android:id="@+id/monToId"
+                        android:layout_column="3"
+                        android:text="17:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                </TableRow>
+
+
+                <TableRow android:padding="5dp">
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tuesday"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/tueFromId"
+                        android:layout_column="1"
+                        android:text="09:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="-"
+                        android:textColor="@color/grey" />
+
+                    <TextView
+                        android:id="@+id/tueToId"
+                        android:text="17:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                </TableRow>
+
+
+                <TableRow android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wednesday"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/wedFromId"
+                        android:text="09:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="-"
+                        android:textColor="@color/grey" />
+
+                    <TextView
+                        android:id="@+id/wedToId"
+                        android:text="17:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                </TableRow>
+
+
+                <TableRow android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thursday"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/thuFromId"
+                        android:text="09:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="-"
+                        android:textColor="@color/grey" />
+
+                    <TextView
+                        android:id="@+id/thuToId"
+                        android:text="17:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                </TableRow>
+
+
+                <TableRow android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friday"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/friFromId"
+                        android:text="09:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="-"
+                        android:textColor="@color/grey" />
+
+                    <TextView
+                        android:id="@+id/friToId"
+                        android:text="17:00"
+                        android:textColor="@color/grey"
+                        android:textSize="13sp" />
+
+                </TableRow>
+
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/submitId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/primary"
+                android:text="Book Appoinment" />
+        </LinearLayout>
+
+
+    </ScrollView>
 
 </FrameLayout>

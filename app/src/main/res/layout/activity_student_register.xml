@@ -33,6 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lets setup your account"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 
     <LinearLayout
@@ -42,8 +43,36 @@
         android:layout_marginBottom="20dp"
         android:orientation="vertical">
 
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/studentCourseId"
+            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Course*">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/accYrId"
+            android:layout_marginTop="5dp"
+            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Accademic Year*">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contactId"
+            android:layout_marginTop="5dp"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,31 +84,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/studentCourseId"
-            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Course">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/accYrId"
-            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Accademic Year">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/bioId"
+            android:layout_marginTop="5dp"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -90,12 +96,22 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <TextView
+            android:id="@+id/errMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:textColor="#D70040"
+         />
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#000"
+            android:backgroundTint="@color/primary"
             android:onClick="onSubmit"
             android:text="Submit" />
 

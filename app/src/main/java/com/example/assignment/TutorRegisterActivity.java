@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,9 +22,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,7 +68,8 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
     CommonClass commonClass = new CommonClass();
     List<String> locationList = new ArrayList<>();
-
+    AutoCompleteTextView autoCompleteTextView;
+    ArrayAdapter<String> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +81,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         getLocationList();
-
     }
 
     private void getLocationList() {
@@ -89,8 +94,8 @@ public class TutorRegisterActivity extends AppCompatActivity {
                         Object value = entry.getValue();
                         locationList.add(value.toString());
                     }
-                    Log.d("MainAct","location:"+ locationList.toString());
-
+                    Log.d("MainAct", "location:" + locationList.toString());
+                    spinnerAdapter.notifyDataSetChanged();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -99,6 +104,11 @@ public class TutorRegisterActivity extends AppCompatActivity {
 //                Log.w(TAG, "Error getting document", e);
             }
         });
+
+        autoCompleteTextView = findViewById(R.id.officeLocationId);
+        spinnerAdapter = new ArrayAdapter<>(this, R.layout.location_dropdown_item, locationList);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        autoCompleteTextView.setAdapter(spinnerAdapter);
     }
 
     public void openDrawer(View view) {
@@ -146,9 +156,18 @@ public class TutorRegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void setBorderRed(TextInputLayout textInput) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setStroke(1, Color.RED);
+        borderDrawable.setCornerRadius(8);
+        EditText editText = textInput.getEditText();
+        editText.setBackground(borderDrawable);
+    }
+
     private void updateDatabase(String fileUrl) {
         TextInputLayout departmentId = findViewById(R.id.departmentId);
         TextInputLayout bioId = findViewById(R.id.bioId);
+        TextInputLayout mainLocationId = findViewById(R.id.mainLocationInput);
 
 
         String departmentInput = departmentId.getEditText().getText().toString();
@@ -204,28 +223,44 @@ public class TutorRegisterActivity extends AppCompatActivity {
         availability.put("friday", fridayData);
 
         Map<String, Object> userData = new HashMap<>();
+
+        String locationInput = autoCompleteTextView.getText().toString();
         userData.put("department", departmentInput);
         userData.put("bio", bioInput);
         userData.put("availability", availability);
         userData.put("profile_pic", fileUrl);
+        userData.put("office_location", locationInput);
+        userData.put("check_in", "");
 
         Log.d("MainAct", userData.toString());
+        if (departmentInput.equals("")) {
+            setBorderRed(departmentId);
+        }
+        if (locationInput.equals("")) {
+            setBorderRed(mainLocationId);
+        }
 
-        db.collection("tutor").document(documentId).update(userData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void Void) {
-                        Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
-                        intent.putExtra("uId", userId);
-                        startActivity(intent);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("MainActivity", "Error adding document", e);
-                    }
-                });
+        TextView errMsg = findViewById(R.id.errMsg);
+        if (!departmentInput.equals("") && !locationInput.equals("")) {
+            db.collection("tutor").document(documentId).update(userData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void Void) {
+                            Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
+                            intent.putExtra("uId", userId);
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("MainActivity", "Error adding document", e);
+                        }
+                    });
+        } else {
+            errMsg.setText("Enter all the required fields");
+        }
+
     }
 
 

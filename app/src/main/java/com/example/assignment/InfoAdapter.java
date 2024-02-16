@@ -25,13 +25,13 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
 
         InfoModel info = getItem(position);
         TextView titleView = convertView.findViewById(R.id.cardName);
-        TextView bioView = convertView.findViewById(R.id.cardBio);
+        TextView locationView = convertView.findViewById(R.id.cardLocation);
         TextView departmentView = convertView.findViewById(R.id.cardDepartment);
         ShapeableImageView profileView = convertView.findViewById(R.id.profileImage);
 
         if (info != null) {
             titleView.setText(info.getName());
-            bioView.setText(info.getBio());
+            locationView.setText(info.getLocation());
             departmentView.setText(info.getDepartment());
 
             if(!info.getProfileUrl().equals("")) {

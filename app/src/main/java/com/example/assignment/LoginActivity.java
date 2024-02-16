@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -93,6 +96,14 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void setBorderRed(TextInputLayout textInput) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setStroke(1, Color.RED);
+        borderDrawable.setCornerRadius(8);
+        EditText editText = textInput.getEditText();
+        editText.setBackground(borderDrawable);
+    }
+
     public void onLogin(View view) {
 
         TextInputLayout email = findViewById(R.id.loginMailId);
@@ -107,6 +118,14 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("MainAct","test :"+ sEmail);
 
         String sPassword = password.getEditText().getText().toString();
+
+        if(sEmail.equals("")){
+            setBorderRed(email);
+        }
+
+        if(sPassword.equals("")){
+            setBorderRed(password);
+        }
 
         if (!sEmail.equals("") && !sPassword.equals("")) {
             login(sEmail, sPassword, userType);

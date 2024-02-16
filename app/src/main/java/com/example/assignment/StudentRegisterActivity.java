@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -116,6 +118,14 @@ public class StudentRegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void setBorderRed(TextInputLayout textInput) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setStroke(1, Color.RED);
+        borderDrawable.setCornerRadius(8);
+        EditText editText = textInput.getEditText();
+        editText.setBackground(borderDrawable);
+    }
+
     private void updateDatabase(String profileUrl) {
         TextInputLayout courseId = findViewById(R.id.studentCourseId);
         TextInputLayout phoneId = findViewById(R.id.contactId);
@@ -124,33 +134,48 @@ public class StudentRegisterActivity extends AppCompatActivity {
 
         String courseInput = courseId.getEditText().getText().toString();
         String phoneInput = phoneId.getEditText().getText().toString();
-        String accademicInout = accYrId.getEditText().getText().toString();
+        String accademicInput = accYrId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
 
         Map<String, Object> userData = new HashMap<>();
         userData.put("course", courseInput);
-        userData.put("accademic_year", accademicInout);
+        userData.put("accademic_year", accademicInput);
         userData.put("phone", phoneInput);
         userData.put("bio", bioInput);
 
         userData.put("profile_pic", profileUrl);
 
         Log.d("MainAct", "uploadSuccess");
-        db.collection("student").document(documentId).update(userData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void Void) {
-                        Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
-                        intent.putExtra("uId", userId);
-                        startActivity(intent);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("MainActivity", "Error adding document", e);
-                    }
-                });
+
+        if (courseInput.equals("")) {
+            setBorderRed(courseId);
+        }
+
+        if (accademicInput.equals("")) {
+            setBorderRed(accYrId);
+        }
+
+        TextView errMsg = findViewById(R.id.errMsg);
+
+        if (!courseInput.equals("") && !accademicInput.equals("")) {
+            db.collection("student").document(documentId).update(userData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void Void) {
+                            Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
+                            intent.putExtra("uId", userId);
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("MainActivity", "Error adding document", e);
+                        }
+                    });
+        } else {
+            errMsg.setText("Enter all the required fields.");
+        }
     }
 
 

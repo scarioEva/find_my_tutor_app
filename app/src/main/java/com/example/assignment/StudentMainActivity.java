@@ -19,7 +19,6 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String userId;
-    String data;
 
     BottomNavigationView bottomNavigationView;
 
@@ -43,7 +42,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
                                 Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
-                                data = "Welcome student " + document.getDocuments().get(0).get("name");
+
                                 loadFragment(new StudentHomeFragment());
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -63,8 +62,8 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
     public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             Bundle mBundle = new Bundle();
-            mBundle.putString("studentData",data);
-            mBundle.putInt("layoutId",R.id.frameLayout);
+            mBundle.putString("studentData", userId);
+            mBundle.putInt("layoutId", R.id.frameLayout);
             fragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
         }
@@ -79,8 +78,11 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
 
         if (id == R.id.home) {
             fragment = new StudentHomeFragment();
-        } else if (id == R.id.profile) {
+        } else if (id == R.id.search) {
             fragment = new StudentSearchFragment();
+        } else if (id == R.id.profile) {
+
+        } else if (id == R.id.setting) {
         }
         return loadFragment(fragment);
     }

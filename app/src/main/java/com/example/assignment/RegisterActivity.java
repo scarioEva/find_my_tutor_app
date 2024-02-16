@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -124,6 +127,14 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    private void setBorderRed(TextInputLayout textInput) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setStroke(1, Color.RED);
+        borderDrawable.setCornerRadius(8);
+        EditText editText = textInput.getEditText();
+        editText.setBackground(borderDrawable);
+    }
+
     public void signupButtonClicked(View view) {
         TextInputLayout email = findViewById(R.id.emailId);
         TextInputLayout password = findViewById(R.id.passId);
@@ -146,6 +157,19 @@ public class RegisterActivity extends AppCompatActivity {
 
         Log.w("MainAct", sEmail);
 
+
+        if(sEmail.equals("")){
+            setBorderRed(email);
+        }
+        if(sName.equals("")){
+            setBorderRed(name);
+        }
+        if(sPassword.equals("")){
+            setBorderRed(password);
+        }
+        if(cPassword.equals("")){
+            setBorderRed(confirmPassword);
+        }
 
         if (!sEmail.equals("") && !sPassword.equals("") && !cPassword.equals("") && !sName.equals("")) {
             if (sPassword.equals(cPassword)) {

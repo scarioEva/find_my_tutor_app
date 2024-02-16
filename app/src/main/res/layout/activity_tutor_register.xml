@@ -21,17 +21,17 @@
             android:layout_height="150dp"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            app:shapeAppearanceOverlay="@style/Circular"
-            android:src="@drawable/_184159_3094350"
             android:onClick="openDrawer"
-            />
+            android:scaleType="fitXY"
+            android:src="@drawable/_184159_3094350"
+            app:shapeAppearanceOverlay="@style/Circular" />
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lets setup your account"
+        android:textColor="@color/black"
         android:textSize="20sp" />
 
     <LinearLayout
@@ -47,11 +47,28 @@
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Departement">
+            android:hint="Departement*">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/mainLocationInput"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:hint="Office Location*">
+
+            <AutoCompleteTextView
+                android:id="@+id/officeLocationId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -59,6 +76,7 @@
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:hint="Bio">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -71,10 +89,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="5dp"
             android:text="Schedule Availability"
             android:textColor="@color/black"
-
-            />
+            android:textStyle="bold" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -298,15 +316,22 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:id="@+id/errMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:textColor="#D70040" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#000"
+            android:backgroundTint="@color/primary"
             android:onClick="onSubmit"
-
             android:text="Submit" />
 
     </LinearLayout>

@@ -37,11 +37,14 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/loginPassId"
+            android:layout_marginTop="5dp"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,20 +61,22 @@
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/student"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                app:buttonTint="@color/primary"
                 android:text="Student" />
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/tutor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity=""
+                app:buttonTint="@color/primary"
                 android:text="Tutor" />
         </RadioGroup>
 
@@ -97,8 +102,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#000"
             android:onClick="onLogin"
+            android:backgroundTint="@color/primary"
             android:text="Login" />
 
         <Button

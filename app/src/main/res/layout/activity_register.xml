@@ -19,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Register"
+        android:textColor="@color/black"
         android:textSize="40sp" />
 
     <LinearLayout
@@ -39,6 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                app:buttonTint="@color/primary"
                 android:text="Student" />
 
             <com.google.android.material.radiobutton.MaterialRadioButton
@@ -46,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity=""
+                app:buttonTint="@color/primary"
                 android:text="Tutor" />
         </RadioGroup>
 
@@ -58,11 +61,14 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailId"
+            android:layout_marginTop="5dp"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -70,11 +76,14 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passId"
+            android:layout_marginTop="5dp"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,6 +98,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/cnfPassId"
+            android:layout_marginTop="5dp"
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,7 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="#000"
+            android:backgroundTint="@color/primary"
             android:onClick="signupButtonClicked"
             android:text="Register" />
 

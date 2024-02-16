@@ -43,9 +43,9 @@
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             tools:replace="android:screenOrientation" />
-        <activity
-            android:name=".StudentRegisterActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".StudentRegisterActivity"-->
+<!--            android:exported="false" />-->
         <activity
             android:name=".TutorMainActivity"
             android:exported="false" />
