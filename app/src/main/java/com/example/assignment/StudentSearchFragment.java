@@ -33,9 +33,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.units.qual.C;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 
 public class StudentSearchFragment extends Fragment {
@@ -47,6 +51,9 @@ public class StudentSearchFragment extends Fragment {
     InfoAdapter adapter;
     ListView listview;
     String studentID;
+    int layoutId;
+    List<AppoinmentObject> slotList = new ArrayList<>();
+    CommonClass commonClass = new CommonClass();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +65,7 @@ public class StudentSearchFragment extends Fragment {
         Bundle mBundle = new Bundle();
         mBundle.putString("tutorUid", uid);
         mBundle.putString("studentId", studentID);
+        mBundle.putInt("layoutId", layoutId);
         TutorProfileFragment tutorProfileFragment = new TutorProfileFragment();
         tutorProfileFragment.setArguments(mBundle);
         androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
@@ -69,6 +77,7 @@ public class StudentSearchFragment extends Fragment {
 
 
     private void onTextChanges(String val) {
+
         if (infoList.size() != 0) {
             adapter.clear();
         }
@@ -81,13 +90,52 @@ public class StudentSearchFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     HashSet<String> uniqueDocumentIds = new HashSet<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
-                            if (uniqueDocumentIds.add(document.getId())) {
-                                Log.d("MainAct", document.getData().size() + " ");
-                                uidList.add(document.getData().get("uId").toString());
-                                infoList.add(new InfoModel(document.getData().get("name").toString(), document.getData().get("office_location").toString(), document.getData().get("department").toString(), document.getData().get("profile_pic").toString()));
+                    HashSet<String> nextUniqueDocumentIds = new HashSet<>();
+                    if (task.getResult().getDocuments().size() != 0) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
 
+                            if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
+                                if (uniqueDocumentIds.add(document.getId())) {
+                                    uidList.add(document.getData().get("uId").toString());
+                                    infoList.add(new InfoModel(document.getData().get("name").toString(),
+                                            document.getData().get("office_location").toString(),
+                                            document.getData().get("department").toString(),
+                                            document.getData().get("profile_pic").toString(),
+                                            "",
+                                            false
+                                    ));
+//                                    for (AppoinmentObject obj : slotList) {
+//
+//                                        if (obj.getTutorId().equals(document.getData().get("uId"))) {
+////                                            try {
+////                                                infoList.add(new InfoModel(document.getData().get("name").toString(),
+////                                                        document.getData().get("office_location").toString(),
+////                                                        document.getData().get("department").toString(),
+////                                                        document.getData().get("profile_pic").toString(),
+////                                                        commonClass.getDateTime(obj.getDate(), obj.getTime()),
+////                                                        false
+////                                                ));
+////
+////                                            } catch (ParseException e) {
+////                                                throw new RuntimeException(e);
+////                                            }
+//                                        } else {
+//                                            if (nextUniqueDocumentIds.add(document.getId())) {
+//                                                Log.d("MainAct", document.getData().get("name").toString());
+////                                                break;
+//                                                infoList.add(new InfoModel(document.getData().get("name").toString(),
+//                                                        document.getData().get("office_location").toString(),
+//                                                        document.getData().get("department").toString(),
+//                                                        document.getData().get("profile_pic").toString(),
+//                                                        "",
+//                                                        false
+//                                                ));
+//                                            }
+//                                        }
+//                                    }
+
+
+                                }
                             }
                         }
                     }
@@ -103,9 +151,9 @@ public class StudentSearchFragment extends Fragment {
         listview.setAdapter(adapter);
 
         Bundle bundle = getArguments();
-        int layoutId = bundle.getInt("layoutId");
+        layoutId = bundle.getInt("layoutId");
         studentID = bundle.getString("studentData");
-        Log.d("MainAct","stu:"+ studentID);
+        Log.d("MainAct", "stu:" + studentID);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -116,8 +164,28 @@ public class StudentSearchFragment extends Fragment {
 
             }
         });
-
     }
+
+//    private void getAppoinmentList() {
+//        db.collection("appoinment").whereEqualTo("student", "UmAA5gUrzdecZc8VUt2k6PCtczj1").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    if (task.getResult().getDocuments().size() != 0) {
+//                        for (QueryDocumentSnapshot document : task.getResult()) {
+//                            AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString());
+//                            slotList.add(obj);
+//                            Log.d("MainAct", document.getData().toString());
+//
+//                        }
+//                    }
+//                }
+//                onTextChanges("");
+//
+//            }
+//        });
+//    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,8 +212,10 @@ public class StudentSearchFragment extends Fragment {
                 }
             });
         }
-
+//        getAppoinmentList();
         onTextChanges("");
+
+
         return view;
     }
 }

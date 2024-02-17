@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical"
+    android:padding="20dp"
 
     >
     <Button
@@ -12,7 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:backgroundTint="@color/primary"
+        android:textColor="@color/black"
+        android:background="@drawable/edit_text_border"
+        android:gravity="center_vertical"
         android:text="Date" />
 
 
@@ -33,14 +36,32 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/appoinmentSubmit"
+    <TextView
+        android:id="@+id/errMsg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
+        android:gravity="center"
+        android:textColor="#D70040" />
+
+    <Button
+        android:id="@+id/appoinmentSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
         android:backgroundTint="@color/primary"
-        android:onClick="onSubmit"
         android:text="Submit" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/black"
+        android:text="Cancel" />
+
 
 </LinearLayout>

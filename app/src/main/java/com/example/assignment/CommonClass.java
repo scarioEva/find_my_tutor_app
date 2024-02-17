@@ -1,6 +1,10 @@
 package com.example.assignment;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class CommonClass {
     public String generateRandomString(int n) {
@@ -17,5 +21,14 @@ public class CommonClass {
         return stringBuilder.toString();
     }
 
+    public String getDateTime(String c_date, String time) throws ParseException {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("MM/d/yyyy", Locale.ENGLISH);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
+        Date date = inputFormat.parse(c_date);
+        String formattedDate = outputFormat.format(date);
+
+        String final_d= formattedDate+" ("+ time+")";
+        return  final_d;
+    }
 
 }

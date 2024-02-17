@@ -81,7 +81,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
         } else if (id == R.id.search) {
             fragment = new StudentSearchFragment();
         } else if (id == R.id.profile) {
-
+            fragment = new StudentProfileFragment();
         } else if (id == R.id.setting) {
         }
         return loadFragment(fragment);

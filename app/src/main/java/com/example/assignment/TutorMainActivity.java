@@ -50,9 +50,10 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             Bundle mBundle = new Bundle();
-//            mBundle.putString("studentData",data);
+            mBundle.putString("tutorUid",userId);
+            mBundle.putInt("layoutId", R.id.frameLayouts);
             fragment.setArguments(mBundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayouts, fragment).commit();
         }
 
         return true;
@@ -170,10 +171,12 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         int id = item.getItemId();
 
         if (id == R.id.home) {
+            fragment=new TutorHomeFragment();
 
         } else if (id == R.id.qrIcon) {
             initQRCodeScanner();
         } else if (id == R.id.profileIcon) {
+            fragment=new TutorProfileFragment();
 
         } else if (id == R.id.settingIcon) {
 

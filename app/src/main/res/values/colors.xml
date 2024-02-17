@@ -6,4 +6,5 @@
     <color name="primary">#246a73</color>
     <color name="danger">#cd5334</color>
     <color name="success">#4BB543</color>
+    <color name="card">#01b4d9</color>
 </resources>
