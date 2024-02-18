@@ -80,6 +80,22 @@ public class StudentRegisterActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.bottom_drawable_layout);
         LinearLayout captureLayout = dialog.findViewById(R.id.drawableItm1ID);
         LinearLayout fileLayout = dialog.findViewById(R.id.drawableItm2ID);
+        LinearLayout removeLayout = dialog.findViewById(R.id.drawableItm3ID);
+        removeLayout.setVisibility(View.GONE);
+        if (ImageUri != null) {
+            removeLayout.setVisibility(View.VISIBLE);
+            removeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ImageUri = null;
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable._184159_3094350));
+                    dialog.hide();
+                }
+            });
+        }
+        else{
+            removeLayout.setVisibility(View.GONE);
+        }
 
         captureLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,13 +153,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
         String accademicInput = accYrId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
 
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("course", courseInput);
-        userData.put("accademic_year", accademicInput);
-        userData.put("phone", phoneInput);
-        userData.put("bio", bioInput);
 
-        userData.put("profile_pic", profileUrl);
 
         Log.d("MainAct", "uploadSuccess");
 
@@ -158,6 +168,14 @@ public class StudentRegisterActivity extends AppCompatActivity {
         TextView errMsg = findViewById(R.id.errMsg);
 
         if (!courseInput.equals("") && !accademicInput.equals("")) {
+
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("course", courseInput);
+            userData.put("accademic_year", accademicInput);
+            userData.put("phone", phoneInput);
+            userData.put("bio", bioInput);
+            userData.put("profile_pic", profileUrl);
+
             db.collection("student").document(documentId).update(userData)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override

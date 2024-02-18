@@ -145,7 +145,7 @@ public class TutorHomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_tutor_home, container, false);
 
         Bundle bundle = getArguments();
-        tutorId = bundle.getString("tutorUid");
+        tutorId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
         getRegisteredAppointments(view);
         return view;

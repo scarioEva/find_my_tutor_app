@@ -50,7 +50,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             Bundle mBundle = new Bundle();
-            mBundle.putString("tutorUid",userId);
+            mBundle.putString("user_id",userId);
             mBundle.putInt("layoutId", R.id.frameLayouts);
             fragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayouts, fragment).commit();

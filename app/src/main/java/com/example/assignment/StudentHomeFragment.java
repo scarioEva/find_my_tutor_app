@@ -155,7 +155,7 @@ public class StudentHomeFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_student_home, container, false);
         Bundle bundle = getArguments();
-        studentId = bundle.getString("studentData");
+        studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
         getRegisteredAppointments(view);
         return view;

@@ -189,7 +189,8 @@ public class TutorProfileFragment extends Fragment {
     private void homeRedirect() {
         dialog.hide();
         Bundle mBundle = new Bundle();
-        mBundle.putString("studentData", studentId);
+        mBundle.putString("user_id", studentId);
+        mBundle.putInt("layoutId", layoutId);
         StudentHomeFragment studentHome = new StudentHomeFragment();
         studentHome.setArguments(mBundle);
         androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
@@ -448,6 +449,20 @@ public class TutorProfileFragment extends Fragment {
         });
     }
 
+
+    private void redirectEditProfile(int layoutId, String tutorId){
+        Bundle mBundle = new Bundle();
+        mBundle.putString("tutorId", tutorId);
+        mBundle.putInt("layoutId", layoutId);
+        TutorEditProfile editProfile = new TutorEditProfile();
+        editProfile.setArguments(mBundle);
+        androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(layoutId, editProfile);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -458,7 +473,7 @@ public class TutorProfileFragment extends Fragment {
 // Set the desired menu item as selected
 
         Bundle bundle = getArguments();
-        tutorId = bundle.getString("tutorUid");
+        tutorId = bundle.getString("user_id");
         studentId = bundle.getString("studentId");
         layoutId = bundle.getInt("layoutId");
 
@@ -511,7 +526,14 @@ public class TutorProfileFragment extends Fragment {
             }
         });
 
+        ImageView editId= view.findViewById(R.id.editIcon);
 
+        editId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectEditProfile(layoutId, tutorId);
+            }
+        });
         return view;
     }
 }

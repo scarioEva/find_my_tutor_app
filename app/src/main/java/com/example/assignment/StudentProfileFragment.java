@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -98,16 +99,38 @@ public class StudentProfileFragment extends Fragment {
                 });
     }
 
+
+    private void redirectEditProfile(int layoutId, String studentId){
+        Bundle mBundle = new Bundle();
+        mBundle.putString("studentData", studentId);
+        mBundle.putInt("layoutId", layoutId);
+        StudentEditProfile editProfile = new StudentEditProfile();
+        editProfile.setArguments(mBundle);
+        androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(layoutId, editProfile);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_student_profile, container, false);
         Bundle bundle = getArguments();
-        studentId = bundle.getString("studentData");
-        Log.d("MainAct", "tutor main student id: "+ studentId);
+        studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
         tutorId=bundle.getString("tutorUid");
+
+        ImageView editId= view.findViewById(R.id.editIcon);
+
+        editId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectEditProfile(layoutId, studentId);
+            }
+        });
 
         getProfileDetails(studentId, view);
 

@@ -82,16 +82,8 @@
                         android:id="@+id/editIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/qr"
+                        android:src="@drawable/edit"
                         android:contentDescription="Edit" />
-<!--                    <TextView-->
-<!--                        android:id="@+id/statusI"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_marginTop="-5dp"-->
-<!--                        android:text="Department"-->
-<!--                        android:textColor="@color/grey"-->
-<!--                        android:textSize="13sp" />-->
                 </LinearLayout>
             </LinearLayout>
 

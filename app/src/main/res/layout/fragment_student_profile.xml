@@ -77,7 +77,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:contentDescription="Edit"
-                        android:src="@drawable/qr" />
+                        android:src="@drawable/edit" />
                     <!--                    <TextView-->
                     <!--                        android:id="@+id/statusI"-->
                     <!--                        android:layout_width="wrap_content"-->

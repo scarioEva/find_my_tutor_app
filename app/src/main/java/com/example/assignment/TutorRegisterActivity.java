@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,11 +26,13 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,6 +53,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +75,18 @@ public class TutorRegisterActivity extends AppCompatActivity {
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> spinnerAdapter;
 
+    Button monFromId;
+    Button monToId;
+    Button tueFromId;
+    Button tueToId;
+    Button wedFromId;
+    Button wedToId;
+    Button thuFromId;
+    Button thuToId;
+    Button friFromId;
+    Button friToId;
+    int hour, minute;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +97,106 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         getLocationList();
+
+        monFromId = findViewById(R.id.monFromId);
+        monFromId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(monFromId);
+            }
+        });
+
+        monToId = findViewById(R.id.monToId);
+        monToId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(monToId);
+            }
+        });
+
+        tueFromId = findViewById(R.id.tueFromId);
+        tueFromId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(tueFromId);
+            }
+        });
+
+        tueToId = findViewById(R.id.tueToId);
+        tueToId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(tueToId);
+            }
+        });
+
+        wedFromId = findViewById(R.id.wedFromId);
+        wedFromId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(wedFromId);
+            }
+        });
+
+        wedToId = findViewById(R.id.wedToId);
+        wedToId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(wedToId);
+            }
+        });
+
+        thuFromId = findViewById(R.id.thuFromId);
+        thuFromId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(thuFromId);
+            }
+        });
+
+        thuToId = findViewById(R.id.thuToId);
+        thuToId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(thuToId);
+            }
+        });
+
+        friFromId = findViewById(R.id.friFromId);
+        friFromId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(friFromId);
+            }
+        });
+
+        friToId = findViewById(R.id.friToId);
+        friToId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog(friToId);
+            }
+        });
+    }
+
+    private void showTimePickerDialog(Button btn) {
+        Calendar calendar = Calendar.getInstance();
+
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
+                        hour = hourOfDay;
+                        minute = minuteOfDay;
+
+                        String time = String.format("%02d:%02d", hour, minute);
+                        btn.setText(time);
+                    }
+                }, hour, minute, false);
+        timePickerDialog.show();
     }
 
     private void getLocationList() {
@@ -101,7 +217,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-//                Log.w(TAG, "Error getting document", e);
             }
         });
 
@@ -118,7 +233,22 @@ public class TutorRegisterActivity extends AppCompatActivity {
         dialog.setContentView(R.layout.bottom_drawable_layout);
         LinearLayout captureLayout = dialog.findViewById(R.id.drawableItm1ID);
         LinearLayout fileLayout = dialog.findViewById(R.id.drawableItm2ID);
-
+        LinearLayout removeLayout = dialog.findViewById(R.id.drawableItm3ID);
+        removeLayout.setVisibility(View.GONE);
+        if (ImageUri != null) {
+            removeLayout.setVisibility(View.VISIBLE);
+            removeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ImageUri = null;
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable._184159_3094350));
+                    dialog.hide();
+                }
+            });
+        }
+        else{
+            removeLayout.setVisibility(View.GONE);
+        }
         captureLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -173,16 +303,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
         String departmentInput = departmentId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
 
-        EditText monFromId = findViewById(R.id.monFromId);
-        EditText monToId = findViewById(R.id.monToId);
-        EditText tueFromId = findViewById(R.id.tueFromId);
-        EditText tueToId = findViewById(R.id.tueToId);
-        EditText wedFromId = findViewById(R.id.wedFromId);
-        EditText wedToId = findViewById(R.id.wedToId);
-        EditText thuFromId = findViewById(R.id.thuFromId);
-        EditText thuToId = findViewById(R.id.thuToId);
-        EditText friFromId = findViewById(R.id.friFromId);
-        EditText friToId = findViewById(R.id.friToId);
 
         String monFromValue = monFromId.getText().toString();
         String monToValue = monToId.getText().toString();
@@ -249,6 +369,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
                             Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
                             intent.putExtra("uId", userId);
                             startActivity(intent);
+                            Toast.makeText(TutorRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -276,14 +397,14 @@ public class TutorRegisterActivity extends AppCompatActivity {
                                 if (uri != null) {
                                     updateDatabase(uri.toString());
                                 }
-                                Toast.makeText(TutorRegisterActivity.this, "UPLOADED", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(TutorRegisterActivity.this, "UPLOADED", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Log.d("MainAct", e.getMessage());
-                                Toast.makeText(TutorRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(TutorRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
             }
@@ -292,7 +413,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 Log.d("MainAct2", e.getMessage());
 
-                Toast.makeText(TutorRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(TutorRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

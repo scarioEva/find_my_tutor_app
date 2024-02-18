@@ -93,17 +93,17 @@ public class StudentSearchFragment extends Fragment {
                     HashSet<String> nextUniqueDocumentIds = new HashSet<>();
                     if (task.getResult().getDocuments().size() != 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-
-                            if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
-                                if (uniqueDocumentIds.add(document.getId())) {
-                                    uidList.add(document.getData().get("uId").toString());
-                                    infoList.add(new InfoModel(document.getData().get("name").toString(),
-                                            document.getData().get("office_location").toString(),
-                                            document.getData().get("department").toString(),
-                                            document.getData().get("profile_pic").toString(),
-                                            "",
-                                            false
-                                    ));
+                            if (document.contains("department")) {
+                                if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
+                                    if (uniqueDocumentIds.add(document.getId())) {
+                                        uidList.add(document.getData().get("uId").toString());
+                                        infoList.add(new InfoModel(document.getData().get("name").toString(),
+                                                document.getData().get("office_location").toString(),
+                                                document.getData().get("department").toString(),
+                                                document.getData().get("profile_pic").toString(),
+                                                "",
+                                                false
+                                        ));
 //                                    for (AppoinmentObject obj : slotList) {
 //
 //                                        if (obj.getTutorId().equals(document.getData().get("uId"))) {
@@ -134,7 +134,7 @@ public class StudentSearchFragment extends Fragment {
 //                                        }
 //                                    }
 
-
+                                    }
                                 }
                             }
                         }
@@ -152,14 +152,14 @@ public class StudentSearchFragment extends Fragment {
 
         Bundle bundle = getArguments();
         layoutId = bundle.getInt("layoutId");
-        studentID = bundle.getString("studentData");
+        studentID = bundle.getString("user_id");
         Log.d("MainAct", "stu:" + studentID);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                bundle.putString("studentData", data);
+//temp
+//                bundle.putString("studentData", data);
                 onDetails(uidList.get(position), layoutId);
 
             }

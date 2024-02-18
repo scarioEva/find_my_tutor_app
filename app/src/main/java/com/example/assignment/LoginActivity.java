@@ -34,13 +34,20 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser!=null) {
+            checkUserTypeExists(currentUser.getUid(), "student", false);
+            checkUserTypeExists(currentUser.getUid(), "teacher", false);
+        }
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+
 //        updateUI(currentUser);
     }
 
@@ -54,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         errMsg.setText(msg);
     }
 
-    private void checkUserTypeExists(String uid, String type){
+    private void checkUserTypeExists(String uid, String type, Boolean showErrMsg){
         String path=type.toLowerCase();
         db.collection(path).whereEqualTo("uId", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -66,7 +73,9 @@ public class LoginActivity extends AppCompatActivity {
                                 intent.putExtra("uId",uid);
                                 startActivity(intent);
                             } else {
-                                setErrorMessage("No user Exists");
+                                if(showErrMsg) {
+                                    setErrorMessage("No user Exists");
+                                }
                                 Log.d("MainActivity", "No such document");
 
                             }
@@ -88,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     String uId=user.getUid();
-                    checkUserTypeExists(uId, type);
+                    checkUserTypeExists(uId, type, true);
                 } else {
                     setErrorMessage(task.getException().getMessage());
                 }
