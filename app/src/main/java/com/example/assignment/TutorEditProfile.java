@@ -1,24 +1,32 @@
 package com.example.assignment;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,6 +59,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -58,7 +67,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TutorEditProfile extends Fragment {
-    CommonClass commonClass=new CommonClass();
+    CommonClass commonClass = new CommonClass();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
@@ -88,6 +97,7 @@ public class TutorEditProfile extends Fragment {
     AutoCompleteTextView autoCompleteTextView;
     public final int CAMERA_REQ_CODE = 100;
     public final int GALLERY_REQ_CODE = 200;
+    final int CAMERA_PERMISSION_CODE = 1001;
     private Uri ImageUri;
     private Bitmap bitmap;
     String profileUrl = "";
@@ -125,11 +135,9 @@ public class TutorEditProfile extends Fragment {
     private void onUpdateData(String fileUrl) {
 
 
-
         String departmentInput = departmentId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
         String nameInput = nameId.getEditText().getText().toString();
-
 
 
         Map<String, Object> mondayData = new HashMap<>();
@@ -241,8 +249,7 @@ public class TutorEditProfile extends Fragment {
         profileUrl = data.get("profile_pic").toString();
         checkProfileUrl = data.get("profile_pic").toString();
         if (!data.get("profile_pic").toString().equals("")) {
-            UrlImage obj = new UrlImage(data.get("profile_pic").toString(), imageView);
-            obj.execute();
+            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),imageView );
         }
         nameId.getEditText().setText(data.get("name").toString());
         departmentId.getEditText().setText(data.get("department").toString());
@@ -324,6 +331,63 @@ public class TutorEditProfile extends Fragment {
 //        autoCompleteTextView.setAdapter(spinnerAdapter);
 //    }
 
+    private void openCamera() {
+        removeImage = false;
+        Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(iCamera, CAMERA_REQ_CODE);
+
+    }
+
+    private void reqCameraPermission(){
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+            AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+            builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                    .setTitle("PermissionRequired")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", ((dialogInterface, i) -> {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+                        dialogInterface.dismiss();
+                    }))
+                    .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                    builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                            .setTitle("PermissionRequired")
+                            .setCancelable(false)
+                            .setPositiveButton("Settings", ((dialogInterface, i) -> {
+                                Intent intent_i=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u=Uri.fromParts("package", requireContext().getPackageName(), null);
+                                intent_i.setData(u);
+                                startActivity(intent_i);
+                                dialogInterface.dismiss();
+                            }))
+                            .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+                    // User has denied permission and selected "Never ask again"
+                    // Show a dialog explaining why the permission is needed
+//                    showPermissionDeniedDialog();
+                } else {
+                    reqCameraPermission();
+                }
+            }
+        }
+    }
+
     public void openDrawer() {
         Log.d("MainAct", "opened");
         Dialog dialog = new Dialog(getContext());
@@ -351,9 +415,7 @@ public class TutorEditProfile extends Fragment {
         captureLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                removeImage = false;
-                Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(iCamera, CAMERA_REQ_CODE);
+                reqCameraPermission();
                 dialog.hide();
             }
         });
@@ -379,6 +441,8 @@ public class TutorEditProfile extends Fragment {
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -387,20 +451,13 @@ public class TutorEditProfile extends Fragment {
             if (requestCode == CAMERA_REQ_CODE) {
                 Bitmap img = (Bitmap) (data.getExtras().get("data"));
                 imageView.setImageBitmap(img);
-                ImageUri = saveImage(img, getContext());
+                ImageUri = commonClass.saveImage(img, getContext());
                 Log.d("MainAct", "image: " + ImageUri.toString());
             } else if (requestCode == GALLERY_REQ_CODE) {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(
-                                requireActivity().getContentResolver(), ImageUri
-                        );
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (ImageUri != null) {
+                    int orientation = commonClass.getImageOrientation(ImageUri, requireActivity());
+                    bitmap =commonClass.getRotatedBitmap(ImageUri, orientation, requireActivity());
                     imageView.setImageBitmap(bitmap);
                 }
             }
@@ -408,24 +465,50 @@ public class TutorEditProfile extends Fragment {
 
     }
 
-    private Uri saveImage(Bitmap image, Context context) {
-        File imageFolder = new File(context.getCacheDir(), "images");
-        Uri uri = null;
+//    private int getImageOrientation(Uri imageUri) {
+//        try {
+//            InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
+//            if (inputStream != null) {
+//                ExifInterface exifInterface = null;
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                    exifInterface = new ExifInterface(inputStream);
+//                }
+//                return exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return ExifInterface.ORIENTATION_UNDEFINED;
+//    }
+//
+//    private Bitmap getRotatedBitmap(Uri imageUri, int orientation) {
+//        Bitmap bitmap;
+//        try {
+//            bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
+//            if (orientation != ExifInterface.ORIENTATION_UNDEFINED) {
+//                Matrix matrix = new Matrix();
+//                switch (orientation) {
+//                    case ExifInterface.ORIENTATION_ROTATE_90:
+//                        matrix.postRotate(90);
+//                        break;
+//                    case ExifInterface.ORIENTATION_ROTATE_180:
+//                        matrix.postRotate(180);
+//                        break;
+//                    case ExifInterface.ORIENTATION_ROTATE_270:
+//                        matrix.postRotate(270);
+//                        break;
+//                    default:
+//                        return bitmap;
+//                }
+//                return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
-        try {
-            imageFolder.mkdirs();
-            File file = new File(imageFolder, "capture_images.jpg");
-            FileOutputStream stream = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            stream.flush();
-            stream.close();
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.example.assignment" + ".provider", file);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return uri;
-    }
 
     private void getFileName() {
 
@@ -507,7 +590,6 @@ public class TutorEditProfile extends Fragment {
 //        getLocationList(view);
 
         getProfileDetails();
-
 
 
         monFromId = view.findViewById(R.id.monFromId);

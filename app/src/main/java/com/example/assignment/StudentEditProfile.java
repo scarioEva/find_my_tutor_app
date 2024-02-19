@@ -1,9 +1,12 @@
 package com.example.assignment;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,11 +16,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -70,6 +75,7 @@ public class StudentEditProfile extends Fragment {
     Button submitId;
     public final int CAMERA_REQ_CODE = 100;
     public final int GALLERY_REQ_CODE = 200;
+    final int CAMERA_PERMISSION_CODE = 1001;
     private Uri ImageUri;
     private Bitmap bitmap;
     String profileUrl = "";
@@ -88,8 +94,7 @@ public class StudentEditProfile extends Fragment {
         checkProfileUrl = data.get("profile_pic").toString();
 
         if (!data.get("profile_pic").toString().equals("")) {
-            UrlImage obj = new UrlImage(data.get("profile_pic").toString(), imageView);
-            obj.execute();
+            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),imageView );
         }
 
         nameView.getEditText().setText(data.get("name").toString());
@@ -204,6 +209,62 @@ public class StudentEditProfile extends Fragment {
 
     }
 
+    private void openCamera() {
+        removeImage = false;
+        Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(iCamera, CAMERA_REQ_CODE);
+
+    }
+
+    private void reqCameraPermission(){
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.CAMERA)) {
+            AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+            builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                    .setTitle("PermissionRequired")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", ((dialogInterface, i) -> {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+                        dialogInterface.dismiss();
+                    }))
+                    .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                    builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                            .setTitle("PermissionRequired")
+                            .setCancelable(false)
+                            .setPositiveButton("Settings", ((dialogInterface, i) -> {
+                                Intent intent_i=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u=Uri.fromParts("package", requireContext().getPackageName(), null);
+                                intent_i.setData(u);
+                                startActivity(intent_i);
+                                dialogInterface.dismiss();
+                            }))
+                            .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+                    // User has denied permission and selected "Never ask again"
+                    // Show a dialog explaining why the permission is needed
+//                    showPermissionDeniedDialog();
+                } else {
+                    reqCameraPermission();
+                }
+            }
+        }
+    }
     public void openDrawer() {
         Log.d("MainAct", "opened");
         Dialog dialog = new Dialog(getContext());
@@ -231,9 +292,7 @@ public class StudentEditProfile extends Fragment {
         captureLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                removeImage = false;
-                Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(iCamera, CAMERA_REQ_CODE);
+                reqCameraPermission();
                 dialog.hide();
             }
         });
@@ -267,45 +326,20 @@ public class StudentEditProfile extends Fragment {
             if (requestCode == CAMERA_REQ_CODE) {
                 Bitmap img = (Bitmap) (data.getExtras().get("data"));
                 imageView.setImageBitmap(img);
-                ImageUri = saveImage(img, getContext());
+                ImageUri = commonClass.saveImage(img, getContext());
                 Log.d("MainAct", "image: " + ImageUri.toString());
             } else if (requestCode == GALLERY_REQ_CODE) {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(
-                                requireActivity().getContentResolver(), ImageUri
-                        );
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (ImageUri != null) {
+                    int orientation = commonClass.getImageOrientation(ImageUri, requireActivity());
+                    bitmap =commonClass.getRotatedBitmap(ImageUri, orientation, requireActivity());
                     imageView.setImageBitmap(bitmap);
                 }
             }
         }
-
     }
 
-    private Uri saveImage(Bitmap image, Context context) {
-        File imageFolder = new File(context.getCacheDir(), "images");
-        Uri uri = null;
 
-        try {
-            imageFolder.mkdirs();
-            File file = new File(imageFolder, "capture_images.jpg");
-            FileOutputStream stream = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            stream.flush();
-            stream.close();
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.example.assignment" + ".provider", file);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return uri;
-    }
 
     private void getFileName() {
 

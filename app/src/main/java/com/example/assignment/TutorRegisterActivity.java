@@ -3,12 +3,16 @@ package com.example.assignment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -18,6 +22,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -64,6 +69,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
     StorageReference storageRef = storage.getReference();
     public final int CAMERA_REQ_CODE = 100;
     public final int GALLERY_REQ_CODE = 200;
+    final int CAMERA_PERMISSION_CODE = 1001;
     String userId = "";
     String documentId = "";
     Uri ImageUri;
@@ -226,6 +232,61 @@ public class TutorRegisterActivity extends AppCompatActivity {
         autoCompleteTextView.setAdapter(spinnerAdapter);
     }
 
+    private void openCamera() {
+        Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(iCamera, CAMERA_REQ_CODE);
+
+    }
+
+    private void reqCameraPermission(){
+        if (ActivityCompat.checkSelfPermission(TutorRegisterActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(TutorRegisterActivity.this, android.Manifest.permission.CAMERA)) {
+            AlertDialog.Builder builder=new AlertDialog.Builder(TutorRegisterActivity.this);
+            builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                    .setTitle("PermissionRequired")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", ((dialogInterface, i) -> {
+                        ActivityCompat.requestPermissions(TutorRegisterActivity.this, new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+                        dialogInterface.dismiss();
+                    }))
+                    .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+
+        } else {
+            ActivityCompat.requestPermissions(TutorRegisterActivity.this, new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(TutorRegisterActivity.this, Manifest.permission.CAMERA)) {
+                    AlertDialog.Builder builder=new AlertDialog.Builder(TutorRegisterActivity.this);
+                    builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                            .setTitle("PermissionRequired")
+                            .setCancelable(false)
+                            .setPositiveButton("Settings", ((dialogInterface, i) -> {
+                                Intent intent_i=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u=Uri.fromParts("package", TutorRegisterActivity.this.getPackageName(), null);
+                                intent_i.setData(u);
+                                startActivity(intent_i);
+                                dialogInterface.dismiss();
+                            }))
+                            .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+                    // User has denied permission and selected "Never ask again"
+                    // Show a dialog explaining why the permission is needed
+//                    showPermissionDeniedDialog();
+                } else {
+                    reqCameraPermission();
+                }
+            }
+        }
+    }
     public void openDrawer(View view) {
         Log.d("MainAct", "opened");
         Dialog dialog = new Dialog(this);
@@ -252,8 +313,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
         captureLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(iCamera, CAMERA_REQ_CODE);
+                reqCameraPermission();
                 dialog.hide();
             }
         });
@@ -368,6 +428,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
                         public void onSuccess(Void Void) {
                             Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
                             intent.putExtra("uId", userId);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             Toast.makeText(TutorRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
                         }
@@ -428,43 +489,17 @@ public class TutorRegisterActivity extends AppCompatActivity {
             if (requestCode == CAMERA_REQ_CODE) {
                 Bitmap img = (Bitmap) (data.getExtras().get("data"));
                 imageView.setImageBitmap(img);
-                ImageUri = saveImage(img, TutorRegisterActivity.this);
+                ImageUri = commonClass.saveImage(img, TutorRegisterActivity.this);
 
             } else if (requestCode == GALLERY_REQ_CODE) {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(
-                                getContentResolver(), ImageUri
-                        );
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (ImageUri != null) {
+                    int orientation = commonClass.getImageOrientation(ImageUri, TutorRegisterActivity.this);
+                    bitmap =commonClass.getRotatedBitmap(ImageUri, orientation, TutorRegisterActivity.this);
                     imageView.setImageBitmap(bitmap);
                 }
             }
         }
-    }
-
-    private Uri saveImage(Bitmap image, Context context) {
-        File imageFolder = new File(context.getCacheDir(), "images");
-        Uri uri = null;
-
-        try {
-            imageFolder.mkdirs();
-            File file = new File(imageFolder, "capture_images.jpg");
-            FileOutputStream stream = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            stream.flush();
-            stream.close();
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.example.assignment" + ".provider", file);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return uri;
     }
 
 }

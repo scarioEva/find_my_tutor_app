@@ -32,7 +32,7 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:onClick="openDrawer"
-                    android:scaleType="fitXY"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/_184159_3094350"
                     app:shapeAppearanceOverlay="@style/Circular" />
             </LinearLayout>

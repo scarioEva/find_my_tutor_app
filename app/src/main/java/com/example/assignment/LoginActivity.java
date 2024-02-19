@@ -36,11 +36,16 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser!=null) {
-            checkUserTypeExists(currentUser.getUid(), "student", false);
-            checkUserTypeExists(currentUser.getUid(), "teacher", false);
+        if (currentUser != null) {
+            checkUserTypeExists(currentUser.getUid(), "student", true);
         }
+    }
 
+    private void autoLogin(QuerySnapshot docs, String uid) {
+        Intent intent = new Intent(LoginActivity.this, docs.getDocuments().size() == 0 ? TutorMainActivity.class : StudentMainActivity.class);
+        intent.putExtra("uId", uid);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override
@@ -61,23 +66,24 @@ public class LoginActivity extends AppCompatActivity {
         errMsg.setText(msg);
     }
 
-    private void checkUserTypeExists(String uid, String type, Boolean showErrMsg){
-        String path=type.toLowerCase();
+    private void checkUserTypeExists(String uid, String type, Boolean autologin) {
+        String path = type.toLowerCase();
         db.collection(path).whereEqualTo("uId", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
-                            if (document.getDocuments().size() != 0) {
-                                Intent intent = new Intent(LoginActivity.this,type.equals("Tutor")? TutorMainActivity.class:StudentMainActivity.class);
-                                intent.putExtra("uId",uid);
-                                startActivity(intent);
+                            if (autologin) {
+                                autoLogin(document, uid);
                             } else {
-                                if(showErrMsg) {
+                                if (document.getDocuments().size() != 0) {
+                                    Intent intent = new Intent(LoginActivity.this, type.equals("Tutor") ? TutorMainActivity.class : StudentMainActivity.class);
+                                    intent.putExtra("uId", uid);
+                                    startActivity(intent);
+                                } else {
                                     setErrorMessage("No user Exists");
+                                    Log.d("MainActivity", "No such document");
                                 }
-                                Log.d("MainActivity", "No such document");
-
                             }
                         }
                     }
@@ -96,8 +102,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
-                    String uId=user.getUid();
-                    checkUserTypeExists(uId, type, true);
+                    String uId = user.getUid();
+                    checkUserTypeExists(uId, type, false);
                 } else {
                     setErrorMessage(task.getException().getMessage());
                 }
@@ -124,15 +130,15 @@ public class LoginActivity extends AppCompatActivity {
         String userType = radioButton.getText().toString();
         String sEmail = email.getEditText().getText().toString();
 
-        Log.d("MainAct","test :"+ sEmail);
+        Log.d("MainAct", "test :" + sEmail);
 
         String sPassword = password.getEditText().getText().toString();
 
-        if(sEmail.equals("")){
+        if (sEmail.equals("")) {
             setBorderRed(email);
         }
 
-        if(sPassword.equals("")){
+        if (sPassword.equals("")) {
             setBorderRed(password);
         }
 

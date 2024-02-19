@@ -1,6 +1,7 @@
 package com.example.assignment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,11 +17,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -45,7 +50,8 @@ public class StudentHomeFragment extends Fragment {
     List<InfoModel> infoList = new ArrayList<>();
     CommonClass commonClass = new CommonClass();
     int layoutId;
-
+    List<AppoinmentObject> appointmentList = new ArrayList<>();
+    List<String> deleteList = new ArrayList<>();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +60,7 @@ public class StudentHomeFragment extends Fragment {
 
     private void onDetails(String uid, int layoutId) {
         Bundle mBundle = new Bundle();
-        mBundle.putString("tutorUid", uid);
+        mBundle.putString("user_id", uid);
         mBundle.putString("studentId", studentId);
         mBundle.putInt("layoutId", layoutId);
         TutorProfileFragment tutorProfileFragment = new TutorProfileFragment();
@@ -80,7 +86,7 @@ public class StudentHomeFragment extends Fragment {
 
                 String date_time = commonClass.getDateTime(slotList.get(i).getDate().toString(), slotList.get(i).getTime().toString());
 
-                db.collection("tutor").whereEqualTo("uId", slotList.get(i).tutorId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                db.collection("tutor").whereEqualTo("uId", slotList.get(i).getUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -114,7 +120,6 @@ public class StudentHomeFragment extends Fragment {
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                     onDetails(uidList.get(position), layoutId);
 
                 }
@@ -131,11 +136,9 @@ public class StudentHomeFragment extends Fragment {
                 if (task.isSuccessful()) {
                     if (task.getResult().getDocuments().size() != 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString());
+                            AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString(), "");
                             slotList.add(obj);
                             Log.d("MainAct", document.getData().toString());
-
-//                            slotList.put("data", slotListData);
                         }
                     }
                 }
@@ -147,6 +150,75 @@ public class StudentHomeFragment extends Fragment {
     }
 
 
+    private void deleteAppointments() {
+        if (appointmentList.size() != 0) {
+            appointmentList.clear();
+        }
+
+        WriteBatch batch = db.batch();
+        if(deleteList.size()!=0) {
+            for (String documentId : deleteList) {
+                DocumentReference docRef = db.collection("appoinment").document(documentId);
+                batch.delete(docRef);
+            }
+
+            batch.commit()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            deleteList.clear();
+                            getRegisteredAppointments(view);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+        }
+        else{
+            getRegisteredAppointments(view);
+        }
+    }
+
+    private void checkAppointmentDone() {
+        for (int i = 0; i < appointmentList.size(); i++) {
+            if (commonClass.checkDatePassed(appointmentList.get(i).getDate(), appointmentList.get(i).getTime())) {
+                deleteList.add(appointmentList.get(i).getDocId());
+            }
+        }
+        deleteAppointments();
+    }
+
+    public void getAppointmentList(String uid) {
+        db.collection("appoinment").whereEqualTo("student", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().getDocuments().size() != 0) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String docId = document.getId();
+                                    Log.d("doad", "doc get: "+ docId);
+                                    String date = document.getData().get("date").toString();
+                                    String time = document.getData().get("time").toString();
+                                    AppoinmentObject obj = new AppoinmentObject("", date, time, docId);
+                                    appointmentList.add(obj);
+                                }
+                                checkAppointmentDone();
+                            }
+                            else {
+                                getRegisteredAppointments(view);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("MainActivity", "Error adding document", e);
+                    }
+                });
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -157,7 +229,7 @@ public class StudentHomeFragment extends Fragment {
         Bundle bundle = getArguments();
         studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
-        getRegisteredAppointments(view);
+        getAppointmentList(studentId);
         return view;
     }
 }

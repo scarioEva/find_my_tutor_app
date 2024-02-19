@@ -48,6 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TutorProfileFragment extends Fragment {
+    CommonClass commonClass=new CommonClass();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     View view;
     Dialog dialog;
@@ -106,8 +107,7 @@ public class TutorProfileFragment extends Fragment {
 
 
         if (!data.get("profile_pic").toString().equals("")) {
-            UrlImage obj = new UrlImage(data.get("profile_pic").toString(), profileView);
-            obj.execute();
+            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),profileView );
         }
         if (data.get("check_in").equals(data.get("office_location"))) {
             statusView.setText("In Office");

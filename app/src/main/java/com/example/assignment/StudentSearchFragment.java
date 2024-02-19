@@ -63,7 +63,7 @@ public class StudentSearchFragment extends Fragment {
 
     private void onDetails(String uid, int layoutId) {
         Bundle mBundle = new Bundle();
-        mBundle.putString("tutorUid", uid);
+        mBundle.putString("user_id", uid);
         mBundle.putString("studentId", studentID);
         mBundle.putInt("layoutId", layoutId);
         TutorProfileFragment tutorProfileFragment = new TutorProfileFragment();
@@ -159,7 +159,6 @@ public class StudentSearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //temp
-//                bundle.putString("studentData", data);
                 onDetails(uidList.get(position), layoutId);
 
             }

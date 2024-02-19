@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class StudentProfileFragment extends Fragment {
+    CommonClass commonClass =new CommonClass();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     View view;
     String studentId;
@@ -48,8 +49,7 @@ public class StudentProfileFragment extends Fragment {
         ImageView editIcom=view.findViewById(R.id.editIcon);
         ShapeableImageView profileView = view.findViewById(R.id.profileImage);
         if (!data.get("profile_pic").toString().equals("")) {
-            UrlImage obj = new UrlImage(data.get("profile_pic").toString(), profileView);
-            obj.execute();
+            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),profileView );
         }
 
         nameView.setText(data.get("name").toString());
