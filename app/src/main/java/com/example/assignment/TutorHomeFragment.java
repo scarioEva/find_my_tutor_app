@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +34,7 @@ public class TutorHomeFragment extends Fragment {
     View view;
     String tutorId;
     int layoutId;
+    RelativeLayout emptyMsg;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     List<AppoinmentObject> slotList = new ArrayList<>();
     InfoAdapter adapter;
@@ -104,7 +106,7 @@ public class TutorHomeFragment extends Fragment {
             adapter = new InfoAdapter(getActivity().getApplicationContext(), infoList);
 
 
-            listview = v.findViewById(R.id.listId);
+
             listview.setAdapter(adapter);
 
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,11 +128,17 @@ public class TutorHomeFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().getDocuments().size() != 0) {
+                        listview.setVisibility(View.VISIBLE);
+                        emptyMsg.setVisibility(View.GONE);
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AppoinmentObject obj = new AppoinmentObject(document.getData().get("student").toString(), document.getData().get("date").toString(), document.getData().get("time").toString(), "");
                             slotList.add(obj);
                             Log.d("MainAct", "asdassd: "+document.getData().get("student").toString());
                         }
+                    }
+                    else{
+                        listview.setVisibility(View.GONE);
+                        emptyMsg.setVisibility(View.VISIBLE);
                     }
                 }
                 getStudentData(v);
@@ -216,6 +224,9 @@ public class TutorHomeFragment extends Fragment {
         Bundle bundle = getArguments();
         tutorId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
+        listview = view.findViewById(R.id.listId);
+        emptyMsg=view.findViewById(R.id.emptyMsg);
+        emptyMsg.setVisibility(View.GONE);
         getAppointmentList(tutorId);
         return view;
     }

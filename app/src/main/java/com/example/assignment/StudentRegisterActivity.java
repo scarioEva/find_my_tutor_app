@@ -66,6 +66,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
     public final int GALLERY_REQ_CODE = 200;
     final int CAMERA_PERMISSION_CODE = 1001;
     CommonClass commonClass = new CommonClass();
+    Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
         documentId = getIntent().getStringExtra("docId");
 
         imageView = findViewById(R.id.imageView);
+        loader = new Loader(StudentRegisterActivity.this);
     }
 
     private void openCamera() {
@@ -186,6 +188,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
+        loader.startLoading();
         Log.d("MainAct", "uri:" + ImageUri);
         if (ImageUri != null) {
             uploadImageStorage();
@@ -240,6 +243,8 @@ public class StudentRegisterActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void Void) {
+                            Toast.makeText(StudentRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
+                            loader.stopLoading();
                             Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
                             intent.putExtra("uId", userId);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -249,11 +254,14 @@ public class StudentRegisterActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            loader.stopLoading();
+                            errMsg.setText("Something went wrong. Please try again");
                             Log.w("MainActivity", "Error adding document", e);
                         }
                     });
         } else {
             errMsg.setText("Enter all the required fields.");
+            loader.stopLoading();
         }
     }
 
@@ -276,6 +284,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                loader.stopLoading();
                                 Log.d("MainAct", e.getMessage());
                                 Toast.makeText(StudentRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -285,8 +294,8 @@ public class StudentRegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("MainAct2", e.getMessage());
+                loader.stopLoading();
 
-                Toast.makeText(StudentRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

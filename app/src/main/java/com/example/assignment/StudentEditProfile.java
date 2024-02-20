@@ -82,6 +82,7 @@ public class StudentEditProfile extends Fragment {
     String checkProfileUrl = "";
     Boolean removeImage = false;
     LinearLayout removeLayout;
+    Loader loader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,10 +107,12 @@ public class StudentEditProfile extends Fragment {
     }
 
     private void getProfileDetails(String id) {
+        loader.startLoading();
         db.collection("student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            loader.stopLoading();
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
                                 updateView(document.getDocuments().get(0));
@@ -123,6 +126,7 @@ public class StudentEditProfile extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
@@ -189,6 +193,7 @@ public class StudentEditProfile extends Fragment {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                loader.stopLoading();
                                                 Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
                                                 onRedirectProfile();
                                             }
@@ -196,6 +201,8 @@ public class StudentEditProfile extends Fragment {
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
+                                                loader.stopLoading();
+                                                errMsg.setText("Something went wrong. Please try again.");
                                             }
                                         });
                             }
@@ -365,6 +372,8 @@ public class StudentEditProfile extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
+                        errMsg.setText("Something went wrong. Please try again.");
                     }
                 });
     }
@@ -390,12 +399,15 @@ public class StudentEditProfile extends Fragment {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Log.d("MainAct", e.getMessage());
+                                errMsg.setText("Image unable to upload. Please Try differnt image");
                             }
                         });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                loader.stopLoading();
+                errMsg.setText("Image unable to upload. Please Try differnt image");
                 Log.d("MainAct2", e.getMessage());
             }
         });
@@ -407,6 +419,7 @@ public class StudentEditProfile extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_student_edit_profile, container, false);
         Bundle bundle = getArguments();
+        loader = new Loader(getActivity());
         studentId = bundle.getString("studentData");
         layoutId = bundle.getInt("layoutId");
         nameView = view.findViewById(R.id.nameId);
@@ -418,6 +431,7 @@ public class StudentEditProfile extends Fragment {
         errMsg = view.findViewById(R.id.errMsg);
         submitId = view.findViewById(R.id.submitId);
 
+
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -427,6 +441,7 @@ public class StudentEditProfile extends Fragment {
         submitId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loader.startLoading();
                 if (removeImage && !profileUrl.equals("")) {
                     onDeletefileImage();
                 } else if (ImageUri != null) {

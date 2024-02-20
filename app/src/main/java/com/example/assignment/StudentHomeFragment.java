@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,7 +41,7 @@ public class StudentHomeFragment extends Fragment {
 
     //    Map<String, Object> slotList = new HashMap<>();
     List<AppoinmentObject> slotList = new ArrayList<>();
-
+    RelativeLayout emptyMsg;
     InfoAdapter adapter;
     ListView listview;
     View view;
@@ -52,6 +53,7 @@ public class StudentHomeFragment extends Fragment {
     int layoutId;
     List<AppoinmentObject> appointmentList = new ArrayList<>();
     List<String> deleteList = new ArrayList<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +116,7 @@ public class StudentHomeFragment extends Fragment {
             adapter = new InfoAdapter(getActivity().getApplicationContext(), infoList);
 
 
-            listview = v.findViewById(R.id.listId);
+
             listview.setAdapter(adapter);
 
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -135,11 +137,17 @@ public class StudentHomeFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().getDocuments().size() != 0) {
+                        listview.setVisibility(View.VISIBLE);
+                        emptyMsg.setVisibility(View.GONE);
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString(), "");
                             slotList.add(obj);
                             Log.d("MainAct", document.getData().toString());
                         }
+                    }
+                    else{
+                        listview.setVisibility(View.GONE);
+                        emptyMsg.setVisibility(View.VISIBLE);
                     }
                 }
                 getTutorData(v);
@@ -156,7 +164,7 @@ public class StudentHomeFragment extends Fragment {
         }
 
         WriteBatch batch = db.batch();
-        if(deleteList.size()!=0) {
+        if (deleteList.size() != 0) {
             for (String documentId : deleteList) {
                 DocumentReference docRef = db.collection("appoinment").document(documentId);
                 batch.delete(docRef);
@@ -175,8 +183,7 @@ public class StudentHomeFragment extends Fragment {
                         public void onFailure(@NonNull Exception e) {
                         }
                     });
-        }
-        else{
+        } else {
             getRegisteredAppointments(view);
         }
     }
@@ -190,6 +197,7 @@ public class StudentHomeFragment extends Fragment {
         deleteAppointments();
     }
 
+    //for checking if current date exceeds then delete appointment
     public void getAppointmentList(String uid) {
         db.collection("appoinment").whereEqualTo("student", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -198,15 +206,14 @@ public class StudentHomeFragment extends Fragment {
                             if (task.getResult().getDocuments().size() != 0) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     String docId = document.getId();
-                                    Log.d("doad", "doc get: "+ docId);
+                                    Log.d("doad", "doc get: " + docId);
                                     String date = document.getData().get("date").toString();
                                     String time = document.getData().get("time").toString();
                                     AppoinmentObject obj = new AppoinmentObject("", date, time, docId);
                                     appointmentList.add(obj);
                                 }
                                 checkAppointmentDone();
-                            }
-                            else {
+                            } else {
                                 getRegisteredAppointments(view);
                             }
                         }
@@ -219,6 +226,7 @@ public class StudentHomeFragment extends Fragment {
                     }
                 });
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -229,6 +237,9 @@ public class StudentHomeFragment extends Fragment {
         Bundle bundle = getArguments();
         studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
+        listview = view.findViewById(R.id.listId);
+        emptyMsg=view.findViewById(R.id.emptyMsg);
+        emptyMsg.setVisibility(View.GONE);
         getAppointmentList(studentId);
         return view;
     }

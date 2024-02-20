@@ -10,10 +10,11 @@
 
     <ImageView
         android:id="@+id/logoImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         android:layout_gravity="center"
-        android:src="@drawable/_184159_3094350" />
+        android:src="@drawable/register_svg"
+        android:contentDescription="Register" />
 
     <TextView
         android:layout_width="wrap_content"

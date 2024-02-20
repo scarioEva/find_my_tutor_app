@@ -77,6 +77,9 @@ public class RegisterActivity extends AppCompatActivity {
         Map<String, Object> userData = new HashMap<>();
         userData.put("name", sName);
         userData.put("uId", uid);
+        if(type.equals("Tutor")){
+            userData.put("department", "");
+        }
         String path=type.toLowerCase();
 
         db.collection(path).add(userData)
@@ -91,6 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        setErrorMessage("Something went wrong. Please try again.");
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });

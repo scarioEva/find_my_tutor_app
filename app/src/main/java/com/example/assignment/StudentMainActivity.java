@@ -113,7 +113,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
             mBundle.putString("user_id", userId);
             mBundle.putInt("layoutId", R.id.frameLayout);
             fragment.setArguments(mBundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
         }
 
         return true;

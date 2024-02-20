@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,6 +51,7 @@ public class StudentSearchFragment extends Fragment {
     String data = "";
     InfoAdapter adapter;
     ListView listview;
+    RelativeLayout emptyMsg;
     String studentID;
     int layoutId;
     List<AppoinmentObject> slotList = new ArrayList<>();
@@ -83,27 +85,36 @@ public class StudentSearchFragment extends Fragment {
         }
         if (uidList.size() != 0) {
             uidList.clear();
+            emptyMsg.setVisibility(View.VISIBLE);
+            listview.setVisibility(View.GONE);
         }
 
-        db.collection("tutor").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("tutor").whereNotEqualTo("department", "").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     HashSet<String> uniqueDocumentIds = new HashSet<>();
                     HashSet<String> nextUniqueDocumentIds = new HashSet<>();
                     if (task.getResult().getDocuments().size() != 0) {
+
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (document.contains("department")) {
-                                if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
-                                    if (uniqueDocumentIds.add(document.getId())) {
-                                        uidList.add(document.getData().get("uId").toString());
-                                        infoList.add(new InfoModel(document.getData().get("name").toString(),
-                                                document.getData().get("office_location").toString(),
-                                                document.getData().get("department").toString(),
-                                                document.getData().get("profile_pic").toString(),
-                                                "",
-                                                false
-                                        ));
+//                            if (document.contains("department")) {
+                            if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
+                                if (uniqueDocumentIds.add(document.getId())) {
+                                    uidList.add(document.getData().get("uId").toString());
+                                    infoList.add(new InfoModel(document.getData().get("name").toString(),
+                                            document.getData().get("office_location").toString(),
+                                            document.getData().get("department").toString(),
+                                            document.getData().get("profile_pic").toString(),
+                                            "",
+                                            false
+                                    ));
+
+                                    if(infoList.size()!=0){
+                                        emptyMsg.setVisibility(View.GONE);
+                                        listview.setVisibility(View.VISIBLE);
+                                    }
+
 //                                    for (AppoinmentObject obj : slotList) {
 //
 //                                        if (obj.getTutorId().equals(document.getData().get("uId"))) {
@@ -134,9 +145,9 @@ public class StudentSearchFragment extends Fragment {
 //                                        }
 //                                    }
 
-                                    }
                                 }
                             }
+//                            }
                         }
                     }
                 }
@@ -144,10 +155,9 @@ public class StudentSearchFragment extends Fragment {
             }
         });
 
+
         adapter = new InfoAdapter(getActivity().getApplicationContext(), infoList);
 
-
-        listview = view.findViewById(R.id.listId);
         listview.setAdapter(adapter);
 
         Bundle bundle = getArguments();
@@ -193,7 +203,9 @@ public class StudentSearchFragment extends Fragment {
 
         TextInputLayout textInputLayout = view.findViewById(R.id.searchInput);
         EditText editText = textInputLayout.getEditText();
-
+        emptyMsg = view.findViewById(R.id.emptyMsg);
+        listview = view.findViewById(R.id.listId);
+        emptyMsg.setVisibility(View.GONE);
         if (editText != null) {
             editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override

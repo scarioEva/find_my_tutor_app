@@ -92,6 +92,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
     Button friFromId;
     Button friToId;
     int hour, minute;
+    Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +101,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
         Intent intent = getIntent();
         this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
         documentId = getIntent().getStringExtra("docId");
+        loader = new Loader(TutorRegisterActivity.this);
 
         imageView = findViewById(R.id.imageView);
         getLocationList();
@@ -238,12 +240,12 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
     }
 
-    private void reqCameraPermission(){
+    private void reqCameraPermission() {
         if (ActivityCompat.checkSelfPermission(TutorRegisterActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
 
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(TutorRegisterActivity.this, android.Manifest.permission.CAMERA)) {
-            AlertDialog.Builder builder=new AlertDialog.Builder(TutorRegisterActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(TutorRegisterActivity.this);
             builder.setMessage("This app requires CAMERA permission for this feature to use.")
                     .setTitle("PermissionRequired")
                     .setCancelable(false)
@@ -266,13 +268,13 @@ public class TutorRegisterActivity extends AppCompatActivity {
                 openCamera();
             } else {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(TutorRegisterActivity.this, Manifest.permission.CAMERA)) {
-                    AlertDialog.Builder builder=new AlertDialog.Builder(TutorRegisterActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(TutorRegisterActivity.this);
                     builder.setMessage("This app requires CAMERA permission for this feature to use.")
                             .setTitle("PermissionRequired")
                             .setCancelable(false)
                             .setPositiveButton("Settings", ((dialogInterface, i) -> {
-                                Intent intent_i=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri u=Uri.fromParts("package", TutorRegisterActivity.this.getPackageName(), null);
+                                Intent intent_i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u = Uri.fromParts("package", TutorRegisterActivity.this.getPackageName(), null);
                                 intent_i.setData(u);
                                 startActivity(intent_i);
                                 dialogInterface.dismiss();
@@ -287,6 +289,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
             }
         }
     }
+
     public void openDrawer(View view) {
         Log.d("MainAct", "opened");
         Dialog dialog = new Dialog(this);
@@ -306,8 +309,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
                     dialog.hide();
                 }
             });
-        }
-        else{
+        } else {
             removeLayout.setVisibility(View.GONE);
         }
         captureLayout.setOnClickListener(new View.OnClickListener() {
@@ -338,6 +340,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
+        loader.startLoading();
         Log.d("MainAct", "uri:" + ImageUri);
         if (ImageUri != null) {
             uploadImageStorage();
@@ -426,9 +429,10 @@ public class TutorRegisterActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void Void) {
+                            loader.stopLoading();
                             Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
                             intent.putExtra("uId", userId);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             Toast.makeText(TutorRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
                         }
@@ -436,6 +440,8 @@ public class TutorRegisterActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            loader.stopLoading();
+                            errMsg.setText("Something went wrong. Please try again.");
                             Log.w("MainActivity", "Error adding document", e);
                         }
                     });
@@ -464,6 +470,8 @@ public class TutorRegisterActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                loader.stopLoading();
+
                                 Log.d("MainAct", e.getMessage());
 //                                Toast.makeText(TutorRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -473,8 +481,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("MainAct2", e.getMessage());
-
-//                Toast.makeText(TutorRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                loader.stopLoading();
             }
         });
 
@@ -495,7 +502,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
                     int orientation = commonClass.getImageOrientation(ImageUri, TutorRegisterActivity.this);
-                    bitmap =commonClass.getRotatedBitmap(ImageUri, orientation, TutorRegisterActivity.this);
+                    bitmap = commonClass.getRotatedBitmap(ImageUri, orientation, TutorRegisterActivity.this);
                     imageView.setImageBitmap(bitmap);
                 }
             }

@@ -104,6 +104,7 @@ public class TutorEditProfile extends Fragment {
     String checkProfileUrl = "";
     Boolean removeImage = false;
     LinearLayout removeLayout;
+    Loader loader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -195,6 +196,7 @@ public class TutorEditProfile extends Fragment {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                loader.stopLoading();
                                                 Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
                                                 onRedirectProfile();
                                             }
@@ -202,6 +204,8 @@ public class TutorEditProfile extends Fragment {
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
+                                                loader.stopLoading();
+                                                errMsg.setText("Something went Wrong. Please try again");
                                             }
                                         });
                             }
@@ -249,7 +253,7 @@ public class TutorEditProfile extends Fragment {
         profileUrl = data.get("profile_pic").toString();
         checkProfileUrl = data.get("profile_pic").toString();
         if (!data.get("profile_pic").toString().equals("")) {
-            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),imageView );
+            commonClass.setImageView(getContext(), data.get("profile_pic").toString(), imageView);
         }
         nameId.getEditText().setText(data.get("name").toString());
         departmentId.getEditText().setText(data.get("department").toString());
@@ -259,10 +263,12 @@ public class TutorEditProfile extends Fragment {
     }
 
     private void getProfileDetails() {
+        loader.startLoading();
         db.collection("tutor").whereEqualTo("uId", tutorId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            loader.stopLoading();
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
                                 updateView(document.getDocuments().get(0));
@@ -278,6 +284,7 @@ public class TutorEditProfile extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
@@ -338,12 +345,12 @@ public class TutorEditProfile extends Fragment {
 
     }
 
-    private void reqCameraPermission(){
+    private void reqCameraPermission() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
 
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-            AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setMessage("This app requires CAMERA permission for this feature to use.")
                     .setTitle("PermissionRequired")
                     .setCancelable(false)
@@ -366,13 +373,13 @@ public class TutorEditProfile extends Fragment {
                 openCamera();
             } else {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-                    AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setMessage("This app requires CAMERA permission for this feature to use.")
                             .setTitle("PermissionRequired")
                             .setCancelable(false)
                             .setPositiveButton("Settings", ((dialogInterface, i) -> {
-                                Intent intent_i=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri u=Uri.fromParts("package", requireContext().getPackageName(), null);
+                                Intent intent_i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u = Uri.fromParts("package", requireContext().getPackageName(), null);
                                 intent_i.setData(u);
                                 startActivity(intent_i);
                                 dialogInterface.dismiss();
@@ -442,7 +449,6 @@ public class TutorEditProfile extends Fragment {
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -457,7 +463,7 @@ public class TutorEditProfile extends Fragment {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
                     int orientation = commonClass.getImageOrientation(ImageUri, requireActivity());
-                    bitmap =commonClass.getRotatedBitmap(ImageUri, orientation, requireActivity());
+                    bitmap = commonClass.getRotatedBitmap(ImageUri, orientation, requireActivity());
                     imageView.setImageBitmap(bitmap);
                 }
             }
@@ -509,7 +515,6 @@ public class TutorEditProfile extends Fragment {
 //    }
 
 
-
     private void getFileName() {
 
         if (profileUrl.equals("")) {
@@ -534,6 +539,8 @@ public class TutorEditProfile extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
+                        errMsg.setText("Something went wrong. Please try again.");
                     }
                 });
     }
@@ -558,6 +565,8 @@ public class TutorEditProfile extends Fragment {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                loader.stopLoading();
+                                errMsg.setText("Image unable to upload. Please Try differnt image");
                                 Log.d("MainAct", e.getMessage());
                             }
                         });
@@ -565,6 +574,8 @@ public class TutorEditProfile extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
+                loader.stopLoading();
+                errMsg.setText("Image unable to upload. Please Try differnt image");
                 Log.d("MainAct2", e.getMessage());
             }
         });
@@ -578,6 +589,7 @@ public class TutorEditProfile extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tutor_edit_profile, container, false);
         Bundle bundle = getArguments();
+        loader = new Loader(getActivity());
         tutorId = bundle.getString("tutorId");
         layoutId = bundle.getInt("layoutId");
         nameId = view.findViewById(R.id.nameId);
@@ -675,6 +687,7 @@ public class TutorEditProfile extends Fragment {
         submitId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loader.startLoading();
                 if (removeImage && !profileUrl.equals("")) {
                     Log.d("MainAct", "call1");
                     onDeletefileImage();

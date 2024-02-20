@@ -27,11 +27,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        loader=new Loader(LoginActivity.this);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -67,11 +70,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkUserTypeExists(String uid, String type, Boolean autologin) {
+        loader.startLoading();
         String path = type.toLowerCase();
         db.collection(path).whereEqualTo("uId", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            loader.stopLoading();
                             QuerySnapshot document = task.getResult();
                             if (autologin) {
                                 autoLogin(document, uid);
@@ -91,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
+                        setErrorMessage("Something went wrong. Please try again.");
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
@@ -105,6 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                     String uId = user.getUid();
                     checkUserTypeExists(uId, type, false);
                 } else {
+                    loader.stopLoading();
                     setErrorMessage(task.getException().getMessage());
                 }
             }
