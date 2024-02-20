@@ -105,6 +105,7 @@ public class TutorEditProfile extends Fragment {
     Boolean removeImage = false;
     LinearLayout removeLayout;
     Loader loader;
+    String selectedLocation = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -139,7 +140,7 @@ public class TutorEditProfile extends Fragment {
         String departmentInput = departmentId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
         String nameInput = nameId.getEditText().getText().toString();
-
+        String locationInput = mainLocationId.getEditText().getText().toString();
 
         Map<String, Object> mondayData = new HashMap<>();
         mondayData.put("from", monFromId.getText());
@@ -169,13 +170,13 @@ public class TutorEditProfile extends Fragment {
         availability.put("friday", fridayData);
 
         Map<String, Object> userData = new HashMap<>();
-
 //        String locationInput = autoCompleteTextView.getText().toString();
         userData.put("department", departmentInput);
         userData.put("bio", bioInput);
         userData.put("availability", availability);
         userData.put("profile_pic", fileUrl);
         userData.put("name", nameInput);
+        userData.put("office_location", locationInput);
 
         Log.d("MainAct", userData.toString());
         if (departmentInput.equals("")) {
@@ -257,7 +258,8 @@ public class TutorEditProfile extends Fragment {
         }
         nameId.getEditText().setText(data.get("name").toString());
         departmentId.getEditText().setText(data.get("department").toString());
-//        mainLocationId.getEditText().setText(data.get("office_location").toString());
+        selectedLocation = data.get("office_location").toString();
+
         bioId.getEditText().setText(data.get("bio").toString());
 
     }
@@ -273,6 +275,7 @@ public class TutorEditProfile extends Fragment {
                             if (document.getDocuments().size() != 0) {
                                 updateView(document.getDocuments().get(0));
                                 getAvailability(document.getDocuments().get(0));
+                                getLocationList();
                                 Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -311,32 +314,44 @@ public class TutorEditProfile extends Fragment {
         timePickerDialog.show();
     }
 
-//    private void getLocationList(View view) {
-//        db.collection("campus_buildings").document("building_list").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                if (documentSnapshot.exists()) {
-//                    Map<String, Object> campusLocations = documentSnapshot.getData();
-//                    for (Map.Entry<String, Object> entry : campusLocations.entrySet()) {
-////                        String key = entry.getKey();
-//                        Object value = entry.getValue();
-//                        locationList.add(value.toString());
-//                    }
-//
-//                    spinnerAdapter.notifyDataSetChanged();
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//            }
-//        });
-//        Log.d("MainAct", "location:" + locationList.toString());
-//        Context context=getActivity();
-//        autoCompleteTextView = view.findViewById(R.id.officeLocationId1);
-//        spinnerAdapter = new ArrayAdapter<>(context, R.layout.location_dropdown_item, locationList);
-//        autoCompleteTextView.setAdapter(spinnerAdapter);
-//    }
+    private void getLocationList() {
+        db.collection("campus_buildings").document("building_list").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Map<String, Object> campusLocations = documentSnapshot.getData();
+                    for (Map.Entry<String, Object> entry : campusLocations.entrySet()) {
+//                        String key = entry.getKey();
+
+                        Object value = entry.getValue();
+                        locationList.add(value.toString());
+                        Context context = getActivity();
+                        autoCompleteTextView = view.findViewById(R.id.officeLocationId);
+                        spinnerAdapter = new ArrayAdapter<>(context, R.layout.location_dropdown_item, locationList);
+                        autoCompleteTextView.setAdapter(spinnerAdapter);
+
+                        for (int i = 0; i < spinnerAdapter.getCount(); i++) {
+                            autoCompleteTextView.setThreshold(Integer.MAX_VALUE);
+                            if (spinnerAdapter.getItem(i).equals(selectedLocation)) {
+                                mainLocationId.getEditText().setText(selectedLocation);
+//                                autoCompleteTextView.setText(selectedLocation, false);
+                                break;
+                            }
+                        }
+                    }
+
+                    spinnerAdapter.notifyDataSetChanged();
+
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+
+    }
 
     private void openCamera() {
         removeImage = false;
@@ -471,50 +486,6 @@ public class TutorEditProfile extends Fragment {
 
     }
 
-//    private int getImageOrientation(Uri imageUri) {
-//        try {
-//            InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
-//            if (inputStream != null) {
-//                ExifInterface exifInterface = null;
-//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                    exifInterface = new ExifInterface(inputStream);
-//                }
-//                return exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return ExifInterface.ORIENTATION_UNDEFINED;
-//    }
-//
-//    private Bitmap getRotatedBitmap(Uri imageUri, int orientation) {
-//        Bitmap bitmap;
-//        try {
-//            bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-//            if (orientation != ExifInterface.ORIENTATION_UNDEFINED) {
-//                Matrix matrix = new Matrix();
-//                switch (orientation) {
-//                    case ExifInterface.ORIENTATION_ROTATE_90:
-//                        matrix.postRotate(90);
-//                        break;
-//                    case ExifInterface.ORIENTATION_ROTATE_180:
-//                        matrix.postRotate(180);
-//                        break;
-//                    case ExifInterface.ORIENTATION_ROTATE_270:
-//                        matrix.postRotate(270);
-//                        break;
-//                    default:
-//                        return bitmap;
-//                }
-//                return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
-
     private void getFileName() {
 
         if (profileUrl.equals("")) {
@@ -598,9 +569,7 @@ public class TutorEditProfile extends Fragment {
         imageView = view.findViewById(R.id.profileImage);
         errMsg = view.findViewById(R.id.errMsg);
         submitId = view.findViewById(R.id.submitId);
-//        mainLocationId = view.findViewById(R.id.mainLocationInput);
-//        getLocationList(view);
-
+        mainLocationId = view.findViewById(R.id.mainLocationInput);
         getProfileDetails();
 
 
