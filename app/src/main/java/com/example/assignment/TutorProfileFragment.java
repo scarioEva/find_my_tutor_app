@@ -65,6 +65,8 @@ public class TutorProfileFragment extends Fragment {
     Activity activity;
     BottomNavigationView bottomNavigationView;
     Boolean slotRegistered;
+    String studentName;
+    String tutor_token;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -209,6 +211,7 @@ public class TutorProfileFragment extends Fragment {
                             if (document.getDocuments().size() != 0) {
                                 updateView(view, document.getDocuments().get(0));
                                 getAvailability(view, document.getDocuments().get(0));
+                                tutor_token=document.getDocuments().get(0).get("token").toString();
                                 Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -283,6 +286,18 @@ public class TutorProfileFragment extends Fragment {
         }
     }
 
+    private void senNotification(String date, String time){
+        if(!tutor_token.equals("")) {
+            Log.d("MainAct", studentName);
+            String title = studentName;
+            String body = "Appointment registered at " + date + " (" + time + ")";
+            String token = tutor_token;
+            CommonClass commonClass = new CommonClass();
+            commonClass.sendNotification(studentId, title, body, token);
+        }
+        homeRedirect();
+    }
+
     private void onRegisterAppoinment() {
 
 
@@ -304,7 +319,8 @@ public class TutorProfileFragment extends Fragment {
                             public void onSuccess(DocumentReference documentReference) {
                                 Toast.makeText(getActivity(), "Appointment registered successfully", Toast.LENGTH_SHORT).show();
                                 bottomNavigationView.setSelectedItemId(R.id.home);
-                                homeRedirect();
+                                senNotification(dateInput, timeInput);
+
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -476,10 +492,15 @@ public class TutorProfileFragment extends Fragment {
         tutorId = bundle.getString("user_id");
         studentId = bundle.getString("studentId");
         layoutId = bundle.getInt("layoutId");
+        studentName=bundle.getString("studentName");
+
+        Log.d("MainAct", "name:"+ studentName);
 
         Log.d("MainActivity", "uuid data:" + studentId);
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tutor_profile, container, false);
+        TextView heading = view.findViewById(R.id.header_title);
+        heading.setText(studentId != null ? "Tutor's profile" : "My Profile");
         getProfileDetails(tutorId, view);
 
         Button submitBtn = view.findViewById(R.id.submitId);

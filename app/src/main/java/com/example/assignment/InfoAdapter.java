@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -29,10 +30,19 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
 
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.imageView = convertView.findViewById(R.id.profileImage);
+            convertView.setTag(viewHolder);
+        }
+        else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         InfoModel info = getItem(position);
@@ -40,8 +50,8 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
         TextView locationView = convertView.findViewById(R.id.cardLocation);
         TextView departmentView = convertView.findViewById(R.id.cardDepartment);
         TextView dateView = convertView.findViewById(R.id.cardDate);
-        ShapeableImageView profileView = convertView.findViewById(R.id.profileImage);
         MaterialCardView cardView = convertView.findViewById(R.id.cardId);
+        ImageView checkView=convertView.findViewById(R.id.check);
 
 //        int color = ;
 //        ColorStateList cs=ColorStateList.valueOf(color);
@@ -53,8 +63,8 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
             departmentView.setText(info.getDepartment());
 
             if (!info.getScheduled().equals("")) {
-                cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.card));
-                departmentView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
+//                cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.card));
+//                departmentView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 dateView.setVisibility(View.VISIBLE);
                 dateView.setText(info.getScheduled());
 
@@ -64,13 +74,26 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
 
 
             if (!info.getProfileUrl().equals("")) {
-                commonClass.setImageView(context, info.getProfileUrl().toString(), profileView);
-
+                Glide.with(context)
+                        .load(info.getProfileUrl())
+                        .into(viewHolder.imageView);
+            }
+            else{
+                viewHolder.imageView.setImageResource(R.drawable._184159_3094350);
+            }
+            if(info.getInOffice()){
+                checkView.setVisibility(View.VISIBLE);
+            }
+            else {
+                checkView.setVisibility(View.GONE);
             }
         }
 
         return convertView;
 
+    }
+    static class ViewHolder {
+        ShapeableImageView imageView;
     }
 
 }

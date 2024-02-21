@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class StudentProfileFragment extends Fragment {
-    CommonClass commonClass =new CommonClass();
+    CommonClass commonClass = new CommonClass();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     View view;
     String studentId;
@@ -38,18 +38,18 @@ public class StudentProfileFragment extends Fragment {
 
     private void updateView(View view, DocumentSnapshot data) {
         TextView nameView = view.findViewById(R.id.nameId);
-        TextView courseView=view.findViewById(R.id.courseId);
-        TextView acView=view.findViewById(R.id.accademicYearId);
-        TextView phoneView=view.findViewById(R.id.phoneId);
-        TextView bioView=view.findViewById(R.id.bioId);
-        TextView bView=view.findViewById(R.id.b);
-        TextView pView=view.findViewById(R.id.p);
+        TextView courseView = view.findViewById(R.id.courseId);
+        TextView acView = view.findViewById(R.id.accademicYearId);
+        TextView phoneView = view.findViewById(R.id.phoneId);
+        TextView bioView = view.findViewById(R.id.bioId);
+        TextView bView = view.findViewById(R.id.b);
+        TextView pView = view.findViewById(R.id.p);
 
 
-        ImageView editIcom=view.findViewById(R.id.editIcon);
+        ImageView editIcom = view.findViewById(R.id.editIcon);
         ShapeableImageView profileView = view.findViewById(R.id.profileImage);
         if (!data.get("profile_pic").toString().equals("")) {
-            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),profileView );
+            commonClass.setImageView(getContext(), data.get("profile_pic").toString(), profileView);
         }
 
         nameView.setText(data.get("name").toString());
@@ -71,11 +71,11 @@ public class StudentProfileFragment extends Fragment {
         }
         if (tutorId != null) {
             editIcom.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             editIcom.setVisibility(View.VISIBLE);
         }
     }
+
     private void getProfileDetails(String id, View view) {
         db.collection("student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -100,7 +100,7 @@ public class StudentProfileFragment extends Fragment {
     }
 
 
-    private void redirectEditProfile(int layoutId, String studentId){
+    private void redirectEditProfile(int layoutId, String studentId) {
         Bundle mBundle = new Bundle();
         mBundle.putString("studentData", studentId);
         mBundle.putInt("layoutId", layoutId);
@@ -121,9 +121,10 @@ public class StudentProfileFragment extends Fragment {
         Bundle bundle = getArguments();
         studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
-        tutorId=bundle.getString("tutorUid");
-
-        ImageView editId= view.findViewById(R.id.editIcon);
+        tutorId = bundle.getString("tutorUid");
+        TextView heading = view.findViewById(R.id.header_title);
+        heading.setText(tutorId != null ? "Student's profile" : "My Profile");
+        ImageView editId = view.findViewById(R.id.editIcon);
 
         editId.setOnClickListener(new View.OnClickListener() {
             @Override

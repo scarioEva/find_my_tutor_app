@@ -29,6 +29,7 @@ public class Setting extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String id;
     int layoutId;
+    String studentName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class Setting extends Fragment {
     private void onSignOut() {
         Map<String, Object> userData = new HashMap<>();
         userData.put("token", "");
-        db.collection("student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(studentName.equals("")?"tutor":"student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -92,6 +93,7 @@ public class Setting extends Fragment {
         Bundle bundle = getArguments();
         id = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
+        studentName=bundle.getString("studentName");
 
         Button accSetting = view.findViewById(R.id.accSetting);
         Button logout = view.findViewById(R.id.logout);

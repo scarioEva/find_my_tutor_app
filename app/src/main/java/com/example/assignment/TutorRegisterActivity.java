@@ -357,6 +357,10 @@ public class TutorRegisterActivity extends AppCompatActivity {
         editText.setBackground(borderDrawable);
     }
 
+    private void setButtonRed(Button btn, boolean red) {
+        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
+    }
+
     private void updateDatabase(String fileUrl) {
         TextInputLayout departmentId = findViewById(R.id.departmentId);
         TextInputLayout bioId = findViewById(R.id.bioId);
@@ -379,24 +383,61 @@ public class TutorRegisterActivity extends AppCompatActivity {
         String friToValue = friToId.getText().toString();
 
         Map<String, Object> mondayData = new HashMap<>();
-        mondayData.put("from", monFromValue);
-        mondayData.put("to", monToValue);
+        if (commonClass.timeValidate(monFromValue, monToValue)) {
+            mondayData.put("from", monFromValue);
+            mondayData.put("to", monToValue);
+            setButtonRed(monFromId, false);
+            setButtonRed(monToId, false);
+        } else {
+            setButtonRed(monFromId, true);
+            setButtonRed(monToId, true);
+        }
+
 
         Map<String, Object> tuesdayData = new HashMap<>();
-        tuesdayData.put("from", tueFromValue);
-        tuesdayData.put("to", tueToValue);
+        if (commonClass.timeValidate(tueFromValue, tueToValue)) {
+            tuesdayData.put("from", tueFromValue);
+            tuesdayData.put("to", tueToValue);
+            setButtonRed(tueFromId, false);
+            setButtonRed(tueToId, false);
+        } else {
+            setButtonRed(tueFromId, true);
+            setButtonRed(tueToId, true);
+        }
+
 
         Map<String, Object> wednesdayData = new HashMap<>();
-        wednesdayData.put("from", wedFromValue);
-        wednesdayData.put("to", wedToValue);
+        if (commonClass.timeValidate(wedFromValue, wedToValue)) {
+            wednesdayData.put("from", wedFromValue);
+            wednesdayData.put("to", wedToValue);
+            setButtonRed(wedFromId, false);
+            setButtonRed(wedToId, false);
+        } else {
+            setButtonRed(wedFromId, true);
+            setButtonRed(wedToId, true);
+        }
 
         Map<String, Object> thursdayData = new HashMap<>();
-        thursdayData.put("from", thuFromValue);
-        thursdayData.put("to", thuToValue);
+        if (commonClass.timeValidate(thuFromValue, thuToValue)) {
+            thursdayData.put("from", thuFromValue);
+            thursdayData.put("to", thuToValue);
+            setButtonRed(thuFromId, false);
+            setButtonRed(thuToId, false);
+        } else {
+            setButtonRed(thuFromId, true);
+            setButtonRed(thuToId, true);
+        }
 
         Map<String, Object> fridayData = new HashMap<>();
-        fridayData.put("from", friFromValue);
-        fridayData.put("to", friToValue);
+        if (commonClass.timeValidate(friFromValue, friToValue)) {
+            fridayData.put("from", friFromValue);
+            fridayData.put("to", friToValue);
+            setButtonRed(friFromId, false);
+            setButtonRed(friToId, false);
+        } else {
+            setButtonRed(friFromId, true);
+            setButtonRed(friToId, true);
+        }
 
         Map<Object, Object> availability = new HashMap<>();
         availability.put("monday", mondayData);
@@ -425,27 +466,38 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
         TextView errMsg = findViewById(R.id.errMsg);
         if (!departmentInput.equals("") && !locationInput.equals("")) {
-            db.collection("tutor").document(documentId).update(userData)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void Void) {
-                            loader.stopLoading();
-                            Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
-                            intent.putExtra("uId", userId);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            Toast.makeText(TutorRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            loader.stopLoading();
-                            errMsg.setText("Something went wrong. Please try again.");
-                            Log.w("MainActivity", "Error adding document", e);
-                        }
-                    });
+            if (commonClass.timeValidate(monFromValue, monToValue) &&
+                    commonClass.timeValidate(tueFromValue, tueToValue) &&
+                    commonClass.timeValidate(wedFromValue, wedToValue) &&
+                    commonClass.timeValidate(thuFromValue, thuToValue) &&
+                    commonClass.timeValidate(friFromValue, friToValue)
+            ) {
+                db.collection("tutor").document(documentId).update(userData)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void Void) {
+                                loader.stopLoading();
+                                Intent intent = new Intent(TutorRegisterActivity.this, TutorMainActivity.class);
+                                intent.putExtra("uId", userId);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                Toast.makeText(TutorRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                loader.stopLoading();
+                                errMsg.setText("Something went wrong. Please try again.");
+                                Log.w("MainActivity", "Error adding document", e);
+                            }
+                        });
+            } else {
+                loader.stopLoading();
+                errMsg.setText("Check time field (from time should not be greater than to time)");
+            }
         } else {
+            loader.stopLoading();
             errMsg.setText("Enter all the required fields");
         }
 

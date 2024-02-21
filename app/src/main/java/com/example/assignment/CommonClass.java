@@ -71,9 +71,28 @@ public class CommonClass {
                 .into(imageView);
     }
 
-//public String getCurrentDate(){
-//    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-//}
+    public boolean timeValidate(String time1, String time2) {
+        boolean flag;
+
+        int hour1 = Integer.parseInt(time1.split(":")[0]);
+        int minute1 = Integer.parseInt(time1.split(":")[1]);
+
+        int hour2 = Integer.parseInt(time2.split(":")[0]);
+        int minute2 = Integer.parseInt(time2.split(":")[1]);
+
+        if (hour1 > hour2 || (hour1 == hour2 && minute1 > minute2)) {
+            flag = false;
+            System.out.println(time1 + " is greater than " + time2);
+        } else if (hour1 < hour2 || (hour1 == hour2 && minute1 < minute2)) {
+            flag = true;
+            System.out.println(time1 + " is less than " + time2);
+        } else {
+            flag = false;
+            System.out.println(time1 + " is equal to " + time2);
+        }
+        return flag;
+    }
+
     public boolean checkDatePassed(String date, String time) {
         boolean flag = false;
         int dashIndex = time.lastIndexOf('-');
@@ -161,6 +180,8 @@ public class CommonClass {
             JSONObject notificationObj = new JSONObject();
             notificationObj.put("title", title);
             notificationObj.put("body", body);
+            notificationObj.put("channel_id", "firebase");
+            notificationObj.put("color", "#7CFC00");
 
             JSONObject dataObj = new JSONObject();
             dataObj.put("userId", userId);
@@ -200,7 +221,6 @@ public class CommonClass {
                 Log.d("Claa", "fail" + response);
             }
         });
-
     }
 
 }

@@ -26,6 +26,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String userId;
+    String studentName;
 
     BottomNavigationView bottomNavigationView;
 
@@ -48,8 +49,8 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
-                                Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
 
+                                studentName = document.getDocuments().get(0).get("name").toString();
                                 loadFragment(new StudentHomeFragment());
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -111,6 +112,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
         if (fragment != null) {
             Bundle mBundle = new Bundle();
             mBundle.putString("user_id", userId);
+            mBundle.putString("studentName", studentName);
             mBundle.putInt("layoutId", R.id.frameLayout);
             fragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();

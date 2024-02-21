@@ -53,6 +53,7 @@ public class StudentHomeFragment extends Fragment {
     int layoutId;
     List<AppoinmentObject> appointmentList = new ArrayList<>();
     List<String> deleteList = new ArrayList<>();
+    String studentName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class StudentHomeFragment extends Fragment {
         Bundle mBundle = new Bundle();
         mBundle.putString("user_id", uid);
         mBundle.putString("studentId", studentId);
+        mBundle.putString("studentName", studentName);
         mBundle.putInt("layoutId", layoutId);
         TutorProfileFragment tutorProfileFragment = new TutorProfileFragment();
         tutorProfileFragment.setArguments(mBundle);
@@ -237,6 +239,7 @@ public class StudentHomeFragment extends Fragment {
         Bundle bundle = getArguments();
         studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
+        studentName = bundle.getString("studentName");
         listview = view.findViewById(R.id.listId);
         emptyMsg=view.findViewById(R.id.emptyMsg);
         emptyMsg.setVisibility(View.GONE);

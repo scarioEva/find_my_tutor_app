@@ -21,7 +21,7 @@ public class InfoModel {
         return scheduled;
     }
 
-    public Boolean inOffice() {
+    public Boolean getInOffice() {
         return in_office;
     }
 

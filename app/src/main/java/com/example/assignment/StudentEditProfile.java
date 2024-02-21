@@ -211,6 +211,7 @@ public class StudentEditProfile extends Fragment {
                 }
             });
         } else {
+            loader.stopLoading();
             errMsg.setText("Enter all the required fields.");
         }
 

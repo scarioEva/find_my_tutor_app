@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -61,9 +62,46 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         userId = getIntent().getStringExtra("uId");
-
         getTutorDatabase(false);
 
+        getToken();
+
+    }
+    private void getToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    String token = task.getResult();
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("token", token);
+                    db.collection("tutor").whereEqualTo("uId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().getDocuments().size() != 0) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        document.getReference().update(userData)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
 
@@ -72,6 +110,8 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         if (fragment != null) {
             Bundle mBundle = new Bundle();
             mBundle.putString("user_id", userId);
+
+            mBundle.putString("studentName", "");  //empty in tutor profile
             mBundle.putInt("layoutId", R.id.frameLayouts);
             fragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayouts, fragment).commit();
@@ -84,7 +124,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     private void updateCheckToStudents(QuerySnapshot doc) {
         String title = "Check in";
         String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
-        String token = "eALOxDOgSzGeerfd4E6_zZ:APA91bE905HjvG_NDKHsZE-BqEzFoBmacDhC_2TDH0QF4PjFugxIgRhQi1hgFqSRJ9qpbdBUCyhiwXG0NaAXHdBmJgug1-kYGjJFZGckZvXaY-poOO1ECpVdrZwDCcNcQQqeTmbV8oEq";
+        String token = "cwyJFprHS8mDM9EmeJ98kZ:APA91bGhYFeJe2uAu3XEtNOY0o81SENBszI9XKKZ8pz_pMadshOEHkxRS8U1BOTfif33srwiYXeL8r19FOES4yg_h97oOtcavE9VSA1gwUTRxk0VDGcHz0tzGxCMDYLSHWPTWffz97Cy";
         CommonClass commonClass = new CommonClass();
         commonClass.sendNotification(userId, title, body, token);
     }

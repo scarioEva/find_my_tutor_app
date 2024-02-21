@@ -56,6 +56,7 @@ public class StudentSearchFragment extends Fragment {
     int layoutId;
     List<AppoinmentObject> slotList = new ArrayList<>();
     CommonClass commonClass = new CommonClass();
+    String studentName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class StudentSearchFragment extends Fragment {
         mBundle.putString("user_id", uid);
         mBundle.putString("studentId", studentID);
         mBundle.putInt("layoutId", layoutId);
+        mBundle.putString("studentName", studentName);
         TutorProfileFragment tutorProfileFragment = new TutorProfileFragment();
         tutorProfileFragment.setArguments(mBundle);
         androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
@@ -107,7 +109,7 @@ public class StudentSearchFragment extends Fragment {
                                             document.getData().get("department").toString(),
                                             document.getData().get("profile_pic").toString(),
                                             "",
-                                            false
+                                            document.getData().get("office_location").toString().equals(   document.getData().get("check_in").toString())
                                     ));
 
                                     if(infoList.size()!=0){
@@ -163,6 +165,8 @@ public class StudentSearchFragment extends Fragment {
         Bundle bundle = getArguments();
         layoutId = bundle.getInt("layoutId");
         studentID = bundle.getString("user_id");
+        studentName=bundle.getString("studentName");
+
         Log.d("MainAct", "stu:" + studentID);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {

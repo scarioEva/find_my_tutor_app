@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".TutorEditProfile">
 
     <ScrollView
@@ -15,6 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10sp"
+                android:text="Edit Profile"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -28,8 +36,7 @@
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/_184159_3094350"
-                    app:shapeAppearanceOverlay="@style/Circular"
-                    />
+                    app:shapeAppearanceOverlay="@style/Circular" />
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -212,7 +219,6 @@
                                 android:textColor="@color/black" />
 
 
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -220,6 +226,7 @@
                                 android:layout_marginStart="20dp"
                                 android:layout_marginEnd="30dp"
                                 android:text="-" />
+
                             <Button
                                 android:id="@+id/wedToId"
                                 android:layout_width="match_parent"
@@ -239,6 +246,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="30dp"
                                 android:text="Thursday" />
+
                             <Button
                                 android:id="@+id/thuFromId"
                                 android:layout_width="match_parent"

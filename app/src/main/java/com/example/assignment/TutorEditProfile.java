@@ -134,6 +134,10 @@ public class TutorEditProfile extends Fragment {
         fragmentTransaction.commit();
     }
 
+    private void setButtonRed(Button btn, boolean red) {
+        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
+    }
+
     private void onUpdateData(String fileUrl) {
 
 
@@ -143,24 +147,61 @@ public class TutorEditProfile extends Fragment {
         String locationInput = mainLocationId.getEditText().getText().toString();
 
         Map<String, Object> mondayData = new HashMap<>();
-        mondayData.put("from", monFromId.getText());
-        mondayData.put("to", monToId.getText());
+
+        if (commonClass.timeValidate(monFromId.getText().toString(), monToId.getText().toString())) {
+            mondayData.put("from", monFromId.getText());
+            mondayData.put("to", monToId.getText());
+            setButtonRed(monFromId, false);
+            setButtonRed(monToId, false);
+        } else {
+            setButtonRed(monFromId, true);
+            setButtonRed(monToId, true);
+        }
 
         Map<String, Object> tuesdayData = new HashMap<>();
-        tuesdayData.put("from", tueFromId.getText());
-        tuesdayData.put("to", tueToId.getText());
+        if (commonClass.timeValidate(tueFromId.getText().toString(), tueToId.getText().toString())) {
+            tuesdayData.put("from", tueFromId.getText());
+            tuesdayData.put("to", tueToId.getText());
+            setButtonRed(tueFromId, false);
+            setButtonRed(tueToId, false);
+        } else {
+            setButtonRed(tueFromId, true);
+            setButtonRed(tueToId, true);
+        }
 
         Map<String, Object> wednesdayData = new HashMap<>();
-        wednesdayData.put("from", wedFromId.getText());
-        wednesdayData.put("to", wedToId.getText());
+        if (commonClass.timeValidate(wedFromId.getText().toString(), wedToId.getText().toString())) {
+            wednesdayData.put("from", wedFromId.getText());
+            wednesdayData.put("to", wedToId.getText());
+            setButtonRed(wedFromId, false);
+            setButtonRed(wedToId, false);
+        } else {
+            setButtonRed(wedFromId, true);
+            setButtonRed(wedToId, true);
+        }
+
 
         Map<String, Object> thursdayData = new HashMap<>();
-        thursdayData.put("from", thuFromId.getText());
-        thursdayData.put("to", thuToId.getText());
+        if (commonClass.timeValidate(thuFromId.getText().toString(), thuToId.getText().toString())) {
+            thursdayData.put("from", thuFromId.getText());
+            thursdayData.put("to", thuToId.getText());
+            setButtonRed(thuFromId, false);
+            setButtonRed(thuToId, false);
+        } else {
+            setButtonRed(thuFromId, true);
+            setButtonRed(thuToId, true);
+        }
 
         Map<String, Object> fridayData = new HashMap<>();
-        fridayData.put("from", friFromId.getText());
-        fridayData.put("to", friToId.getText());
+        if (commonClass.timeValidate(friFromId.getText().toString(), friToId.getText().toString())) {
+            fridayData.put("from", friFromId.getText());
+            fridayData.put("to", friToId.getText());
+            setButtonRed(friFromId, false);
+            setButtonRed(friToId, false);
+        } else {
+            setButtonRed(friFromId, true);
+            setButtonRed(friToId, true);
+        }
 
         Map<Object, Object> availability = new HashMap<>();
         availability.put("monday", mondayData);
@@ -187,34 +228,45 @@ public class TutorEditProfile extends Fragment {
 //        }
 
         if (!departmentInput.equals("")) {
-            db.collection("tutor").whereEqualTo("uId", tutorId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().getDocuments().size() != 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                document.getReference().update(userData)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                loader.stopLoading();
-                                                Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                                                onRedirectProfile();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                loader.stopLoading();
-                                                errMsg.setText("Something went Wrong. Please try again");
-                                            }
-                                        });
+            if (commonClass.timeValidate(monFromId.getText().toString(), monToId.getText().toString()) &&
+                    commonClass.timeValidate(tueFromId.getText().toString(), tueToId.getText().toString()) &&
+                    commonClass.timeValidate(wedFromId.getText().toString(), wedToId.getText().toString()) &&
+                    commonClass.timeValidate(thuFromId.getText().toString(), thuToId.getText().toString()) &&
+                    commonClass.timeValidate(friFromId.getText().toString(), friToId.getText().toString())
+            ) {
+                db.collection("tutor").whereEqualTo("uId", tutorId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().getDocuments().size() != 0) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    document.getReference().update(userData)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    loader.stopLoading();
+                                                    Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                                                    onRedirectProfile();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    loader.stopLoading();
+                                                    errMsg.setText("Something went Wrong. Please try again");
+                                                }
+                                            });
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            } else {
+                loader.stopLoading();
+                errMsg.setText("Check time field (from time should not be greater than to time)");
+            }
         } else {
+            loader.stopLoading();
             errMsg.setText("Enter all the required fields");
         }
 
@@ -228,7 +280,6 @@ public class TutorEditProfile extends Fragment {
         assert monday != null;
         monFromId.setText(monday.get("from").toString());
         monToId.setText(monday.get("to").toString());
-
         Map<String, Object> tuesday = (Map<String, Object>) timeMap.get("tuesday");
         assert tuesday != null;
         tueFromId.setText(tuesday.get("from").toString());

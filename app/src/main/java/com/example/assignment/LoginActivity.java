@@ -112,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
                     String uId = user.getUid();
                     checkUserTypeExists(uId, type, false);
                 } else {
-                    loader.stopLoading();
                     setErrorMessage(task.getException().getMessage());
                 }
             }
