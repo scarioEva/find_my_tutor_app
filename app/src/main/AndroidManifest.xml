@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" tools:node="remove"/>
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"
+        tools:node="remove" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -24,6 +27,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Assignment"
         tools:targetApi="31">
+        <activity
+            android:name=".EmailVerificationActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -33,13 +39,12 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_path" />
-        </provider>
-        <!-- <activity -->
+        </provider> <!-- <activity -->
         <!-- android:name=".TestActivity" -->
         <!-- android:exported="false" /> -->
-        <!--        <activity-->
-        <!--            android:name=".StudentMainActivity"-->
-        <!--            android:exported="false" />-->
+        <!-- <activity -->
+        <!-- android:name=".StudentMainActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
@@ -74,7 +79,6 @@
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>

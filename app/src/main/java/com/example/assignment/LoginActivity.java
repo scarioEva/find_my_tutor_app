@@ -34,20 +34,20 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        loader=new Loader(LoginActivity.this);
+        loader = new Loader(LoginActivity.this);
 
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            checkUserTypeExists(currentUser.getUid(), "student", true);
+            checkUserTypeExists("student", true);
         }
     }
 
     private void autoLogin(QuerySnapshot docs, String uid) {
         Intent intent = new Intent(LoginActivity.this, docs.getDocuments().size() == 0 ? TutorMainActivity.class : StudentMainActivity.class);
         intent.putExtra("uId", uid);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -69,7 +69,17 @@ public class LoginActivity extends AppCompatActivity {
         errMsg.setText(msg);
     }
 
-    private void checkUserTypeExists(String uid, String type, Boolean autologin) {
+
+    private void redirectVerificationPage(String email) {
+        Intent intent = new Intent(LoginActivity.this, EmailVerificationActivity.class);
+//        intent.putExtra("uId", user.getUid());
+        intent.putExtra("email", email);
+        startActivity(intent);
+    }
+
+    private void checkUserTypeExists(String type, Boolean autologin) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        String uid = user.getUid();
         loader.startLoading();
         String path = type.toLowerCase();
         db.collection(path).whereEqualTo("uId", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -79,12 +89,21 @@ public class LoginActivity extends AppCompatActivity {
                             loader.stopLoading();
                             QuerySnapshot document = task.getResult();
                             if (autologin) {
-                                autoLogin(document, uid);
+//                                if (user.isEmailVerified()) {
+                                    autoLogin(document, uid);
+//                                } else {
+//                                    redirectVerificationPage(user.getEmail());
+//                                }
                             } else {
                                 if (document.getDocuments().size() != 0) {
-                                    Intent intent = new Intent(LoginActivity.this, type.equals("Tutor") ? TutorMainActivity.class : StudentMainActivity.class);
-                                    intent.putExtra("uId", uid);
-                                    startActivity(intent);
+//                                    if (user.isEmailVerified()) {
+                                        Intent intent = new Intent(LoginActivity.this, type.equals("Tutor") ? TutorMainActivity.class : StudentMainActivity.class);
+                                        intent.putExtra("uId", uid);
+                                        startActivity(intent);
+//                                    } else {
+//                                        Log.d("MainAct", "redirect");
+//                                        redirectVerificationPage(user.getEmail());
+//                                    }
                                 } else {
                                     setErrorMessage("No user Exists");
                                     Log.d("MainActivity", "No such document");
@@ -108,9 +127,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    String uId = user.getUid();
-                    checkUserTypeExists(uId, type, false);
+
+//                    String uId = user.getUid();
+//                    checkUserTypeExists(uId, type, false);
+                    checkUserTypeExists(type, false);
+
+
                 } else {
                     setErrorMessage(task.getException().getMessage());
                 }

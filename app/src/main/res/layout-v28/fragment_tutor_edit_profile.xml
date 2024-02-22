@@ -129,15 +129,14 @@
                                 android:text="Monday" />
 
                             <Button
-                                style="@style/Widget.AppCompat.Button.Colored"
                                 android:id="@+id/monFromId"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/edit_text_border"
+                                android:backgroundTint="@color/white"
                                 android:gravity="center_vertical"
+                                android:outlineSpotShadowColor="@color/black"
                                 android:text="09:00"
                                 android:textColor="@color/black" />
-<!--                            android:theme="@style/Test"-->
 
 
                             <TextView

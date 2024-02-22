@@ -1,6 +1,7 @@
 package com.example.assignment;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -28,6 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -274,11 +276,14 @@ public class TutorEditProfile extends Fragment {
 
     private void getAvailability(DocumentSnapshot data) {
 
+
+
         Map<String, Object> timeMap = (Map<String, Object>) data.get("availability");
 
         Map<String, Object> monday = (Map<String, Object>) timeMap.get("monday");
         assert monday != null;
         monFromId.setText(monday.get("from").toString());
+
         monToId.setText(monday.get("to").toString());
         Map<String, Object> tuesday = (Map<String, Object>) timeMap.get("tuesday");
         assert tuesday != null;
