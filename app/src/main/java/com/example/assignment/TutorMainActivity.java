@@ -122,11 +122,11 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
 
 
     private void updateCheckToStudents(QuerySnapshot doc) {
-        String title = "Check in";
-        String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
-        String token = "cwyJFprHS8mDM9EmeJ98kZ:APA91bGhYFeJe2uAu3XEtNOY0o81SENBszI9XKKZ8pz_pMadshOEHkxRS8U1BOTfif33srwiYXeL8r19FOES4yg_h97oOtcavE9VSA1gwUTRxk0VDGcHz0tzGxCMDYLSHWPTWffz97Cy";
-        CommonClass commonClass = new CommonClass();
-        commonClass.sendNotification(userId, title, body, token);
+//        String title = "Check in";
+//        String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
+//        String token = "cwyJFprHS8mDM9EmeJ98kZ:APA91bGhYFeJe2uAu3XEtNOY0o81SENBszI9XKKZ8pz_pMadshOEHkxRS8U1BOTfif33srwiYXeL8r19FOES4yg_h97oOtcavE9VSA1gwUTRxk0VDGcHz0tzGxCMDYLSHWPTWffz97Cy";
+//        CommonClass commonClass = new CommonClass();
+//        commonClass.sendNotification(userId, title, body, token);
     }
 
 

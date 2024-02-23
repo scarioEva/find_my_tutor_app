@@ -53,7 +53,7 @@ public class Setting extends Fragment {
     private void onSignOut() {
         Map<String, Object> userData = new HashMap<>();
         userData.put("token", "");
-        db.collection(studentName.equals("")?"tutor":"student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(studentName==null?"tutor":"student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {

@@ -1,28 +1,24 @@
 package com.example.assignment;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -58,10 +54,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -137,7 +129,8 @@ public class TutorEditProfile extends Fragment {
     }
 
     private void setButtonRed(Button btn, boolean red) {
-        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
+        btn.setTextColor( ContextCompat.getColor(getContext(),red?R.color.danger:R.color.black));
+//        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
     }
 
     private void onUpdateData(String fileUrl) {
@@ -275,7 +268,6 @@ public class TutorEditProfile extends Fragment {
     }
 
     private void getAvailability(DocumentSnapshot data) {
-
 
 
         Map<String, Object> timeMap = (Map<String, Object>) data.get("availability");

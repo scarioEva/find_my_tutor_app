@@ -93,6 +93,7 @@
             />
 
         <Button
+            android:id="@+id/forgotPass"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

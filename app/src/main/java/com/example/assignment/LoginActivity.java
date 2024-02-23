@@ -9,10 +9,12 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,16 +42,48 @@ public class LoginActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            checkUserTypeExists("student", true);
+            loader.startLoading();
+            getUserType(currentUser.getUid());
+//            checkUserTypeExists("student");
         }
+
+
+        Button forgotPass = findViewById(R.id.forgotPass);
+
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onForgotPass();
+            }
+        });
     }
 
-    private void autoLogin(QuerySnapshot docs, String uid) {
-        Intent intent = new Intent(LoginActivity.this, docs.getDocuments().size() == 0 ? TutorMainActivity.class : StudentMainActivity.class);
-        intent.putExtra("uId", uid);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+    private void getUserType(String uid) {
+        db.collection("users").whereEqualTo("uid", uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            loader.stopLoading();
+                            QuerySnapshot document = task.getResult();
+                            if (document.getDocuments().size() != 0) {
+                                String userType = document.getDocuments().get(0).get("type").toString();
+                                checkUserTypeExists(userType);
+                            } else {
+                                Log.d("MainActivity", "No such document");
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
+                        setErrorMessage("Something went wrong. Please try again.");
+                        Log.w("MainActivity", "Error adding document", e);
+                    }
+                });
     }
+
 
     @Override
     public void onStart() {
@@ -77,7 +111,13 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void checkUserTypeExists(String type, Boolean autologin) {
+    private void redirectRegistrationPage(String user, String documentId) {
+        Intent intent = new Intent(LoginActivity.this, user.equals("tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
+        intent.putExtra("docId", documentId);
+        startActivity(intent);
+    }
+
+    private void checkUserTypeExists(String type) {
         FirebaseUser user = mAuth.getCurrentUser();
         String uid = user.getUid();
         loader.startLoading();
@@ -88,27 +128,28 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             loader.stopLoading();
                             QuerySnapshot document = task.getResult();
-                            if (autologin) {
-//                                if (user.isEmailVerified()) {
-                                    autoLogin(document, uid);
-//                                } else {
-//                                    redirectVerificationPage(user.getEmail());
-//                                }
-                            } else {
-                                if (document.getDocuments().size() != 0) {
-//                                    if (user.isEmailVerified()) {
+                            if (document.getDocuments().size() != 0) {
+//                                Log.d("MainAct", "course:"+ document.getDocuments().contains("course"));
+                                if (user.isEmailVerified()) {
+                                    if ((path.equals("student") && !document.getDocuments().get(0).contains("course")) || (path.equals("tutor") && document.getDocuments().get(0).get("department").toString().equals(""))) {
+                                        redirectRegistrationPage(path, document.getDocuments().get(0).getReference().getId());
+                                    } else {
                                         Intent intent = new Intent(LoginActivity.this, type.equals("Tutor") ? TutorMainActivity.class : StudentMainActivity.class);
                                         intent.putExtra("uId", uid);
                                         startActivity(intent);
-//                                    } else {
-//                                        Log.d("MainAct", "redirect");
-//                                        redirectVerificationPage(user.getEmail());
-//                                    }
+                                    }
+                                    //code
+
+
                                 } else {
-                                    setErrorMessage("No user Exists");
-                                    Log.d("MainActivity", "No such document");
+                                    Log.d("MainAct", "redirect");
+                                    redirectVerificationPage(user.getEmail());
                                 }
+                            } else {
+                                setErrorMessage("No user Exists");
+                                Log.d("MainActivity", "No such document");
                             }
+//                            }
                         }
                     }
                 })
@@ -130,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
 
 //                    String uId = user.getUid();
 //                    checkUserTypeExists(uId, type, false);
-                    checkUserTypeExists(type, false);
+                    checkUserTypeExists(type);
 
 
                 } else {
@@ -146,6 +187,30 @@ public class LoginActivity extends AppCompatActivity {
         borderDrawable.setCornerRadius(8);
         EditText editText = textInput.getEditText();
         editText.setBackground(borderDrawable);
+    }
+
+    private void onForgotPass() {
+        TextInputLayout email = findViewById(R.id.loginMailId);
+        String emailAddr=email.getEditText().getText().toString();
+        if (emailAddr.equals("")) {
+            setErrorMessage("Please enter email id");
+        } else {
+            mAuth.sendPasswordResetEmail(emailAddr)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            setErrorMessage("");
+                            Toast.makeText(LoginActivity.this, "Password reset email sent successfully", Toast.LENGTH_SHORT).show();
+                            // Password reset email sent successfully
+//                            Log.d(TAG, "Password reset email sent.");
+                            // You can add code here to notify the user or navigate to a success screen
+                        } else {
+                            setErrorMessage("Failed to send password reset email");
+                            // Failed to send password reset email
+//                            Log.e(TAG, "Error sending password reset email.", task.getException());
+                            // You can add code here to handle the error, e.g., show an error message to the user
+                        }
+                    });
+        }
     }
 
     public void onLogin(View view) {
@@ -176,5 +241,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             setErrorMessage("Please enter all the required fileds");
         }
+
+
     }
 }

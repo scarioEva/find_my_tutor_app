@@ -53,6 +53,7 @@ public class AccountSetting extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(getActivity(), "Email changed successfully", Toast.LENGTH_SHORT).show();
+                            errMsg.setText("");
                         } else {
                             errMsg.setText("Failed to update email:"+task.getException().getMessage());
 //                            Log.d("MainActivity", "Failed to update email: " + task.getException().getMessage());

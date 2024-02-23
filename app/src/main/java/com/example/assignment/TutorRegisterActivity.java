@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
@@ -358,7 +359,8 @@ public class TutorRegisterActivity extends AppCompatActivity {
     }
 
     private void setButtonRed(Button btn, boolean red) {
-        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
+        btn.setTextColor( ContextCompat.getColor(TutorRegisterActivity.this,red?R.color.danger:R.color.black));
+//        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
     }
 
     private void updateDatabase(String fileUrl) {

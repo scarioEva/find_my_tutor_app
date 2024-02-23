@@ -60,12 +60,12 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void redirectPage(String user, String userId, String documentId) {
-        Intent intent = new Intent(RegisterActivity.this, user.equals("Tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
-        intent.putExtra(userIdValue, userId);
-        intent.putExtra("docId",documentId);
-        startActivity(intent);
-    }
+//    private void redirectPage(String user, String userId, String documentId) {
+//        Intent intent = new Intent(RegisterActivity.this, user.equals("Tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
+//        intent.putExtra(userIdValue, userId);
+//        intent.putExtra("docId",documentId);
+//        startActivity(intent);
+//    }
 
 
     public void onSignIn(View view) {
@@ -73,22 +73,37 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intentLogin);
     }
 
-    private void addDb(String uid, String type, String sName) {
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("name", sName);
-        userData.put("uId", uid);
-        if(type.equals("Tutor")){
-            userData.put("department", "");
-        }
-        String path=type.toLowerCase();
+    private void redirectVerificationPage(String email) {
+        Intent intent = new Intent(RegisterActivity.this, EmailVerificationActivity.class);
+//        intent.putExtra("uId", user.getUid());
+        intent.putExtra("email", email);
+        startActivity(intent);
+    }
 
-        db.collection(path).add(userData)
+
+    private void addDb(String type, String sName, FirebaseUser userData) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", sName);
+        data.put("uId", userData.getUid().toString());
+        if (type.equals("Tutor")) {
+            data.put("department", "");
+        }
+        String path = type.toLowerCase();
+
+        db.collection(path).add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
-                        String documentId=documentReference.getId();
-                        redirectPage(type, uid, documentId);
+                        String documentId = documentReference.getId();
+//                        if(user.isEmailVerified()) {
+//                            redirectPage(type, user.toString(), documentId);
+//                        }
+//                        else{
+                        userData.sendEmailVerification();
+                        redirectVerificationPage(userData.getEmail());
+//                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -96,6 +111,26 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         setErrorMessage("Something went wrong. Please try again.");
                         Log.w("MainActivity", "Error adding document", e);
+                    }
+                });
+    }
+
+    private void addUser(String type, String name) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        Map<String, Object> data = new HashMap<>();
+        data.put("type", type.toLowerCase());
+        data.put("uid", user.getUid());
+        db.collection("users").add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        addDb(type, name, user);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        setErrorMessage("Something went wrong. Please try again.");
                     }
                 });
     }
@@ -111,13 +146,13 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.w("MainActivity", task.toString());
                         if (task.isSuccessful()) {
                             Log.d("MainActivity", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+
                             Toast.makeText(RegisterActivity.this,
                                     "Authentication success. Use an intent to move to a new activity",
                                     Toast.LENGTH_SHORT).show();
                             //user has been signed in, use an intent to move to the next activity
                             setErrorMessage("");
-                            addDb(user.getUid(), uType, name);
+                            addUser(uType, name);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -162,16 +197,16 @@ public class RegisterActivity extends AppCompatActivity {
         Log.w("MainAct", sEmail);
 
 
-        if(sEmail.equals("")){
+        if (sEmail.equals("")) {
             setBorderRed(email);
         }
-        if(sName.equals("")){
+        if (sName.equals("")) {
             setBorderRed(name);
         }
-        if(sPassword.equals("")){
+        if (sPassword.equals("")) {
             setBorderRed(password);
         }
-        if(cPassword.equals("")){
+        if (cPassword.equals("")) {
             setBorderRed(confirmPassword);
         }
 
