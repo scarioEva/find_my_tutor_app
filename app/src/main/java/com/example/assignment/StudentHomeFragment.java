@@ -24,12 +24,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -118,7 +123,6 @@ public class StudentHomeFragment extends Fragment {
             adapter = new InfoAdapter(getActivity().getApplicationContext(), infoList);
 
 
-
             listview.setAdapter(adapter);
 
             listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,13 +145,43 @@ public class StudentHomeFragment extends Fragment {
                     if (task.getResult().getDocuments().size() != 0) {
                         listview.setVisibility(View.VISIBLE);
                         emptyMsg.setVisibility(View.GONE);
+
+                        List<QueryDocumentSnapshot> documents = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            documents.add(document);
+                        }
+                        // Sort documents by the "date" field in ascending order
+                        Collections.sort(documents, new Comparator<QueryDocumentSnapshot>() {
+                            @Override
+                            public int compare(QueryDocumentSnapshot doc1, QueryDocumentSnapshot doc2) {
+                                // Get the date strings from the documents
+                                String dateString1 = doc1.getString("date");
+                                String dateString2 = doc2.getString("date");
+
+                                // Parse the date strings into Date objects
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                                Date date1 = null, date2 = null;
+                                try {
+                                    date1 = dateFormat.parse(dateString1);
+                                    date2 = dateFormat.parse(dateString2);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+                                // Compare the dates
+                                if (date1 != null && date2 != null) {
+                                    return date1.compareTo(date2);
+                                }
+                                return 0;
+                            }
+                        });
+
+                        for (QueryDocumentSnapshot document : documents) {
                             AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString(), "");
                             slotList.add(obj);
                             Log.d("MainAct", document.getData().toString());
                         }
-                    }
-                    else{
+                    } else {
                         listview.setVisibility(View.GONE);
                         emptyMsg.setVisibility(View.VISIBLE);
                     }
@@ -241,7 +275,7 @@ public class StudentHomeFragment extends Fragment {
         layoutId = bundle.getInt("layoutId");
         studentName = bundle.getString("studentName");
         listview = view.findViewById(R.id.listId);
-        emptyMsg=view.findViewById(R.id.emptyMsg);
+        emptyMsg = view.findViewById(R.id.emptyMsg);
         emptyMsg.setVisibility(View.GONE);
         getAppointmentList(studentId);
         return view;

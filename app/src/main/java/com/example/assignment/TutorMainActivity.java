@@ -67,6 +67,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         getToken();
 
     }
+
     private void getToken() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
@@ -105,7 +106,6 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     }
 
 
-
     public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             Bundle mBundle = new Bundle();
@@ -121,12 +121,27 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     }
 
 
-    private void updateCheckToStudents(QuerySnapshot doc) {
-//        String title = "Check in";
-//        String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
-//        String token = "cwyJFprHS8mDM9EmeJ98kZ:APA91bGhYFeJe2uAu3XEtNOY0o81SENBszI9XKKZ8pz_pMadshOEHkxRS8U1BOTfif33srwiYXeL8r19FOES4yg_h97oOtcavE9VSA1gwUTRxk0VDGcHz0tzGxCMDYLSHWPTWffz97Cy";
-//        CommonClass commonClass = new CommonClass();
-//        commonClass.sendNotification(userId, title, body, token);
+    private void updateCheckToStudents(QuerySnapshot doc, String student_token) {
+        String title = "Check in";
+        String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
+        String token = student_token;
+        CommonClass commonClass = new CommonClass();
+        commonClass.sendNotification(userId, title, body, token);
+    }
+
+    private void getStudentList(QuerySnapshot tutorDoc) {
+        db.collection("student").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot docs : task.getResult()) {
+                        if (!docs.get("token").toString().equals("")) {
+                            updateCheckToStudents(tutorDoc, docs.get("token").toString());
+                        }
+                    }
+                }
+            }
+        });
     }
 
 
@@ -138,15 +153,14 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
                                 loadFragment(new TutorHomeFragment());
-                                if (checkin) {
-                                    updateCheckToStudents(document);
-                                }
-                                Log.d("MainActivity", " data: " + document.getDocuments().get(0).getId());
+
                                 docId = document.getDocuments().get(0).getId();
-                                Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
-                                String name = "Welcome " + document.getDocuments().get(0).get("name");
+//                                String name = "Welcome " + document.getDocuments().get(0).get("name");
                                 if (document.getDocuments().get(0).get("check_in") != null) {
                                     checkIn = document.getDocuments().get(0).get("check_in").toString();
+                                    if (checkin) {
+                                        getStudentList(document);
+                                    }
                                 } else {
                                     checkIn = "";
                                 }
@@ -168,11 +182,15 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     private void updateTutorCheckIn(String val) {
         Map<String, Object> tutorData = new HashMap<>();
         tutorData.put("check_in", val.equals(checkIn) ? "" : val);
+        String status = (val.equals(checkIn) ? "Check out" : "Check in") + ": " + val.toString();
+        Toast.makeText(this, status, Toast.LENGTH_LONG).show();
         db.collection("tutor").document(docId).update(tutorData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void Void) {
                         getTutorDatabase(true);
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -230,7 +248,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
                 Toast.makeText(this, "Scan cancelled", Toast.LENGTH_LONG).show();
             } else {
                 onScanQr(result.getContents());
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

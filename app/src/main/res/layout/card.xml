@@ -36,7 +36,7 @@
                         android:layout_gravity="center"
                         android:adjustViewBounds="true"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/_184159_3094350"
+                        android:src="@drawable/user_new"
                         app:shapeAppearanceOverlay="@style/Circular" />
                 </LinearLayout>
 

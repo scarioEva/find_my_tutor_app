@@ -79,7 +79,7 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
                         .into(viewHolder.imageView);
             }
             else{
-                viewHolder.imageView.setImageResource(R.drawable._184159_3094350);
+                viewHolder.imageView.setImageResource(R.drawable.user_new);
             }
             if(info.getInOffice()){
                 checkView.setVisibility(View.VISIBLE);

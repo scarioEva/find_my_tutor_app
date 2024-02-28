@@ -13,6 +13,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
+import com.airbnb.lottie.L;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -24,6 +25,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -53,13 +55,36 @@ public class CommonClass {
     }
 
     public String getDateTime(String c_date, String time) throws ParseException {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("MM/d/yyyy", Locale.ENGLISH);
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
         Date date = inputFormat.parse(c_date);
         String formattedDate = outputFormat.format(date);
 
         String final_d = formattedDate + " (" + time + ")";
         return final_d;
+    }
+
+    public String toTimeStamp(String date, String time) {
+        Timestamp timestamp = null;
+        try {
+            int dashIndex = time.lastIndexOf('-');
+            String lastTime = time.substring(dashIndex + 1).trim();
+            Log.d("MainAct", time);
+            String dateTimeString = date + " " + lastTime + ":00";
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+            dateFormat.setLenient(false);
+
+            Date new_date = dateFormat.parse(dateTimeString);
+            Log.d("MainAct", "timest:" + new_date);
+            long milliseconds = new_date.getTime();
+            timestamp = new Timestamp(milliseconds);
+
+
+        } catch (ParseException e) {
+            Log.d("MainAct", e.toString());
+        }
+        return timestamp.toString();
     }
 
     public void setImageView(Context context, String url, ShapeableImageView imageView) {

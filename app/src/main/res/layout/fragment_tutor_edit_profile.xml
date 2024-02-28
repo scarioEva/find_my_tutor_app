@@ -35,7 +35,7 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/_184159_3094350"
+                    android:src="@drawable/user_new"
                     app:shapeAppearanceOverlay="@style/Circular" />
             </LinearLayout>
 
@@ -334,6 +334,11 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/primary"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:paddingTop="13sp"
+                android:paddingBottom="13sp"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="Submit" />
         </LinearLayout>
     </ScrollView>

@@ -129,6 +129,11 @@
             android:layout_marginBottom="5dp"
             android:backgroundTint="@color/primary"
             android:onClick="signupButtonClicked"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:paddingTop="13sp"
+            android:paddingBottom="13sp"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="Register" />
 
         <Button

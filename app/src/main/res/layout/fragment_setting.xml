@@ -24,6 +24,11 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
           android:backgroundTint="@color/primary"
+          android:textColor="@color/white"
+          android:textAllCaps="false"
+          android:paddingTop="13sp"
+          android:paddingBottom="13sp"
+          style="@style/Widget.MaterialComponents.Button.TextButton"
           android:text="Account Setting" />
 
       <Button
@@ -31,7 +36,12 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="20dp"
-          android:backgroundTint="@color/primary"
+          android:backgroundTint="@color/black"
+          android:textColor="@color/white"
+          android:textAllCaps="false"
+          android:paddingTop="13sp"
+          android:paddingBottom="13sp"
+          style="@style/Widget.MaterialComponents.Button.TextButton"
           android:text="Logout" />
 
   </LinearLayout>

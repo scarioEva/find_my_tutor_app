@@ -38,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,7 +49,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class TutorProfileFragment extends Fragment {
-    CommonClass commonClass=new CommonClass();
+    CommonClass commonClass = new CommonClass();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     View view;
     Dialog dialog;
@@ -105,11 +106,11 @@ public class TutorProfileFragment extends Fragment {
         TextView currentLocationHeader = view.findViewById(R.id.locationTextId);
         TextView bioView = view.findViewById(R.id.bioId);
         TextView bView = view.findViewById(R.id.bioHeader);
-        ImageView editIcon=view.findViewById(R.id.editIcon);
+        ImageView editIcon = view.findViewById(R.id.editIcon);
 
 
         if (!data.get("profile_pic").toString().equals("")) {
-            commonClass.setImageView(getContext(),data.get("profile_pic").toString(),profileView );
+            commonClass.setImageView(getContext(), data.get("profile_pic").toString(), profileView);
         }
         if (data.get("check_in").equals(data.get("office_location"))) {
             statusView.setText("In Office");
@@ -138,11 +139,10 @@ public class TutorProfileFragment extends Fragment {
             bioView.setVisibility(View.GONE);
             bView.setVisibility(View.GONE);
         }
-        if(studentId!=null) {
+        if (studentId != null) {
             getAppoinmentDetails();
             editIcon.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             statusView.setVisibility(View.GONE);
             editIcon.setVisibility(View.VISIBLE);
         }
@@ -211,7 +211,7 @@ public class TutorProfileFragment extends Fragment {
                             if (document.getDocuments().size() != 0) {
                                 updateView(view, document.getDocuments().get(0));
                                 getAvailability(view, document.getDocuments().get(0));
-                                tutor_token=document.getDocuments().get(0).get("token").toString();
+                                tutor_token = document.getDocuments().get(0).get("token").toString();
                                 Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -286,8 +286,8 @@ public class TutorProfileFragment extends Fragment {
         }
     }
 
-    private void senNotification(String date, String time){
-        if(!tutor_token.equals("")) {
+    private void senNotification(String date, String time) {
+        if (!tutor_token.equals("")) {
             Log.d("MainAct", studentName);
             String title = studentName;
             String body = "Appointment registered at " + date + " (" + time + ")";
@@ -299,43 +299,45 @@ public class TutorProfileFragment extends Fragment {
     }
 
     private void onRegisterAppoinment() {
+//        try {
+            if (timeSelect.getVisibility() != View.GONE) {
+                String timeInput = autoCompleteTextView.getText().toString();
+                Log.d("MainAct", dateInput);
+                Log.d("MainAct", timeInput);
+                if (!timeInput.equals("")) {
+                    Log.d("MainAct", "reguistered");
+                    Map<String, Object> appoinment_data = new HashMap<>();
+                    appoinment_data.put("date", dateInput);
+                    appoinment_data.put("time", timeInput);
+                    appoinment_data.put("tutor", tutorId);
+                    appoinment_data.put("student", studentId);
 
+                    String timeStamp = commonClass.toTimeStamp(dateInput, timeInput);
+                    appoinment_data.put("timeStamp", timeStamp);
 
-        if (timeSelect.getVisibility() != View.GONE) {
-            String timeInput = autoCompleteTextView.getText().toString();
-            Log.d("MainAct", dateInput);
-            Log.d("MainAct", timeInput);
-            if (!timeInput.equals("")) {
-                Log.d("MainAct", "reguistered");
-                Map<String, Object> appoinment_data = new HashMap<>();
-                appoinment_data.put("date", dateInput);
-                appoinment_data.put("time", timeInput);
-                appoinment_data.put("tutor", tutorId);
-                appoinment_data.put("student", studentId);
+                    db.collection("appoinment").add(appoinment_data)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Toast.makeText(getActivity(), "Appointment registered successfully", Toast.LENGTH_SHORT).show();
+                                    bottomNavigationView.setSelectedItemId(R.id.home);
+                                    senNotification(dateInput, timeInput);
 
-                db.collection("appoinment").add(appoinment_data)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(getActivity(), "Appointment registered successfully", Toast.LENGTH_SHORT).show();
-                                bottomNavigationView.setSelectedItemId(R.id.home);
-                                senNotification(dateInput, timeInput);
-
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("MainActivity", "Error adding document", e);
-                            }
-                        });
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("MainActivity", "Error adding document", e);
+                                }
+                            });
+                } else {
+                    showError(dialog.findViewById(R.id.errMsg), "Please select time");
+                }
             } else {
-                showError(dialog.findViewById(R.id.errMsg), "Please select time");
+                showError(dialog.findViewById(R.id.errMsg), "Please select date");
             }
-        } else {
-            showError(dialog.findViewById(R.id.errMsg), "Please select date");
         }
-    }
 
 
     private void showDatePickerDialog() {
@@ -353,13 +355,17 @@ public class TutorProfileFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
 
+
                         Calendar selectedCalendar = Calendar.getInstance();
                         selectedCalendar.set(year, month, dayOfMonth);
                         SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
                         String weekName = sdf.format(selectedCalendar.getTime());
 
+                        int month_extend = month + 1;
 
-                        dateInput = dayOfMonth + "/" + (month + 1) + "/" + year;
+
+                        String finalMonth = (month_extend < 10 ? "0" : "") + month_extend;
+                        dateInput = dayOfMonth + "/" + finalMonth + "/" + year;
                         Log.d("MainAct", dateInput);
                         getSlotList(dateInput, weekName);
 
@@ -466,7 +472,7 @@ public class TutorProfileFragment extends Fragment {
     }
 
 
-    private void redirectEditProfile(int layoutId, String tutorId){
+    private void redirectEditProfile(int layoutId, String tutorId) {
         Bundle mBundle = new Bundle();
         mBundle.putString("tutorId", tutorId);
         mBundle.putInt("layoutId", layoutId);
@@ -492,9 +498,9 @@ public class TutorProfileFragment extends Fragment {
         tutorId = bundle.getString("user_id");
         studentId = bundle.getString("studentId");
         layoutId = bundle.getInt("layoutId");
-        studentName=bundle.getString("studentName");
+        studentName = bundle.getString("studentName");
 
-        Log.d("MainAct", "name:"+ studentName);
+        Log.d("MainAct", "name:" + studentName);
 
         Log.d("MainActivity", "uuid data:" + studentId);
         // Inflate the layout for this fragment
@@ -507,7 +513,7 @@ public class TutorProfileFragment extends Fragment {
         Button cancelBtn = view.findViewById(R.id.cancelId);
         cancelBtn.setVisibility(View.GONE);
         dialog = new Dialog(getContext());
-        if(studentId==null){
+        if (studentId == null) {
             submitBtn.setVisibility(View.GONE);
         }
 
@@ -547,7 +553,7 @@ public class TutorProfileFragment extends Fragment {
             }
         });
 
-        ImageView editId= view.findViewById(R.id.editIcon);
+        ImageView editId = view.findViewById(R.id.editIcon);
 
         editId.setOnClickListener(new View.OnClickListener() {
             @Override

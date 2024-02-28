@@ -36,7 +36,7 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/_184159_3094350"
+                    android:src="@drawable/user_new"
                     app:shapeAppearanceOverlay="@style/Circular" />
             </LinearLayout>
 
@@ -341,6 +341,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/primary"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:paddingTop="13sp"
+                android:paddingBottom="13sp"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="Book Appointment" />
 
             <Button
@@ -349,6 +354,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/danger"
+                android:textColor="@color/white"
+                android:textAllCaps="false"
+                android:paddingTop="13sp"
+                android:paddingBottom="13sp"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="Cancel Appoinment" />
         </LinearLayout>
 

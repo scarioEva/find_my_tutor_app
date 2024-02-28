@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if ((path.equals("student") && !document.getDocuments().get(0).contains("course")) || (path.equals("tutor") && document.getDocuments().get(0).get("department").toString().equals(""))) {
                                         redirectRegistrationPage(path, document.getDocuments().get(0).getReference().getId());
                                     } else {
-                                        Intent intent = new Intent(LoginActivity.this, type.equals("Tutor") ? TutorMainActivity.class : StudentMainActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, path.equals("tutor") ? TutorMainActivity.class : StudentMainActivity.class);
                                         intent.putExtra("uId", uid);
                                         startActivity(intent);
                                     }

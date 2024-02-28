@@ -52,6 +52,11 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="5dp"
         android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:paddingTop="13sp"
+        android:paddingBottom="13sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:text="Submit" />
 
     <Button
@@ -61,6 +66,11 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:backgroundTint="@color/black"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:paddingTop="13sp"
+        android:paddingBottom="13sp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:text="Cancel" />
 
 
