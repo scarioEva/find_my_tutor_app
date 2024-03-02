@@ -82,16 +82,16 @@ public class TutorRegisterActivity extends AppCompatActivity {
     AutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> spinnerAdapter;
 
-    Button monFromId;
-    Button monToId;
-    Button tueFromId;
-    Button tueToId;
-    Button wedFromId;
-    Button wedToId;
-    Button thuFromId;
-    Button thuToId;
-    Button friFromId;
-    Button friToId;
+    TextView monFromId;
+    TextView monToId;
+    TextView tueFromId;
+    TextView tueToId;
+    TextView wedFromId;
+    TextView wedToId;
+    TextView thuFromId;
+    TextView thuToId;
+    TextView friFromId;
+    TextView friToId;
     int hour, minute;
     Loader loader;
 
@@ -188,7 +188,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void showTimePickerDialog(Button btn) {
+    private void showTimePickerDialog(TextView btn) {
         Calendar calendar = Calendar.getInstance();
 
         hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -358,9 +358,10 @@ public class TutorRegisterActivity extends AppCompatActivity {
         editText.setBackground(borderDrawable);
     }
 
-    private void setButtonRed(Button btn, boolean red) {
+    private void setButtonRed(TextView btn, boolean red) {
         btn.setTextColor( ContextCompat.getColor(TutorRegisterActivity.this,red?R.color.danger:R.color.black));
-//        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
+        btn.setBackground(ContextCompat.getDrawable(TutorRegisterActivity.this, red ? R.drawable.button_border_red : R.drawable.edit_text_border));
+
     }
 
     private void updateDatabase(String fileUrl) {

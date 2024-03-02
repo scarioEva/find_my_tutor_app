@@ -19,8 +19,9 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
 
                 >
@@ -35,6 +36,23 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/user_new"
                     app:shapeAppearanceOverlay="@style/Circular" />
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circle"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="-30dp"
+                    android:padding="2sp"
+                    android:layout_gravity="bottom"
+                    >
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/upload_white"
+                        />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
@@ -118,7 +136,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
-                            <TableRow android:padding="5dp">
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -127,14 +147,19 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="Monday" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/monFromId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="09:00"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/black"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -144,19 +169,25 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="-" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/monToId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                             </TableRow>
 
 
-                            <TableRow android:padding="5dp">
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
                                 <TextView
 
@@ -166,13 +197,17 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="Tuesday" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/tueFromId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                                 <TextView
@@ -183,19 +218,25 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="-" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/tueToId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                             </TableRow>
 
 
-                            <TableRow android:padding="5dp">
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -204,13 +245,17 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="Wednesday" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/wedFromId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                                 <TextView
@@ -221,19 +266,25 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="-" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/wedToId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                             </TableRow>
 
 
-                            <TableRow android:padding="5dp">
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -241,13 +292,17 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="Thursday" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/thuFromId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                                 <TextView
@@ -257,19 +312,25 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="-" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/thuToId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                             </TableRow>
 
 
-                            <TableRow android:padding="5dp">
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -277,13 +338,17 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="Friday" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/friFromId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                                 <TextView
@@ -293,13 +358,17 @@
                                     android:layout_marginEnd="30dp"
                                     android:text="-" />
 
-                                <Button
+                                <TextView
                                     android:id="@+id/friToId"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
                                     android:textColor="@color/black" />
 
                             </TableRow>

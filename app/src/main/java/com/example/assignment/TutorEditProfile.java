@@ -71,16 +71,16 @@ public class TutorEditProfile extends Fragment {
     ShapeableImageView imageView;
     TextView errMsg;
     Button submitId;
-    Button monFromId;
-    Button monToId;
-    Button tueFromId;
-    Button tueToId;
-    Button wedFromId;
-    Button wedToId;
-    Button thuFromId;
-    Button thuToId;
-    Button friFromId;
-    Button friToId;
+    TextView monFromId;
+    TextView monToId;
+    TextView tueFromId;
+    TextView tueToId;
+    TextView wedFromId;
+    TextView wedToId;
+    TextView thuFromId;
+    TextView thuToId;
+    TextView friFromId;
+    TextView friToId;
     int hour, minute;
     TextInputLayout nameId;
     TextInputLayout departmentId;
@@ -128,9 +128,11 @@ public class TutorEditProfile extends Fragment {
         fragmentTransaction.commit();
     }
 
-    private void setButtonRed(Button btn, boolean red) {
-        btn.setTextColor( ContextCompat.getColor(getContext(),red?R.color.danger:R.color.black));
-//        btn.setBackgroundResource(red ? R.drawable.button_border_red : R.drawable.edit_text_border);
+    private void setButtonRed(TextView btn, boolean red) {
+        btn.setBackground(ContextCompat.getDrawable(getContext(), red ? R.drawable.button_border_red : R.drawable.edit_text_border));
+
+        btn.setTextColor(ContextCompat.getColor(getContext(), red ? R.color.danger : R.color.black));
+
     }
 
     private void onUpdateData(String fileUrl) {
@@ -268,8 +270,6 @@ public class TutorEditProfile extends Fragment {
     }
 
     private void getAvailability(DocumentSnapshot data) {
-
-
         Map<String, Object> timeMap = (Map<String, Object>) data.get("availability");
 
         Map<String, Object> monday = (Map<String, Object>) timeMap.get("monday");
@@ -342,7 +342,9 @@ public class TutorEditProfile extends Fragment {
     }
 
 
-    private void showTimePickerDialog(Button btn) {
+    public void showTimePickerDialog(TextView txt) {
+        Log.d("MainAct54", txt.toString());
+//        txt.setText("dhakushk");
         Calendar calendar = Calendar.getInstance();
 
         hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -356,7 +358,10 @@ public class TutorEditProfile extends Fragment {
                         minute = minuteOfDay;
 
                         String time = String.format("%02d:%02d", hour, minute);
-                        btn.setText(time);
+                        Log.d("MainAct", time);
+                        Log.d("MainAct", txt.getText().toString());
+
+                        txt.setText(time.toString());
                     }
                 }, hour, minute, false);
         timePickerDialog.show();
@@ -622,6 +627,7 @@ public class TutorEditProfile extends Fragment {
 
 
         monFromId = view.findViewById(R.id.monFromId);
+        Log.d("MainAct54", monFromId.toString());
         monFromId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
