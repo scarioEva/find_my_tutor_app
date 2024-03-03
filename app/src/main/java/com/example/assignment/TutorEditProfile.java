@@ -131,7 +131,7 @@ public class TutorEditProfile extends Fragment {
     private void setButtonRed(TextView btn, boolean red) {
         btn.setBackground(ContextCompat.getDrawable(getContext(), red ? R.drawable.button_border_red : R.drawable.edit_text_border));
 
-        btn.setTextColor(ContextCompat.getColor(getContext(), red ? R.color.danger : R.color.black));
+        btn.setTextColor(ContextCompat.getColor(getContext(), red ? R.color.danger : R.color.text_color));
 
     }
 
@@ -480,7 +480,7 @@ public class TutorEditProfile extends Fragment {
                     removeImage = true;
                     ImageUri = null;
                     checkProfileUrl = "";
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable._184159_3094350));
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.user_new));
                     dialog.hide();
                 }
             });

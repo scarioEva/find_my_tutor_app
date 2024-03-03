@@ -16,7 +16,9 @@
             android:layout_marginBottom="10sp"
             android:text="Appointments"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/text_color"
+            />
 
 
         <RelativeLayout
@@ -47,7 +49,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:gravity="center"
-                        android:text="You don't have any appointment." />
+                        android:text="You don't have any appointment."
+                        android:textColor="@color/text_color"
+                        />
                 </RelativeLayout>
             </LinearLayout>
         </RelativeLayout>

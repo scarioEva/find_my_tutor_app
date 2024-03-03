@@ -45,6 +45,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -106,6 +107,17 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         getLocationList();
+
+        Button loginBtn=findViewById(R.id.loginBtn);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent loginIntent = new Intent(TutorRegisterActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+            }
+        });
+
 
         monFromId = findViewById(R.id.monFromId);
         monFromId.setOnClickListener(new View.OnClickListener() {
@@ -306,7 +318,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     ImageUri = null;
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable._184159_3094350));
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.user_new));
                     dialog.hide();
                 }
             });
@@ -359,7 +371,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
     }
 
     private void setButtonRed(TextView btn, boolean red) {
-        btn.setTextColor( ContextCompat.getColor(TutorRegisterActivity.this,red?R.color.danger:R.color.black));
+        btn.setTextColor( ContextCompat.getColor(TutorRegisterActivity.this,red?R.color.danger:R.color.text_color));
         btn.setBackground(ContextCompat.getDrawable(TutorRegisterActivity.this, red ? R.drawable.button_border_red : R.drawable.edit_text_border));
 
     }

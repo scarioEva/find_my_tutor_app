@@ -126,7 +126,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
         String token = student_token;
         CommonClass commonClass = new CommonClass();
-        commonClass.sendNotification(userId, title, body, token);
+        commonClass.sendNotification(userId, title, body, token, doc.getDocuments().get(0).get("profile_pic").toString());
     }
 
     private void getStudentList(QuerySnapshot tutorDoc) {
@@ -135,8 +135,10 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot docs : task.getResult()) {
-                        if (!docs.get("token").toString().equals("")) {
-                            updateCheckToStudents(tutorDoc, docs.get("token").toString());
+                        if (docs.contains("token")) {
+                            if (!docs.get("token").toString().equals("")) {
+                                updateCheckToStudents(tutorDoc, docs.get("token").toString());
+                            }
                         }
                     }
                 }
@@ -158,7 +160,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
 //                                String name = "Welcome " + document.getDocuments().get(0).get("name");
                                 if (document.getDocuments().get(0).get("check_in") != null) {
                                     checkIn = document.getDocuments().get(0).get("check_in").toString();
-                                    if (checkin) {
+                                    if (!checkIn.equals("")) {
                                         getStudentList(document);
                                     }
                                 } else {
@@ -216,6 +218,8 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
 
                         if (document.contains(value)) {
                             updateTutorCheckIn(document.getData().get(value).toString());
+                        } else {
+                            Toast.makeText(TutorMainActivity.this, "Invalid QR code!", Toast.LENGTH_SHORT).show();
                         }
 
                     } else {

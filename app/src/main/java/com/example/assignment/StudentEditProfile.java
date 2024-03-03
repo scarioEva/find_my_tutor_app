@@ -290,7 +290,7 @@ public class StudentEditProfile extends Fragment {
                     removeImage = true;
                     ImageUri = null;
                     checkProfileUrl = "";
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable._184159_3094350));
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.user_new));
                     dialog.hide();
                 }
             });

@@ -199,14 +199,15 @@ public class CommonClass {
         return uri;
     }
 
-    public void sendNotification(String userId, String title, String body, String token) {
+    public void sendNotification(String userId, String title, String body, String token, String image) {
         try {
             JSONObject jsonObject = new JSONObject();
             JSONObject notificationObj = new JSONObject();
             notificationObj.put("title", title);
             notificationObj.put("body", body);
-            notificationObj.put("channel_id", "firebase");
-            notificationObj.put("color", "#7CFC00");
+            notificationObj.put("image", image);
+//            notificationObj.put("icon", R.mipmap.ic_launcher);
+            notificationObj.put("color", "#5d865d");
 
             JSONObject dataObj = new JSONObject();
             dataObj.put("userId", userId);

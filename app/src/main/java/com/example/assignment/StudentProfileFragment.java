@@ -28,7 +28,7 @@ public class StudentProfileFragment extends Fragment {
     String studentId;
     String tutorId;
     int layoutId;
-
+    Loader loader;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class StudentProfileFragment extends Fragment {
         TextView bioView = view.findViewById(R.id.bioId);
         TextView bView = view.findViewById(R.id.b);
         TextView pView = view.findViewById(R.id.p);
+        TextView studentId = view.findViewById(R.id.student);
 
 
         ImageView editIcom = view.findViewById(R.id.editIcon);
@@ -55,7 +56,7 @@ public class StudentProfileFragment extends Fragment {
         nameView.setText(data.get("name").toString());
         courseView.setText(data.get("course").toString());
         acView.setText(data.get("accademic_year").toString());
-
+        studentId.setText(data.get("student_id").toString());
         if (!data.get("bio").equals("")) {
             bioView.setText(data.get("bio").toString());
         } else {
@@ -77,6 +78,7 @@ public class StudentProfileFragment extends Fragment {
     }
 
     private void getProfileDetails(String id, View view) {
+        loader.startLoading();
         db.collection("student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -89,11 +91,13 @@ public class StudentProfileFragment extends Fragment {
 
                             }
                         }
+                        loader.stopLoading();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
@@ -122,6 +126,9 @@ public class StudentProfileFragment extends Fragment {
         studentId = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
         tutorId = bundle.getString("tutorUid");
+
+        loader = new Loader(getActivity());
+
         TextView heading = view.findViewById(R.id.header_title);
         heading.setText(tutorId != null ? "Student's profile" : "My Profile");
         ImageView editId = view.findViewById(R.id.editIcon);

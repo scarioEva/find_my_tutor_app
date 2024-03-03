@@ -11,6 +11,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -23,9 +24,12 @@
                 android:text="Profile"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:layout_marginBottom="10sp"/>
+                android:layout_marginBottom="10sp"
+                android:textColor="@color/text_color"
+                />
 
             <LinearLayout
+                android:layout_marginTop="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -44,7 +48,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -59,9 +63,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Full name"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+
+                        />
 
                     <TextView
                         android:id="@+id/departmentId"
@@ -69,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="-5dp"
                         android:text="Department"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
                 </LinearLayout>
 
@@ -79,14 +85,7 @@
                     android:layout_gravity="center_vertical"
                     android:paddingStart="20dp">
 
-                    <TextView
-                        android:id="@+id/statusId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="-5dp"
-                        android:text="Status"
-                        android:textColor="@color/grey"
-                        android:textSize="13sp" />
+
                     <ImageView
                         android:id="@+id/editIcon"
                         android:layout_width="wrap_content"
@@ -102,8 +101,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Current Location"
-                android:textColor="@color/black"
+                android:text="Currently at"
+                android:textColor="@color/text_color"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -112,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Current Location"
-                android:textColor="@color/grey"
+                android:textColor="@color/text_light"
                 android:textSize="13sp" />
 
             <TextView
@@ -120,17 +119,35 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="Main Office Location"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/officeId"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Office Location"
-                android:textColor="@color/grey"
-                android:textSize="13sp" />
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:id="@+id/officeId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Office Location"
+                    android:textColor="@color/text_light"
+                    android:textSize="13sp"
+
+                    />
+                <TextView
+                    android:id="@+id/statusId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status"
+                    android:textColor="@color/grey"
+                    android:textSize="13sp"
+                    android:layout_marginLeft="4sp"
+                    android:layout_gravity="center_vertical"
+                    />
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/bioHeader"
@@ -138,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="Bio"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -147,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bio"
-                android:textColor="@color/grey"
+                android:textColor="@color/text_light"
                 android:textSize="13sp" />
 
             <TextView
@@ -155,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="Availability"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -171,14 +188,14 @@
                         android:layout_column="0"
                         android:layout_marginEnd="30dp"
                         android:text="Monday"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/monFromId"
                         android:layout_column="1"
                         android:text="09:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
 
                         android:textSize="13sp" />
 
@@ -189,13 +206,13 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:text="-"
-                        android:textColor="@color/grey" />
+                        android:textColor="@color/text_light" />
 
                     <TextView
                         android:id="@+id/monToId"
                         android:layout_column="3"
                         android:text="17:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                 </TableRow>
@@ -208,14 +225,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Tuesday"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/tueFromId"
                         android:layout_column="1"
                         android:text="09:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
@@ -225,12 +242,12 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:text="-"
-                        android:textColor="@color/grey" />
+                        android:textColor="@color/text_light"/>
 
                     <TextView
                         android:id="@+id/tueToId"
                         android:text="17:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                 </TableRow>
@@ -242,13 +259,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Wednesday"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/wedFromId"
                         android:text="09:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
@@ -258,12 +275,12 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:text="-"
-                        android:textColor="@color/grey" />
+                        android:textColor="@color/text_light" />
 
                     <TextView
                         android:id="@+id/wedToId"
                         android:text="17:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                 </TableRow>
@@ -275,13 +292,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Thursday"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/thuFromId"
                         android:text="09:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
@@ -290,12 +307,12 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:text="-"
-                        android:textColor="@color/grey" />
+                        android:textColor="@color/text_light" />
 
                     <TextView
                         android:id="@+id/thuToId"
                         android:text="17:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                 </TableRow>
@@ -307,13 +324,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Friday"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/friFromId"
                         android:text="09:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                     <TextView
@@ -322,12 +339,12 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginEnd="20dp"
                         android:text="-"
-                        android:textColor="@color/grey" />
+                        android:textColor="@color/text_light" />
 
                     <TextView
                         android:id="@+id/friToId"
                         android:text="17:00"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/text_light"
                         android:textSize="13sp" />
 
                 </TableRow>
@@ -340,8 +357,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/primary"
-                android:textColor="@color/white"
+                android:backgroundTint="@color/button_primary"
+                android:textColor="@color/button_primary_text"
                 android:textAllCaps="false"
                 android:paddingTop="13sp"
                 android:paddingBottom="13sp"
@@ -359,7 +376,7 @@
                 android:paddingTop="13sp"
                 android:paddingBottom="13sp"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:text="Cancel Appoinment" />
+                android:text="Cancel Appointment" />
         </LinearLayout>
 
 

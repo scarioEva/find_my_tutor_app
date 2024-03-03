@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".TutorRegisterActivity">
+    tools:context=".TutorRegisterActivity"
+    android:background="@color/layout_background"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
@@ -58,14 +60,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lets setup your account"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:layout_marginTop="20sp"
+                android:text="Lets setup your tutor account"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
                 android:orientation="vertical">
 
@@ -80,7 +84,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:textColor="@color/text_color"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -95,7 +100,8 @@
                         android:id="@+id/officeLocationId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="none" />
+                        android:inputType="none"
+                        android:textColor="@color/text_color"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -109,7 +115,8 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -119,18 +126,22 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:text="Schedule Availability"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:textStyle="bold" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+
+                    >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="10dp">
+                        android:padding="10dp"
+                        android:background="@color/layout_background"
+                        >
 
                         <TableLayout
                             android:layout_width="match_parent"
@@ -145,7 +156,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_column="0"
                                     android:layout_marginEnd="30dp"
-                                    android:text="Monday" />
+                                    android:text="Monday"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/monFromId"
@@ -154,7 +167,7 @@
                                     android:background="@drawable/edit_text_border"
                                     android:gravity="center_vertical"
                                     android:text="09:00"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/text_color"
                                     android:paddingLeft="20dp"
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
@@ -167,7 +180,9 @@
                                     android:layout_column="2"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="30dp"
-                                    android:text="-" />
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/monToId"
@@ -180,7 +195,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                             </TableRow>
 
@@ -195,7 +210,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_column="0"
                                     android:layout_marginEnd="30dp"
-                                    android:text="Tuesday" />
+                                    android:text="Tuesday"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/tueFromId"
@@ -208,7 +225,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -216,7 +233,9 @@
                                     android:layout_column="2"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="30dp"
-                                    android:text="-" />
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/tueToId"
@@ -229,7 +248,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                             </TableRow>
 
@@ -243,7 +262,9 @@
                                     android:layout_height="wrap_content"
                                     android:layout_column="0"
                                     android:layout_marginEnd="30dp"
-                                    android:text="Wednesday" />
+                                    android:text="Wednesday"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/wedFromId"
@@ -256,7 +277,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -264,7 +285,9 @@
                                     android:layout_column="2"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="30dp"
-                                    android:text="-" />
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/wedToId"
@@ -277,7 +300,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                             </TableRow>
 
@@ -290,7 +313,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="30dp"
-                                    android:text="Thursday" />
+                                    android:text="Thursday"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/thuFromId"
@@ -303,14 +328,16 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="30dp"
-                                    android:text="-" />
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/thuToId"
@@ -323,7 +350,8 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color"
+                                    />
 
                             </TableRow>
 
@@ -336,7 +364,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="30dp"
-                                    android:text="Friday" />
+                                    android:text="Friday"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/friFromId"
@@ -349,14 +379,17 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="30dp"
-                                    android:text="-" />
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
                                 <TextView
                                     android:id="@+id/friToId"
@@ -369,7 +402,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingRight="20dp"
                                     android:paddingBottom="10dp"
-                                    android:textColor="@color/black" />
+                                    android:textColor="@color/text_color" />
 
                             </TableRow>
 
@@ -393,8 +426,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    android:backgroundTint="@color/primary"
-                    android:textColor="@color/white"
+                    android:backgroundTint="@color/button_primary"
+                    android:textColor="@color/button_primary_text"
                     android:textAllCaps="false"
                     android:paddingTop="13sp"
                     android:paddingBottom="13sp"
@@ -402,6 +435,16 @@
                     android:onClick="onSubmit"
                     android:text="Submit" />
 
+                <Button
+                    android:id="@+id/loginBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="5dp"
+                    android:background="#00000000"
+                    android:elevation="0dp"
+                    android:text="Back to Login"
+                    android:textColor="@color/text_color" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

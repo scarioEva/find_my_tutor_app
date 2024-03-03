@@ -27,6 +27,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
 
     String userId;
     String studentName;
+    String profile_img;
 
     BottomNavigationView bottomNavigationView;
 
@@ -51,6 +52,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                             if (document.getDocuments().size() != 0) {
 
                                 studentName = document.getDocuments().get(0).get("name").toString();
+                                profile_img=document.getDocuments().get(0).get("profile_pic").toString();
                                 loadFragment(new StudentHomeFragment());
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -113,6 +115,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
             Bundle mBundle = new Bundle();
             mBundle.putString("user_id", userId);
             mBundle.putString("studentName", studentName);
+            mBundle.putString("studentProfile", profile_img);
             mBundle.putInt("layoutId", R.id.frameLayout);
             fragment.setArguments(mBundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();

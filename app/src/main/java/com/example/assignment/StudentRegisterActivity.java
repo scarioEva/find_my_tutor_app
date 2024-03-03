@@ -30,6 +30,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -79,6 +81,17 @@ public class StudentRegisterActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         loader = new Loader(StudentRegisterActivity.this);
+
+        Button loginBtn=findViewById(R.id.loginBtn);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent loginIntent = new Intent(StudentRegisterActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+            }
+        });
     }
 
     private void openCamera() {
@@ -151,7 +164,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     ImageUri = null;
-                    imageView.setImageDrawable(getResources().getDrawable(R.drawable._184159_3094350));
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.user_new));
                     dialog.hide();
                 }
             });
@@ -210,11 +223,13 @@ public class StudentRegisterActivity extends AppCompatActivity {
         TextInputLayout phoneId = findViewById(R.id.contactId);
         TextInputLayout accYrId = findViewById(R.id.accYrId);
         TextInputLayout bioId = findViewById(R.id.bioId);
+        TextInputLayout studentId=findViewById(R.id.student);
 
         String courseInput = courseId.getEditText().getText().toString();
         String phoneInput = phoneId.getEditText().getText().toString();
         String accademicInput = accYrId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
+        String studentIdInput= studentId.getEditText().getText().toString();
 
 
 
@@ -228,12 +243,17 @@ public class StudentRegisterActivity extends AppCompatActivity {
             setBorderRed(accYrId);
         }
 
+        if (studentIdInput.equals("")) {
+            setBorderRed(studentId);
+        }
+
         TextView errMsg = findViewById(R.id.errMsg);
 
-        if (!courseInput.equals("") && !accademicInput.equals("")) {
+        if (!courseInput.equals("") && !accademicInput.equals("") && !studentIdInput.equals("")) {
 
             Map<String, Object> userData = new HashMap<>();
             userData.put("course", courseInput);
+            userData.put("student_id", studentIdInput);
             userData.put("accademic_year", accademicInput);
             userData.put("phone", phoneInput);
             userData.put("bio", bioInput);

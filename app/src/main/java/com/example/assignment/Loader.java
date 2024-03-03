@@ -21,8 +21,18 @@ public class Loader{
             loaderDialog.show();
 
     }
+    void setTimeout(Runnable runnable, int delay){
+        new Thread(() -> {
+            try {
+                Thread.sleep(delay);
+                runnable.run();
+            }
+            catch (Exception e){
+            }
+        }).start();
+    }
 
     void stopLoading(){
-        loaderDialog.dismiss();
+        setTimeout(()->loaderDialog.dismiss(), 1000);
     }
 }

@@ -58,6 +58,8 @@ public class StudentSearchFragment extends Fragment {
     CommonClass commonClass = new CommonClass();
     String studentName;
 
+    String studentProfile;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +72,7 @@ public class StudentSearchFragment extends Fragment {
         mBundle.putString("studentId", studentID);
         mBundle.putInt("layoutId", layoutId);
         mBundle.putString("studentName", studentName);
+        mBundle.putString("studentProfile", studentProfile);
         TutorProfileFragment tutorProfileFragment = new TutorProfileFragment();
         tutorProfileFragment.setArguments(mBundle);
         androidx.fragment.app.FragmentManager fragmentManager = getFragmentManager();
@@ -109,47 +112,17 @@ public class StudentSearchFragment extends Fragment {
                                             document.getData().get("department").toString(),
                                             document.getData().get("profile_pic").toString(),
                                             "",
-                                            document.getData().get("office_location").toString().equals(   document.getData().get("check_in").toString())
+                                            document.getData().get("office_location").toString().equals(document.getData().get("check_in").toString())
                                     ));
 
-                                    if(infoList.size()!=0){
+                                    if (infoList.size() != 0) {
                                         emptyMsg.setVisibility(View.GONE);
                                         listview.setVisibility(View.VISIBLE);
                                     }
 
-//                                    for (AppoinmentObject obj : slotList) {
-//
-//                                        if (obj.getTutorId().equals(document.getData().get("uId"))) {
-////                                            try {
-////                                                infoList.add(new InfoModel(document.getData().get("name").toString(),
-////                                                        document.getData().get("office_location").toString(),
-////                                                        document.getData().get("department").toString(),
-////                                                        document.getData().get("profile_pic").toString(),
-////                                                        commonClass.getDateTime(obj.getDate(), obj.getTime()),
-////                                                        false
-////                                                ));
-////
-////                                            } catch (ParseException e) {
-////                                                throw new RuntimeException(e);
-////                                            }
-//                                        } else {
-//                                            if (nextUniqueDocumentIds.add(document.getId())) {
-//                                                Log.d("MainAct", document.getData().get("name").toString());
-////                                                break;
-//                                                infoList.add(new InfoModel(document.getData().get("name").toString(),
-//                                                        document.getData().get("office_location").toString(),
-//                                                        document.getData().get("department").toString(),
-//                                                        document.getData().get("profile_pic").toString(),
-//                                                        "",
-//                                                        false
-//                                                ));
-//                                            }
-//                                        }
-//                                    }
-
                                 }
                             }
-//                            }
+
                         }
                     }
                 }
@@ -165,7 +138,8 @@ public class StudentSearchFragment extends Fragment {
         Bundle bundle = getArguments();
         layoutId = bundle.getInt("layoutId");
         studentID = bundle.getString("user_id");
-        studentName=bundle.getString("studentName");
+        studentName = bundle.getString("studentName");
+        studentProfile=bundle.getString("studentProfile");
 
         Log.d("MainAct", "stu:" + studentID);
 

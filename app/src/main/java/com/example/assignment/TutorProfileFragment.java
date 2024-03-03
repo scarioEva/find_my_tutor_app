@@ -68,7 +68,8 @@ public class TutorProfileFragment extends Fragment {
     Boolean slotRegistered;
     String studentName;
     String tutor_token;
-
+    Loader loader;
+    String studentProfile;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,12 +114,12 @@ public class TutorProfileFragment extends Fragment {
             commonClass.setImageView(getContext(), data.get("profile_pic").toString(), profileView);
         }
         if (data.get("check_in").equals(data.get("office_location"))) {
-            statusView.setText("In Office");
+            statusView.setText("(In Office)");
             statusView.setTextColor(ContextCompat.getColor(getContext(), R.color.success));
             currentLocationView.setVisibility(View.GONE);
             currentLocationHeader.setVisibility(View.GONE);
         } else {
-            statusView.setText("Out of Office");
+            statusView.setText("(Out of Office)");
             statusView.setTextColor(ContextCompat.getColor(getContext(), R.color.danger));
         }
 
@@ -203,6 +204,7 @@ public class TutorProfileFragment extends Fragment {
     }
 
     private void getProfileDetails(String id, View view) {
+        loader.startLoading();
         db.collection("tutor").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -218,11 +220,13 @@ public class TutorProfileFragment extends Fragment {
 
                             }
                         }
+                        loader.stopLoading();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        loader.stopLoading();
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
@@ -293,12 +297,13 @@ public class TutorProfileFragment extends Fragment {
             String body = "Appointment registered at " + date + " (" + time + ")";
             String token = tutor_token;
             CommonClass commonClass = new CommonClass();
-            commonClass.sendNotification(studentId, title, body, token);
+            commonClass.sendNotification(studentId, title, body, token, studentProfile);
         }
         homeRedirect();
     }
 
     private void onRegisterAppoinment() {
+        Log.d("MainAct", "booked");
 //        try {
             if (timeSelect.getVisibility() != View.GONE) {
                 String timeInput = autoCompleteTextView.getText().toString();
@@ -499,7 +504,9 @@ public class TutorProfileFragment extends Fragment {
         studentId = bundle.getString("studentId");
         layoutId = bundle.getInt("layoutId");
         studentName = bundle.getString("studentName");
+        studentProfile=bundle.getString("studentProfile");
 
+        loader = new Loader(getActivity());
         Log.d("MainAct", "name:" + studentName);
 
         Log.d("MainActivity", "uuid data:" + studentId);
@@ -520,7 +527,7 @@ public class TutorProfileFragment extends Fragment {
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
         builder.setTitle("Confirmation");
-        builder.setMessage("Are you sure you want to cancel the appointment?");
+        builder.setMessage("Are you sure you want to cancel this appointment?");
 
 // Set the positive button and its listener
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
