@@ -112,8 +112,9 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void redirectRegistrationPage(String user, String documentId) {
+    private void redirectRegistrationPage(String user, String documentId,String uid) {
         Intent intent = new Intent(LoginActivity.this, user.equals("tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
+        intent.putExtra("uId", uid);
         intent.putExtra("docId", documentId);
         startActivity(intent);
     }
@@ -133,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
 //                                Log.d("MainAct", "course:"+ document.getDocuments().contains("course"));
                                 if (user.isEmailVerified()) {
                                     if ((path.equals("student") && !document.getDocuments().get(0).contains("course")) || (path.equals("tutor") && document.getDocuments().get(0).get("department").toString().equals(""))) {
-                                        redirectRegistrationPage(path, document.getDocuments().get(0).getReference().getId());
+                                        redirectRegistrationPage(path, document.getDocuments().get(0).getReference().getId() , uid);
                                     } else {
                                         Intent intent = new Intent(LoginActivity.this, path.equals("tutor") ? TutorMainActivity.class : StudentMainActivity.class);
                                         intent.putExtra("uId", uid);
@@ -171,10 +172,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     String uid = user.getUid();
-//Log.d("Login", task.)
-//                    String uId = user.getUid();
-//                    checkUserTypeExists(uId, type, false);
-//                    checkUserTypeExists(type);
                     getUserType(uid);
 
                 } else {
@@ -203,14 +200,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             setErrorMessage("");
                             Toast.makeText(LoginActivity.this, "Password reset email sent successfully", Toast.LENGTH_SHORT).show();
-                            // Password reset email sent successfully
-//                            Log.d(TAG, "Password reset email sent.");
-                            // You can add code here to notify the user or navigate to a success screen
                         } else {
                             setErrorMessage("Failed to send password reset email");
-                            // Failed to send password reset email
-//                            Log.e(TAG, "Error sending password reset email.", task.getException());
-                            // You can add code here to handle the error, e.g., show an error message to the user
                         }
                     });
         }

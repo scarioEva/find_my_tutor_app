@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -53,7 +58,7 @@ public class TutorProfileFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     View view;
     Dialog dialog;
-    AutoCompleteTextView autoCompleteTextView;
+    MaterialAutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> spinnerAdapter;
     List<String> timeList = new ArrayList<>();
     List<String> slotList = new ArrayList<>();
@@ -346,42 +351,51 @@ public class TutorProfileFragment extends Fragment {
 
 
     private void showDatePickerDialog() {
-        // Get current date
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, 1);
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // Create a DatePickerDialog and show it
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getContext(),
-                new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        //disable till current date
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        constraintsBuilder.setValidator(new CalendarConstraints.DateValidator() {
+            @Override
+            public boolean isValid(long date) {
+                return date >= calendar.getTimeInMillis();
+            }
 
+            @Override
+            public int describeContents() {
+                return 0;
+            }
 
-                        Calendar selectedCalendar = Calendar.getInstance();
-                        selectedCalendar.set(year, month, dayOfMonth);
-                        SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
-                        String weekName = sdf.format(selectedCalendar.getTime());
+            @Override
+            public void writeToParcel(@NonNull Parcel parcel, int i) {
 
-                        int month_extend = month + 1;
+            }
+        });
 
+        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
+        builder.setTitleText("Select Date");
+        builder.setSelection(calendar.getTimeInMillis());
+        builder.setCalendarConstraints(constraintsBuilder.build());
 
-                        String finalMonth = (month_extend < 10 ? "0" : "") + month_extend;
-                        dateInput = dayOfMonth + "/" + finalMonth + "/" + year;
-                        Log.d("MainAct", dateInput);
-                        getSlotList(dateInput, weekName);
+        MaterialDatePicker<Long> materialDatePicker = builder.build();
+        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
 
-                        Button dateButton = dialog.findViewById(R.id.dateButton);
-                        dateButton.setText(dateInput);
-                    }
-                },
-                year, month, dayOfMonth
-        );
-        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
-        datePickerDialog.show();
+            Calendar selectedCalendar = Calendar.getInstance();
+            selectedCalendar.setTimeInMillis(selection);
+
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
+            String weekName = sdf.format(selectedCalendar.getTime());
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            dateInput = dateFormat.format(selectedCalendar.getTime());
+
+            getSlotList(dateInput, weekName);
+
+            Button dateButton = dialog.findViewById(R.id.dateButton);
+            dateButton.setText(dateInput);
+        });
+
+        materialDatePicker.show(getParentFragmentManager(), "MaterialDatePicker");
     }
 
 
@@ -560,7 +574,7 @@ public class TutorProfileFragment extends Fragment {
             }
         });
 
-        ImageView editId = view.findViewById(R.id.editIcon);
+        FloatingActionButton editId = view.findViewById(R.id.editIcon);
 
         editId.setOnClickListener(new View.OnClickListener() {
             @Override

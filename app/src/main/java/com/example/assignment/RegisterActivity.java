@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -211,10 +212,15 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!sEmail.equals("") && !sPassword.equals("") && !cPassword.equals("") && !sName.equals("")) {
-            if (sPassword.equals(cPassword)) {
-                signup(sEmail, sPassword, userType, sName);
-            } else {
-                setErrorMessage("Password and Confirm Password did not match.");
+            if(Patterns.EMAIL_ADDRESS.matcher(sEmail).matches()) {
+                if (sPassword.equals(cPassword)) {
+                    signup(sEmail, sPassword, userType, sName);
+                } else {
+                    setErrorMessage("Password and Confirm Password did not match.");
+                }
+            }
+            else{
+                setErrorMessage("Please enter valid email");
             }
         } else {
             setErrorMessage("Please enter all the required fileds");

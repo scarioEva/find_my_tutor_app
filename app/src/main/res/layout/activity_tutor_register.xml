@@ -96,7 +96,7 @@
                     android:layout_marginTop="5dp"
                     android:hint="Office Location*">
 
-                    <AutoCompleteTextView
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
                         android:id="@+id/officeLocationId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -421,7 +421,7 @@
                     android:gravity="center"
                     android:textColor="#D70040" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -435,7 +435,7 @@
                     android:onClick="onSubmit"
                     android:text="Submit" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/loginBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -44,7 +44,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -80,7 +83,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
     CommonClass commonClass = new CommonClass();
     List<String> locationList = new ArrayList<>();
-    AutoCompleteTextView autoCompleteTextView;
+    MaterialAutoCompleteTextView autoCompleteTextView;
     ArrayAdapter<String> spinnerAdapter;
 
     TextView monFromId;
@@ -101,7 +104,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutor_register);
         Intent intent = getIntent();
-        this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
+        this.userId = intent.getStringExtra("uId");
         documentId = getIntent().getStringExtra("docId");
         loader = new Loader(TutorRegisterActivity.this);
 
@@ -206,18 +209,23 @@ public class TutorRegisterActivity extends AppCompatActivity {
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
-                        hour = hourOfDay;
-                        minute = minuteOfDay;
+        MaterialTimePicker.Builder builder = new MaterialTimePicker.Builder();
+        builder.setTimeFormat(TimeFormat.CLOCK_24H);
+        builder.setHour(hour);
+        builder.setMinute(minute);
 
-                        String time = String.format("%02d:%02d", hour, minute);
-                        btn.setText(time);
-                    }
-                }, hour, minute, false);
-        timePickerDialog.show();
+        MaterialTimePicker materialTimePicker = builder.build();
+
+        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
+            int hourOfDay = materialTimePicker.getHour();
+            int minuteOfDay = materialTimePicker.getMinute();
+
+            String time = String.format("%02d:%02d", hourOfDay, minuteOfDay);
+
+            btn.setText(time);
+        });
+
+        materialTimePicker.show(getSupportFragmentManager(), "MaterialTimePicker");
     }
 
     private void getLocationList() {
@@ -470,6 +478,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
         userData.put("profile_pic", fileUrl);
         userData.put("office_location", locationInput);
         userData.put("check_in", "");
+        userData.put("token", "");
 
         Log.d("MainAct", userData.toString());
         if (departmentInput.equals("")) {

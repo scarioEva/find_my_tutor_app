@@ -45,7 +45,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.timepicker.MaterialTimePicker;
+import com.google.android.material.timepicker.TimeFormat;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -88,7 +91,7 @@ public class TutorEditProfile extends Fragment {
     TextInputLayout mainLocationId;
     List<String> locationList = new ArrayList<>();
     ArrayAdapter<String> spinnerAdapter;
-    AutoCompleteTextView autoCompleteTextView;
+    MaterialAutoCompleteTextView autoCompleteTextView;
     public final int CAMERA_REQ_CODE = 100;
     public final int GALLERY_REQ_CODE = 200;
     final int CAMERA_PERMISSION_CODE = 1001;
@@ -343,28 +346,29 @@ public class TutorEditProfile extends Fragment {
 
 
     public void showTimePickerDialog(TextView txt) {
-        Log.d("MainAct54", txt.toString());
-//        txt.setText("dhakushk");
         Calendar calendar = Calendar.getInstance();
 
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
-                        hour = hourOfDay;
-                        minute = minuteOfDay;
+        MaterialTimePicker.Builder builder = new MaterialTimePicker.Builder();
+        builder.setTimeFormat(TimeFormat.CLOCK_24H);
+        builder.setHour(hour);
+        builder.setMinute(minute);
 
-                        String time = String.format("%02d:%02d", hour, minute);
-                        Log.d("MainAct", time);
-                        Log.d("MainAct", txt.getText().toString());
+        MaterialTimePicker materialTimePicker = builder.build();
 
-                        txt.setText(time.toString());
-                    }
-                }, hour, minute, false);
-        timePickerDialog.show();
+        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
+            int hourOfDay = materialTimePicker.getHour();
+            int minuteOfDay = materialTimePicker.getMinute();
+
+
+            String time = String.format("%02d:%02d", hourOfDay, minuteOfDay);
+
+            txt.setText(time);
+        });
+
+        materialTimePicker.show(getParentFragmentManager(), "MaterialTimePicker");
     }
 
     private void getLocationList() {

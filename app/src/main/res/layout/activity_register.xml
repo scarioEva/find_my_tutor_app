@@ -132,7 +132,7 @@
             android:textColor="#D70040" />
 
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -146,7 +146,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="Register" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

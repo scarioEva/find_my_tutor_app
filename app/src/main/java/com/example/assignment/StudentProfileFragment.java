@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -131,7 +132,7 @@ public class StudentProfileFragment extends Fragment {
 
         TextView heading = view.findViewById(R.id.header_title);
         heading.setText(tutorId != null ? "Student's profile" : "My Profile");
-        ImageView editId = view.findViewById(R.id.editIcon);
+        FloatingActionButton editId = view.findViewById(R.id.editIcon);
 
         editId.setOnClickListener(new View.OnClickListener() {
             @Override

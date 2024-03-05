@@ -50,8 +50,9 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
-
+                                getToken();
                                 studentName = document.getDocuments().get(0).get("name").toString();
+                                Log.w("Cll", studentName);
                                 profile_img=document.getDocuments().get(0).get("profile_pic").toString();
                                 loadFragment(new StudentHomeFragment());
                             } else {
@@ -68,11 +69,12 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                     }
                 });
 
-        getToken();
+
     }
 
 
     private void getToken() {
+//        Log.w("Cll token", userId.toString());
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {

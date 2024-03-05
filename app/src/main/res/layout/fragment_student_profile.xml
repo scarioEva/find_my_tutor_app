@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".StudentProfileFragment">
 
 
@@ -22,17 +22,16 @@
                 android:id="@+id/header_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textStyle="bold"
-                android:textSize="20sp"
                 android:layout_marginBottom="10sp"
+                android:text="Profile"
                 android:textColor="@color/text_color"
-                />
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_marginTop="20sp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
@@ -42,8 +41,7 @@
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/user_new"
-                    app:shapeAppearanceOverlay="@style/Circular"
-                    />
+                    app:shapeAppearanceOverlay="@style/Circular" />
             </LinearLayout>
 
 
@@ -79,28 +77,6 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingStart="20dp">
-
-
-                    <ImageView
-                        android:id="@+id/editIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="Edit"
-                        android:src="@drawable/edit" />
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/statusI"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_marginTop="-5dp"-->
-                    <!--                        android:text="Department"-->
-                    <!--                        android:textColor="@color/grey"-->
-                    <!--                        android:textSize="13sp" />-->
-                </LinearLayout>
             </LinearLayout>
 
 
@@ -138,7 +114,6 @@
                 android:text="Year"
                 android:textColor="@color/text_light"
                 android:textSize="13sp" />
-
 
 
             <TextView
@@ -179,5 +154,12 @@
         </LinearLayout>
     </ScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:backgroundTint="@color/button_secondary_text"
+        android:src="@drawable/edit" />
 
 </FrameLayout>

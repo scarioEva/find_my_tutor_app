@@ -27,7 +27,7 @@
         android:layout_marginTop="5dp"
         android:hint="Select Time*">
 
-        <AutoCompleteTextView
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/timeId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
         android:gravity="center"
         android:textColor="#D70040" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/appoinmentSubmit"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
         android:textAllCaps="false"
         android:textColor="@color/button_primary_text" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/cancel_button"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="match_parent"

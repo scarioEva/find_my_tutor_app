@@ -83,6 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_color"
+                        android:inputType="text"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,6 +98,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_color"
+                        android:inputType="text"
                         />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,6 +113,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="text"
                         android:textColor="@color/text_color"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -125,6 +128,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="text"
                         android:textColor="@color/text_color"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,6 +143,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="text"
                         android:textColor="@color/text_color"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -151,7 +156,7 @@
                     android:gravity="center"
                     android:textColor="#D70040" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -165,7 +170,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/button_primary_text" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/loginBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

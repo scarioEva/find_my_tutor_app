@@ -91,8 +91,8 @@ public class CommonClass {
         Glide.with(context)
                 .load(url)
                 .apply(new RequestOptions()
-                        .diskCacheStrategy(DiskCacheStrategy.NONE) // Disable caching if needed
-                        .skipMemoryCache(true)) // Skip memory cache if needed
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true))
                 .into(imageView);
     }
 
@@ -181,12 +181,12 @@ public class CommonClass {
     }
 
     public Uri saveImage(Bitmap image, Context context) {
-        File imageFolder = new File(context.getCacheDir(), "images");
+        File imgFolder = new File(context.getCacheDir(), "images");
         Uri uri = null;
 
         try {
-            imageFolder.mkdirs();
-            File file = new File(imageFolder, "capture_images.jpg");
+            imgFolder.mkdirs();
+            File file = new File(imgFolder, "image1.jpg");
             FileOutputStream stream = new FileOutputStream(file);
             image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             stream.flush();
@@ -215,7 +215,7 @@ public class CommonClass {
             jsonObject.put("notification", notificationObj);
             jsonObject.put("data", dataObj);
             jsonObject.put("to", token);
-            Log.d("MainAct", "called api" + userId + title + body);
+            Log.d("Claa", "called api" + userId + title + body+" " + image);
             callApi(jsonObject);
         } catch (Exception e) {
 
@@ -244,7 +244,7 @@ public class CommonClass {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d("Claa", "fail" + response);
+                Log.d("Claa", "success" + response);
             }
         });
     }

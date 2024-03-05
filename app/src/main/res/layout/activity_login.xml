@@ -111,7 +111,7 @@
             android:text="Forger password?"
             android:textColor="@color/text_color" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -125,7 +125,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="Login" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

@@ -76,13 +76,14 @@ public class StudentRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_student_register);
 
         Intent intent = getIntent();
-        this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
+        userId = intent.getStringExtra("uId");
+        Log.d("Cll", "login, "+userId);
         documentId = getIntent().getStringExtra("docId");
 
         imageView = findViewById(R.id.imageView);
         loader = new Loader(StudentRegisterActivity.this);
 
-        Button loginBtn=findViewById(R.id.loginBtn);
+        Button loginBtn = findViewById(R.id.loginBtn);
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,12 +101,12 @@ public class StudentRegisterActivity extends AppCompatActivity {
 
     }
 
-    private void reqCameraPermission(){
+    private void reqCameraPermission() {
         if (ActivityCompat.checkSelfPermission(StudentRegisterActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
 
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(StudentRegisterActivity.this, android.Manifest.permission.CAMERA)) {
-            AlertDialog.Builder builder=new AlertDialog.Builder(StudentRegisterActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(StudentRegisterActivity.this);
             builder.setMessage("This app requires CAMERA permission for this feature to use.")
                     .setTitle("PermissionRequired")
                     .setCancelable(false)
@@ -128,13 +129,13 @@ public class StudentRegisterActivity extends AppCompatActivity {
                 openCamera();
             } else {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(StudentRegisterActivity.this, Manifest.permission.CAMERA)) {
-                    AlertDialog.Builder builder=new AlertDialog.Builder(StudentRegisterActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StudentRegisterActivity.this);
                     builder.setMessage("This app requires CAMERA permission for this feature to use.")
                             .setTitle("PermissionRequired")
                             .setCancelable(false)
                             .setPositiveButton("Settings", ((dialogInterface, i) -> {
-                                Intent intent_i=new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                Uri u=Uri.fromParts("package", StudentRegisterActivity.this.getPackageName(), null);
+                                Intent intent_i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u = Uri.fromParts("package", StudentRegisterActivity.this.getPackageName(), null);
                                 intent_i.setData(u);
                                 startActivity(intent_i);
                                 dialogInterface.dismiss();
@@ -149,6 +150,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
             }
         }
     }
+
     public void openDrawer(View view) {
         Log.d("MainAct", "opened");
         Dialog dialog = new Dialog(this);
@@ -168,8 +170,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
                     dialog.hide();
                 }
             });
-        }
-        else{
+        } else {
             removeLayout.setVisibility(View.GONE);
         }
 
@@ -219,18 +220,18 @@ public class StudentRegisterActivity extends AppCompatActivity {
     }
 
     private void updateDatabase(String profileUrl) {
+        loader.stopLoading();
         TextInputLayout courseId = findViewById(R.id.studentCourseId);
         TextInputLayout phoneId = findViewById(R.id.contactId);
         TextInputLayout accYrId = findViewById(R.id.accYrId);
         TextInputLayout bioId = findViewById(R.id.bioId);
-        TextInputLayout studentId=findViewById(R.id.student);
+        TextInputLayout studentId = findViewById(R.id.student);
 
         String courseInput = courseId.getEditText().getText().toString();
         String phoneInput = phoneId.getEditText().getText().toString();
         String accademicInput = accYrId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
-        String studentIdInput= studentId.getEditText().getText().toString();
-
+        String studentIdInput = studentId.getEditText().getText().toString();
 
 
         Log.d("MainAct", "uploadSuccess");
@@ -257,6 +258,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
             userData.put("accademic_year", accademicInput);
             userData.put("phone", phoneInput);
             userData.put("bio", bioInput);
+            userData.put("token", "");
             userData.put("profile_pic", profileUrl);
 
             db.collection("student").document(documentId).update(userData)
@@ -264,24 +266,22 @@ public class StudentRegisterActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void Void) {
                             Toast.makeText(StudentRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
-                            loader.stopLoading();
+
                             Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
                             intent.putExtra("uId", userId);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            loader.stopLoading();
                             errMsg.setText("Something went wrong. Please try again");
                             Log.w("MainActivity", "Error adding document", e);
                         }
                     });
         } else {
             errMsg.setText("Enter all the required fields.");
-            loader.stopLoading();
         }
     }
 
@@ -336,13 +336,12 @@ public class StudentRegisterActivity extends AppCompatActivity {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
                     int orientation = commonClass.getImageOrientation(ImageUri, StudentRegisterActivity.this);
-                    bitmap =commonClass.getRotatedBitmap(ImageUri, orientation, StudentRegisterActivity.this);
+                    bitmap = commonClass.getRotatedBitmap(ImageUri, orientation, StudentRegisterActivity.this);
                     imageView.setImageBitmap(bitmap);
                 }
             }
         }
     }
-
 
 
 }

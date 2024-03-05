@@ -146,7 +146,7 @@
                 android:gravity="center"
                 android:textColor="#D70040" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/submitId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

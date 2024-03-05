@@ -160,7 +160,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
 //                                String name = "Welcome " + document.getDocuments().get(0).get("name");
                                 if (document.getDocuments().get(0).get("check_in") != null) {
                                     checkIn = document.getDocuments().get(0).get("check_in").toString();
-                                    if (!checkIn.equals("")) {
+                                    if (!checkIn.equals("") && checkin) {
                                         getStudentList(document);
                                     }
                                 } else {

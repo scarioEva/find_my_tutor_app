@@ -33,6 +33,6 @@ public class Loader{
     }
 
     void stopLoading(){
-        setTimeout(()->loaderDialog.dismiss(), 1000);
+        loaderDialog.dismiss();
     }
 }

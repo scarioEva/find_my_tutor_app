@@ -87,7 +87,7 @@ public class TutorHomeFragment extends Fragment {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     if (uniqueDocumentIds.add(document.getId())) {
                                         uidList.add(document.getData().get("uId").toString());
-                                        infoList.add(new InfoModel(document.getData().get("name").toString(),
+                                        infoList.add(new InfoModel(document.getData().get("name").toString() +" ("+document.getData().get("student_id").toString()+")",
                                                 document.getData().get("accademic_year").toString(),
                                                 document.getData().get("course").toString(),
                                                 document.getData().get("profile_pic").toString(),

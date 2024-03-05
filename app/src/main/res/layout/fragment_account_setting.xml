@@ -43,11 +43,10 @@
             android:gravity="center"
             android:textColor="#D70040" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/saveBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:backgroundTint="@color/button_primary"
             android:textColor="@color/button_primary_text"
             android:textAllCaps="false"
@@ -56,11 +55,11 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:text="Update Email" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/changePass"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:backgroundTint="@color/button_secondary"
             android:textColor="@color/button_secondary_text"
             android:textAllCaps="false"

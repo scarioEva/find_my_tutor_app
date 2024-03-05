@@ -79,20 +79,7 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingStart="20dp">
 
-
-                    <ImageView
-                        android:id="@+id/editIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/edit"
-                        android:contentDescription="Edit" />
-                </LinearLayout>
             </LinearLayout>
 
 
@@ -352,7 +339,7 @@
 
             </TableLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/submitId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -365,7 +352,7 @@
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:text="Book Appointment" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/cancelId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -381,5 +368,11 @@
 
 
     </ScrollView>
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:backgroundTint="@color/button_secondary_text"
+        android:src="@drawable/edit" />
 </FrameLayout>
