@@ -44,9 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser != null) {
             loader.startLoading();
             getUserType(currentUser.getUid());
-//            checkUserTypeExists("student");
         }
-
 
         Button forgotPass = findViewById(R.id.forgotPass);
 
@@ -89,9 +87,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
 
-//        updateUI(currentUser);
     }
 
     public void onRegister(View view) {
@@ -112,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void redirectRegistrationPage(String user, String documentId,String uid) {
+    private void redirectRegistrationPage(String user, String documentId, String uid) {
         Intent intent = new Intent(LoginActivity.this, user.equals("tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
         intent.putExtra("uId", uid);
         intent.putExtra("docId", documentId);
@@ -131,17 +127,14 @@ public class LoginActivity extends AppCompatActivity {
                             loader.stopLoading();
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
-//                                Log.d("MainAct", "course:"+ document.getDocuments().contains("course"));
                                 if (user.isEmailVerified()) {
                                     if ((path.equals("student") && !document.getDocuments().get(0).contains("course")) || (path.equals("tutor") && document.getDocuments().get(0).get("department").toString().equals(""))) {
-                                        redirectRegistrationPage(path, document.getDocuments().get(0).getReference().getId() , uid);
+                                        redirectRegistrationPage(path, document.getDocuments().get(0).getReference().getId(), uid);
                                     } else {
                                         Intent intent = new Intent(LoginActivity.this, path.equals("tutor") ? TutorMainActivity.class : StudentMainActivity.class);
                                         intent.putExtra("uId", uid);
                                         startActivity(intent);
                                     }
-                                    //code
-
 
                                 } else {
                                     Log.d("MainAct", "redirect");
@@ -151,7 +144,6 @@ public class LoginActivity extends AppCompatActivity {
                                 setErrorMessage("No user Exists");
                                 Log.d("MainActivity", "No such document");
                             }
-//                            }
                         }
                     }
                 })
@@ -191,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void onForgotPass() {
         TextInputLayout email = findViewById(R.id.loginMailId);
-        String emailAddr=email.getEditText().getText().toString();
+        String emailAddr = email.getEditText().getText().toString();
         if (emailAddr.equals("")) {
             setErrorMessage("Please enter email id");
         } else {
@@ -211,14 +203,8 @@ public class LoginActivity extends AppCompatActivity {
 
         TextInputLayout email = findViewById(R.id.loginMailId);
         TextInputLayout password = findViewById(R.id.loginPassId);
-//        RadioGroup radioGroup = findViewById(R.id.radioGroup);
-//        int selectedId = radioGroup.getCheckedRadioButtonId();
-//        RadioButton radioButton = findViewById(selectedId);
 
-//        String userType = radioButton.getText().toString();
         String sEmail = email.getEditText().getText().toString();
-
-        Log.d("MainAct", "test :" + sEmail);
 
         String sPassword = password.getEditText().getText().toString();
 
@@ -233,9 +219,7 @@ public class LoginActivity extends AppCompatActivity {
         if (!sEmail.equals("") && !sPassword.equals("")) {
             login(sEmail, sPassword);
         } else {
-            setErrorMessage("Please enter all the required fileds");
+            setErrorMessage("Please enter all the required fields.");
         }
-
-
     }
 }

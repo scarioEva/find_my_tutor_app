@@ -133,14 +133,10 @@ public class TutorEditProfile extends Fragment {
 
     private void setButtonRed(TextView btn, boolean red) {
         btn.setBackground(ContextCompat.getDrawable(getContext(), red ? R.drawable.button_border_red : R.drawable.edit_text_border));
-
         btn.setTextColor(ContextCompat.getColor(getContext(), red ? R.color.danger : R.color.text_color));
-
     }
 
     private void onUpdateData(String fileUrl) {
-
-
         String departmentInput = departmentId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
         String nameInput = nameId.getEditText().getText().toString();
@@ -211,7 +207,6 @@ public class TutorEditProfile extends Fragment {
         availability.put("friday", fridayData);
 
         Map<String, Object> userData = new HashMap<>();
-//        String locationInput = autoCompleteTextView.getText().toString();
         userData.put("department", departmentInput);
         userData.put("bio", bioInput);
         userData.put("availability", availability);
@@ -223,9 +218,7 @@ public class TutorEditProfile extends Fragment {
         if (departmentInput.equals("")) {
             setBorderRed(departmentId);
         }
-//        if (locationInput.equals("")) {
-//            setBorderRed(mainLocationId);
-//        }
+
 
         if (!departmentInput.equals("")) {
             if (commonClass.timeValidate(monFromId.getText().toString(), monToId.getText().toString()) &&
@@ -327,7 +320,6 @@ public class TutorEditProfile extends Fragment {
                                 updateView(document.getDocuments().get(0));
                                 getAvailability(document.getDocuments().get(0));
                                 getLocationList();
-                                Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
                             } else {
                                 Log.d("MainActivity", "No such document");
 
@@ -356,19 +348,19 @@ public class TutorEditProfile extends Fragment {
         builder.setHour(hour);
         builder.setMinute(minute);
 
-        MaterialTimePicker materialTimePicker = builder.build();
+        MaterialTimePicker timePicker = builder.build();
 
-        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
-            int hourOfDay = materialTimePicker.getHour();
-            int minuteOfDay = materialTimePicker.getMinute();
+        timePicker.addOnPositiveButtonClickListener(dialog -> {
+            int hr = timePicker.getHour();
+            int min = timePicker.getMinute();
 
 
-            String time = String.format("%02d:%02d", hourOfDay, minuteOfDay);
+            String time = String.format("%02d:%02d", hr, min);
 
             txt.setText(time);
         });
 
-        materialTimePicker.show(getParentFragmentManager(), "MaterialTimePicker");
+        timePicker.show(getParentFragmentManager(), "tp");
     }
 
     private void getLocationList() {
@@ -378,7 +370,6 @@ public class TutorEditProfile extends Fragment {
                 if (documentSnapshot.exists()) {
                     Map<String, Object> campusLocations = documentSnapshot.getData();
                     for (Map.Entry<String, Object> entry : campusLocations.entrySet()) {
-//                        String key = entry.getKey();
 
                         Object value = entry.getValue();
                         locationList.add(value.toString());
@@ -391,7 +382,6 @@ public class TutorEditProfile extends Fragment {
                             autoCompleteTextView.setThreshold(Integer.MAX_VALUE);
                             if (spinnerAdapter.getItem(i).equals(selectedLocation)) {
                                 mainLocationId.getEditText().setText(selectedLocation);
-//                                autoCompleteTextView.setText(selectedLocation, false);
                                 break;
                             }
                         }
@@ -417,6 +407,8 @@ public class TutorEditProfile extends Fragment {
 
     }
 
+
+    //  Camera Permission: https://www.youtube.com/watch?v=OJpceQqXIjY
     private void reqCameraPermission() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
@@ -468,7 +460,7 @@ public class TutorEditProfile extends Fragment {
     }
 
     public void openDrawer() {
-        Log.d("MainAct", "opened");
+        //bottom sheet https://www.youtube.com/watch?v=sp9j0e-Kzc8
         Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_drawable_layout);
@@ -530,7 +522,6 @@ public class TutorEditProfile extends Fragment {
                 Bitmap img = (Bitmap) (data.getExtras().get("data"));
                 imageView.setImageBitmap(img);
                 ImageUri = commonClass.saveImage(img, getContext());
-                Log.d("MainAct", "image: " + ImageUri.toString());
             } else if (requestCode == GALLERY_REQ_CODE) {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();

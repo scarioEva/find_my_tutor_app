@@ -60,42 +60,23 @@ public class ChangePassword extends Fragment {
 
             if (newPassValue.equals(confirmPassValue)) {
 
-                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassValue); // Replace "currentPassword123" with the user's current password
+                AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassValue);
                 user.reauthenticate(credential)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                // User has been reauthenticated, proceed with password update
-                                String newPassword = "newPassword123"; // Replace with the new password entered by the user
-                                user.updatePassword(newPassword)
+                                user.updatePassword(newPassValue)
                                         .addOnCompleteListener(updatePasswordTask -> {
                                             if (updatePasswordTask.isSuccessful()) {
                                                 Toast.makeText(getActivity(), "Password updated successfully", Toast.LENGTH_SHORT).show();
                                                 redirectPage();
                                             } else {
-                                                // Failed to update password
                                                 errMsg.setText("Failed to update password. Please try again");
                                             }
                                         });
                             } else {
                                 errMsg.setText("Invalid current password");
-//                                // Failed to reauthenticate user
-//                                Log.e(TAG, "Error reauthenticating user.", task.getException());
-//                                // You can add code here to handle the error, e.g., show an error message to the user
                             }
                         });
-
-//                user.updatePassword(newPassValue)
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if (task.isSuccessful()) {
-//                                    Toast.makeText(getActivity(), "Password updated successfully", Toast.LENGTH_SHORT).show();
-//                                    redirectPage();
-//                                } else {
-//                                    errMsg.setText("Failed to update password: " + task.getException().getMessage());
-//                                }
-//                            }
-//                        });
 
             } else {
                 errMsg.setText("New password and conform new password did not match.");
@@ -109,7 +90,6 @@ public class ChangePassword extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_change_password, container, false);
 
         Bundle bundle = getArguments();

@@ -53,8 +53,6 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
         MaterialCardView cardView = convertView.findViewById(R.id.cardId);
         ImageView checkView=convertView.findViewById(R.id.check);
 
-//        int color = ;
-//        ColorStateList cs=ColorStateList.valueOf(color);
 
 
         if (info != null) {
@@ -63,11 +61,8 @@ public class InfoAdapter extends ArrayAdapter<InfoModel> {
             departmentView.setText(info.getDepartment());
 
             if (!info.getScheduled().equals("")) {
-//                cardView.setCardBackgroundColor(ContextCompat.getColor(getContext(), R.color.card));
-//                departmentView.setTextColor(ContextCompat.getColor(getContext(), R.color.white));
                 dateView.setVisibility(View.VISIBLE);
                 dateView.setText(info.getScheduled());
-
             } else {
                 dateView.setVisibility(View.GONE);
             }

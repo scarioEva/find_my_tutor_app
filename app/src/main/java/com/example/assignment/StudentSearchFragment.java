@@ -99,11 +99,9 @@ public class StudentSearchFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     HashSet<String> uniqueDocumentIds = new HashSet<>();
-                    HashSet<String> nextUniqueDocumentIds = new HashSet<>();
                     if (task.getResult().getDocuments().size() != 0) {
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
-//                            if (document.contains("department")) {
                             if (document.getData().get("name").toString().toLowerCase().startsWith(val.toLowerCase()) || document.getData().get("department").toString().toLowerCase().startsWith(val.toLowerCase())) {
                                 if (uniqueDocumentIds.add(document.getId())) {
                                     uidList.add(document.getData().get("uId").toString());
@@ -141,37 +139,15 @@ public class StudentSearchFragment extends Fragment {
         studentName = bundle.getString("studentName");
         studentProfile=bundle.getString("studentProfile");
 
-        Log.d("MainAct", "stu:" + studentID);
-
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//temp
                 onDetails(uidList.get(position), layoutId);
 
             }
         });
     }
 
-//    private void getAppoinmentList() {
-//        db.collection("appoinment").whereEqualTo("student", "UmAA5gUrzdecZc8VUt2k6PCtczj1").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    if (task.getResult().getDocuments().size() != 0) {
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString());
-//                            slotList.add(obj);
-//                            Log.d("MainAct", document.getData().toString());
-//
-//                        }
-//                    }
-//                }
-//                onTextChanges("");
-//
-//            }
-//        });
-//    }
 
 
     @Override
@@ -194,14 +170,12 @@ public class StudentSearchFragment extends Fragment {
                             (keyEvent != null && keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
                                     keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                         onTextChanges(editText.getText().toString());
-                        Log.d("MainAct", editText.getText().toString());
                         return true;
                     }
                     return false;
                 }
             });
         }
-//        getAppoinmentList();
         onTextChanges("");
 
 

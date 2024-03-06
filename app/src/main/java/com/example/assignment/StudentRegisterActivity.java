@@ -77,7 +77,6 @@ public class StudentRegisterActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         userId = intent.getStringExtra("uId");
-        Log.d("Cll", "login, "+userId);
         documentId = getIntent().getStringExtra("docId");
 
         imageView = findViewById(R.id.imageView);
@@ -101,6 +100,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
 
     }
 
+    //  Camera Permission: https://www.youtube.com/watch?v=OJpceQqXIjY
     private void reqCameraPermission() {
         if (ActivityCompat.checkSelfPermission(StudentRegisterActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
@@ -141,9 +141,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
                                 dialogInterface.dismiss();
                             }))
                             .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
-                    // User has denied permission and selected "Never ask again"
-                    // Show a dialog explaining why the permission is needed
-//                    showPermissionDeniedDialog();
+
                 } else {
                     reqCameraPermission();
                 }
@@ -152,7 +150,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
     }
 
     public void openDrawer(View view) {
-        Log.d("MainAct", "opened");
+        //bottom sheet https://www.youtube.com/watch?v=sp9j0e-Kzc8
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_drawable_layout);
@@ -233,8 +231,6 @@ public class StudentRegisterActivity extends AppCompatActivity {
         String bioInput = bioId.getEditText().getText().toString();
         String studentIdInput = studentId.getEditText().getText().toString();
 
-
-        Log.d("MainAct", "uploadSuccess");
 
         if (courseInput.equals("")) {
             setBorderRed(courseId);

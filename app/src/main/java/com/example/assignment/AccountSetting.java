@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,22 +48,27 @@ public class AccountSetting extends Fragment {
     private void updateEmailId() {
         String newEmail = emailId.getEditText().getText().toString();
         if (!newEmail.equals((""))) {
-            if (user != null) {
-                user.updateEmail(newEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(), "Email changed successfully", Toast.LENGTH_SHORT).show();
-                            errMsg.setText("");
-                        } else {
-                            errMsg.setText("Failed to update email:"+task.getException().getMessage());
-//                            Log.d("MainActivity", "Failed to update email: " + task.getException().getMessage());
+//            Email Validation
+//            https://stackoverflow.com/questions/12947620/email-address-validation-in-android-on-edittext
+            if (Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+                if (user != null) {
+                    user.updateEmail(newEmail).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(getActivity(), "Email changed successfully", Toast.LENGTH_SHORT).show();
+                                errMsg.setText("");
+                            } else {
+                                errMsg.setText("Failed to update email:" + task.getException().getMessage());
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    // User is not signed in
+                    Log.d("MainActivity", "User is not signed in");
+                }
             } else {
-                // User is not signed in
-                Log.d("MainActivity", "User is not signed in");
+                errMsg.setText("Please enter valid email");
             }
         } else {
             errMsg.setText("Please enter Email id");
@@ -70,7 +76,7 @@ public class AccountSetting extends Fragment {
 
     }
 
-    private  void redireChangePassPage(){
+    private void redireChangePassPage() {
         Bundle mBundle = new Bundle();
         mBundle.putInt("layoutId", layoutId);
         ChangePassword changePassword = new ChangePassword();
@@ -91,7 +97,7 @@ public class AccountSetting extends Fragment {
         id = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
         Button saveBtn = view.findViewById(R.id.saveBtn);
-        Button changePass=view.findViewById(R.id.changePass);
+        Button changePass = view.findViewById(R.id.changePass);
 
         emailId = view.findViewById(R.id.emailId);
         errMsg = view.findViewById(R.id.errMsg);

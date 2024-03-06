@@ -12,6 +12,7 @@ public class Loader{
         activity=myAct;
     }
 
+//    Custom loading: https://www.youtube.com/watch?v=tccoRIrMyhU&t=246s
     void startLoading(){
         AlertDialog.Builder builder=new AlertDialog.Builder(activity);
             LayoutInflater inflator=activity.getLayoutInflater();

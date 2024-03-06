@@ -40,10 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         mAuth = FirebaseAuth.getInstance();
-
-
     }
 
     public void setErrorMessage(String msg) {
@@ -54,10 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            //User is signed in use an intent to move to another activity
         }
     }
 
@@ -96,15 +91,8 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
-                        String documentId = documentReference.getId();
-//                        if(user.isEmailVerified()) {
-//                            redirectPage(type, user.toString(), documentId);
-//                        }
-//                        else{
                         userData.sendEmailVerification();
                         redirectVerificationPage(userData.getEmail());
-//                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -137,9 +125,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void signup(String email, String password, String uType, String name) {
-
-
-        Log.w("MainActivity", "called" + email + ", " + password);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -148,10 +133,6 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d("MainActivity", "createUserWithEmail:success");
 
-                            Toast.makeText(RegisterActivity.this,
-                                    "Authentication success. Use an intent to move to a new activity",
-                                    Toast.LENGTH_SHORT).show();
-                            //user has been signed in, use an intent to move to the next activity
                             setErrorMessage("");
                             addUser(uType, name);
 
@@ -184,7 +165,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int selectedId = radioGroup.getCheckedRadioButtonId();
-        Log.w("MainAct", selectedId + "sad");
 
         RadioButton radioButton = findViewById(selectedId);
 
@@ -194,8 +174,6 @@ public class RegisterActivity extends AppCompatActivity {
         String sEmail = email.getEditText().getText().toString();
         String sPassword = password.getEditText().getText().toString();
         String cPassword = confirmPassword.getEditText().getText().toString();
-
-        Log.w("MainAct", sEmail);
 
 
         if (sEmail.equals("")) {
@@ -212,6 +190,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!sEmail.equals("") && !sPassword.equals("") && !cPassword.equals("") && !sName.equals("")) {
+//            Email Validation
+//            https://stackoverflow.com/questions/12947620/email-address-validation-in-android-on-edittext
             if(Patterns.EMAIL_ADDRESS.matcher(sEmail).matches()) {
                 if (sPassword.equals(cPassword)) {
                     signup(sEmail, sPassword, userType, sName);

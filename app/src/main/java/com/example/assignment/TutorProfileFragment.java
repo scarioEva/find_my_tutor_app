@@ -75,6 +75,7 @@ public class TutorProfileFragment extends Fragment {
     String tutor_token;
     Loader loader;
     String studentProfile;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,7 +220,6 @@ public class TutorProfileFragment extends Fragment {
                                 updateView(view, document.getDocuments().get(0));
                                 getAvailability(view, document.getDocuments().get(0));
                                 tutor_token = document.getDocuments().get(0).get("token").toString();
-                                Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
                             } else {
                                 Log.d("MainActivity", "No such document");
 
@@ -250,7 +250,6 @@ public class TutorProfileFragment extends Fragment {
     }
 
     private void getData(String week_name) {
-        Log.d("MainAct", "slot: " + slotList.toString());
         if (timeMap.containsKey(week_name.toLowerCase())) {
             showError(dialog.findViewById(R.id.errMsg), "");
             timeSelect.setVisibility(View.VISIBLE);
@@ -267,21 +266,21 @@ public class TutorProfileFragment extends Fragment {
                 Date startTime = sdf.parse(startTimeStr);
                 Date endTime = sdf.parse(endTimeStr);
 
-                Calendar calStart = Calendar.getInstance();
-                calStart.setTime(startTime);
+                Calendar c_start = Calendar.getInstance();
+                c_start.setTime(startTime);
 
-                Calendar calEnd = Calendar.getInstance();
-                calEnd.setTime(endTime);
+                Calendar c_end = Calendar.getInstance();
+                c_end.setTime(endTime);
 
-                while (calStart.before(calEnd)) {
-                    String from_time = sdf.format(calStart.getTime());
-                    String to_time = sdf.format(addMinutes(calStart, 30).getTime());
+                while (c_start.before(c_end)) {
+                    String from_time = sdf.format(c_start.getTime());
+                    String to_time = sdf.format(addMinutes(c_start, 30).getTime());
                     String time_slot = from_time + " - " + to_time;
                     if (!slotList.contains(time_slot)) {
                         timeList.add(time_slot);
                     }
-                    System.out.println(sdf.format(calStart.getTime()) + " - " + sdf.format(addMinutes(calStart, 30).getTime()));
-                    calStart.add(Calendar.MINUTE, 30);
+                    System.out.println(sdf.format(c_start.getTime()) + " - " + sdf.format(addMinutes(c_start, 30).getTime()));
+                    c_start.add(Calendar.MINUTE, 30);
                 }
                 spinnerAdapter.notifyDataSetChanged();
 
@@ -308,46 +307,42 @@ public class TutorProfileFragment extends Fragment {
     }
 
     private void onRegisterAppoinment() {
-        Log.d("MainAct", "booked");
-//        try {
-            if (timeSelect.getVisibility() != View.GONE) {
-                String timeInput = autoCompleteTextView.getText().toString();
-                Log.d("MainAct", dateInput);
-                Log.d("MainAct", timeInput);
-                if (!timeInput.equals("")) {
-                    Log.d("MainAct", "reguistered");
-                    Map<String, Object> appoinment_data = new HashMap<>();
-                    appoinment_data.put("date", dateInput);
-                    appoinment_data.put("time", timeInput);
-                    appoinment_data.put("tutor", tutorId);
-                    appoinment_data.put("student", studentId);
+        if (timeSelect.getVisibility() != View.GONE) {
+            String timeInput = autoCompleteTextView.getText().toString();
 
-                    String timeStamp = commonClass.toTimeStamp(dateInput, timeInput);
-                    appoinment_data.put("timeStamp", timeStamp);
+            if (!timeInput.equals("")) {
+                Map<String, Object> appoinment_data = new HashMap<>();
+                appoinment_data.put("date", dateInput);
+                appoinment_data.put("time", timeInput);
+                appoinment_data.put("tutor", tutorId);
+                appoinment_data.put("student", studentId);
 
-                    db.collection("appoinment").add(appoinment_data)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Toast.makeText(getActivity(), "Appointment registered successfully", Toast.LENGTH_SHORT).show();
-                                    bottomNavigationView.setSelectedItemId(R.id.home);
-                                    senNotification(dateInput, timeInput);
+                String timeStamp = commonClass.toTimeStamp(dateInput, timeInput);
+                appoinment_data.put("timeStamp", timeStamp);
 
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w("MainActivity", "Error adding document", e);
-                                }
-                            });
-                } else {
-                    showError(dialog.findViewById(R.id.errMsg), "Please select time");
-                }
+                db.collection("appoinment").add(appoinment_data)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Toast.makeText(getActivity(), "Appointment registered successfully", Toast.LENGTH_SHORT).show();
+                                bottomNavigationView.setSelectedItemId(R.id.home);
+                                senNotification(dateInput, timeInput);
+
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("MainActivity", "Error adding document", e);
+                            }
+                        });
             } else {
-                showError(dialog.findViewById(R.id.errMsg), "Please select date");
+                showError(dialog.findViewById(R.id.errMsg), "Please select time");
             }
+        } else {
+            showError(dialog.findViewById(R.id.errMsg), "Please select date");
         }
+    }
 
 
     private void showDatePickerDialog() {
@@ -380,14 +375,14 @@ public class TutorProfileFragment extends Fragment {
         MaterialDatePicker<Long> materialDatePicker = builder.build();
         materialDatePicker.addOnPositiveButtonClickListener(selection -> {
 
-            Calendar selectedCalendar = Calendar.getInstance();
-            selectedCalendar.setTimeInMillis(selection);
+            Calendar selected_c = Calendar.getInstance();
+            selected_c.setTimeInMillis(selection);
 
             SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.getDefault());
-            String weekName = sdf.format(selectedCalendar.getTime());
+            String weekName = sdf.format(selected_c.getTime());
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            dateInput = dateFormat.format(selectedCalendar.getTime());
+            dateInput = dateFormat.format(selected_c.getTime());
 
             getSlotList(dateInput, weekName);
 
@@ -427,6 +422,9 @@ public class TutorProfileFragment extends Fragment {
     }
 
     private void getDialogData() {
+//        Custom alert popup
+//        https://www.youtube.com/watch?v=0DH2tZjJtm0&list=LL&index=17
+
         autoCompleteTextView = dialog.findViewById(R.id.timeId);
         spinnerAdapter = new ArrayAdapter<>(getContext(), R.layout.location_dropdown_item, timeList);
         autoCompleteTextView.setAdapter(spinnerAdapter);
@@ -511,20 +509,15 @@ public class TutorProfileFragment extends Fragment {
         activity = getActivity();
         bottomNavigationView = activity.findViewById(R.id.bottomNavigationView);
 
-// Set the desired menu item as selected
-
         Bundle bundle = getArguments();
         tutorId = bundle.getString("user_id");
         studentId = bundle.getString("studentId");
         layoutId = bundle.getInt("layoutId");
         studentName = bundle.getString("studentName");
-        studentProfile=bundle.getString("studentProfile");
+        studentProfile = bundle.getString("studentProfile");
 
         loader = new Loader(getActivity());
-        Log.d("MainAct", "name:" + studentName);
 
-        Log.d("MainActivity", "uuid data:" + studentId);
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tutor_profile, container, false);
         TextView heading = view.findViewById(R.id.header_title);
         heading.setText(studentId != null ? "Tutor's profile" : "My Profile");
@@ -538,12 +531,10 @@ public class TutorProfileFragment extends Fragment {
             submitBtn.setVisibility(View.GONE);
         }
 
-
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getContext());
         builder.setTitle("Confirmation");
         builder.setMessage("Are you sure you want to cancel this appointment?");
 
-// Set the positive button and its listener
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

@@ -40,22 +40,19 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CommonClass {
+
+    //  Generate random string: https://www.geeksforgeeks.org/generate-random-string-of-given-size-in-java/
     public String generateRandomString(int n) {
         StringBuilder stringBuilder = new StringBuilder(n);
         for (int i = 0; i < n; i++) {
-            // generate a random number between
-            // 0 to AlphaNumericString variable length
             String alphaNumericString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" + "abcdefghijklmnopqrstuvxyz";
             int index = (int) (alphaNumericString.length() * Math.random());
-
-            // add Character one by one in end of sb
             stringBuilder.append(alphaNumericString.charAt(index));
         }
         return stringBuilder.toString();
     }
 
     public String getDateTime(String c_date, String time) throws ParseException {
-
         SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM, yyyy", Locale.ENGLISH);
         Date date = inputFormat.parse(c_date);
@@ -80,13 +77,13 @@ public class CommonClass {
             long milliseconds = new_date.getTime();
             timestamp = new Timestamp(milliseconds);
 
-
         } catch (ParseException e) {
             Log.d("MainAct", e.toString());
         }
         return timestamp.toString();
     }
 
+    // Image view using Glide Library: https://guides.codepath.com/android/Displaying-Images-with-the-Glide-Library
     public void setImageView(Context context, String url, ShapeableImageView imageView) {
         Glide.with(context)
                 .load(url)
@@ -137,6 +134,7 @@ public class CommonClass {
         return flag;
     }
 
+
     public int getImageOrientation(Uri imageUri, Activity activity) {
         try {
             InputStream inputStream = activity.getContentResolver().openInputStream(imageUri);
@@ -153,6 +151,9 @@ public class CommonClass {
         return ExifInterface.ORIENTATION_UNDEFINED;
     }
 
+//    Bitmap Image Rotate to correct orientation
+    //  https://darrylkarney.wordpress.com/2020/06/21/android-studio-how-to-rotate-an-image-by-a-given-angle/
+    //  https://teamtreehouse.com/community/how-to-rotate-images-to-the-correct-orientation-portrait-by-editing-the-exif-data-once-photo-has-been-taken
     public Bitmap getRotatedBitmap(Uri imageUri, int orientation, Activity activity) {
         Bitmap bitmap;
         try {
@@ -180,6 +181,7 @@ public class CommonClass {
         return null;
     }
 
+//   Camera Image get Uri: https://www.youtube.com/watch?v=XRdzAWIt8rw&list=LL&index=16
     public Uri saveImage(Bitmap image, Context context) {
         File imgFolder = new File(context.getCacheDir(), "images");
         Uri uri = null;
@@ -215,13 +217,13 @@ public class CommonClass {
             jsonObject.put("notification", notificationObj);
             jsonObject.put("data", dataObj);
             jsonObject.put("to", token);
-            Log.d("Claa", "called api" + userId + title + body+" " + image);
             callApi(jsonObject);
         } catch (Exception e) {
 
         }
     }
 
+//    Push notifications using firebase cloud messaging API: https://www.youtube.com/watch?v=YjNZO90yVsE
     private void callApi(JSONObject jsonObject) {
         MediaType JSON = MediaType.get("application/json");
 
@@ -239,12 +241,12 @@ public class CommonClass {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.d("Claa", "fail" + e);
+                Log.d("Call", "fail" + e);
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.d("Claa", "success" + response);
+                Log.d("Call", "success" + response);
             }
         });
     }

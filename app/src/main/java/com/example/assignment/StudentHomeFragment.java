@@ -150,15 +150,13 @@ public class StudentHomeFragment extends Fragment {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             documents.add(document);
                         }
-                        // Sort documents by the "date" field in ascending order
+
                         Collections.sort(documents, new Comparator<QueryDocumentSnapshot>() {
                             @Override
                             public int compare(QueryDocumentSnapshot doc1, QueryDocumentSnapshot doc2) {
-                                // Get the date strings from the documents
                                 String dateString1 = doc1.getString("date");
                                 String dateString2 = doc2.getString("date");
 
-                                // Parse the date strings into Date objects
                                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                                 Date date1 = null, date2 = null;
                                 try {
@@ -168,8 +166,9 @@ public class StudentHomeFragment extends Fragment {
                                     e.printStackTrace();
                                 }
 
-                                // Compare the dates
+
                                 if (date1 != null && date2 != null) {
+//                                  Compare dates: https://stackoverflow.com/questions/2592501/how-to-compare-dates-in-java
                                     return date1.compareTo(date2);
                                 }
                                 return 0;
@@ -179,7 +178,6 @@ public class StudentHomeFragment extends Fragment {
                         for (QueryDocumentSnapshot document : documents) {
                             AppoinmentObject obj = new AppoinmentObject(document.getData().get("tutor").toString(), document.getData().get("date").toString(), document.getData().get("time").toString(), "");
                             slotList.add(obj);
-                            Log.d("MainAct", document.getData().toString());
                         }
                     } else {
                         listview.setVisibility(View.GONE);
@@ -198,7 +196,7 @@ public class StudentHomeFragment extends Fragment {
         if (appointmentList.size() != 0) {
             appointmentList.clear();
         }
-
+//        Firebase WriteBatch: https://www.youtube.com/watch?v=BTYsml-OlnY
         WriteBatch batch = db.batch();
         if (deleteList.size() != 0) {
             for (String documentId : deleteList) {
@@ -242,7 +240,6 @@ public class StudentHomeFragment extends Fragment {
                             if (task.getResult().getDocuments().size() != 0) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     String docId = document.getId();
-                                    Log.d("doad", "doc get: " + docId);
                                     String date = document.getData().get("date").toString();
                                     String time = document.getData().get("time").toString();
                                     AppoinmentObject obj = new AppoinmentObject("", date, time, docId);
@@ -267,8 +264,6 @@ public class StudentHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_student_home, container, false);
         Bundle bundle = getArguments();
         studentId = bundle.getString("user_id");

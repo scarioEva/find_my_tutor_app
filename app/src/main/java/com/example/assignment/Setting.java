@@ -52,7 +52,6 @@ public class Setting extends Fragment {
 
     private void onSignOut() {
         Map<String, Object> userData = new HashMap<>();
-        userData.put("token", "");
         db.collection(studentName==null?"tutor":"student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -88,7 +87,6 @@ public class Setting extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_setting, container, false);
         Bundle bundle = getArguments();
         id = bundle.getString("user_id");

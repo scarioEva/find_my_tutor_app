@@ -210,12 +210,6 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-//                        if (document.getData().get(value) != null) {
-//                            Log.d("MainActivity", "DocumentSnapshot data: " +
-//                                    document.getData().get(value));
-//                            updateTutorCheckIn(document.getData().get(value).toString());
-//                        }
-
                         if (document.contains(value)) {
                             updateTutorCheckIn(document.getData().get(value).toString());
                         } else {
@@ -259,6 +253,7 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         }
     }
 
+    //    Bottom navigation with fragment: https://www.youtube.com/watch?v=1GkSLwcGZhc&t=466s
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;

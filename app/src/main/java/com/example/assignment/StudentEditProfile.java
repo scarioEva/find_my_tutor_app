@@ -224,6 +224,7 @@ public class StudentEditProfile extends Fragment {
 
     }
 
+//  Camera Permission: https://www.youtube.com/watch?v=OJpceQqXIjY
     private void reqCameraPermission(){
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
@@ -264,9 +265,6 @@ public class StudentEditProfile extends Fragment {
                                 dialogInterface.dismiss();
                             }))
                             .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
-                    // User has denied permission and selected "Never ask again"
-                    // Show a dialog explaining why the permission is needed
-//                    showPermissionDeniedDialog();
                 } else {
                     reqCameraPermission();
                 }
@@ -274,7 +272,7 @@ public class StudentEditProfile extends Fragment {
         }
     }
     public void openDrawer() {
-        Log.d("MainAct", "opened");
+        //bottom sheet https://www.youtube.com/watch?v=sp9j0e-Kzc8
         Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_drawable_layout);

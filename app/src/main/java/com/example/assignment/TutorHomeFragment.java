@@ -194,7 +194,6 @@ public class TutorHomeFragment extends Fragment {
                             if (task.getResult().getDocuments().size() != 0) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     String docId = document.getId();
-                                    Log.d("doad", "doc get: "+ docId);
                                     String date = document.getData().get("date").toString();
                                     String time = document.getData().get("time").toString();
                                     AppoinmentObject obj = new AppoinmentObject("", date, time, docId);
@@ -218,7 +217,6 @@ public class TutorHomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_tutor_home, container, false);
 
         Bundle bundle = getArguments();

@@ -214,18 +214,18 @@ public class TutorRegisterActivity extends AppCompatActivity {
         builder.setHour(hour);
         builder.setMinute(minute);
 
-        MaterialTimePicker materialTimePicker = builder.build();
+        MaterialTimePicker timePicker = builder.build();
 
-        materialTimePicker.addOnPositiveButtonClickListener(dialog -> {
-            int hourOfDay = materialTimePicker.getHour();
-            int minuteOfDay = materialTimePicker.getMinute();
+        timePicker.addOnPositiveButtonClickListener(dialog -> {
+            int hr = timePicker.getHour();
+            int min = timePicker.getMinute();
 
-            String time = String.format("%02d:%02d", hourOfDay, minuteOfDay);
+            String time = String.format("%02d:%02d", hr, min);
 
             btn.setText(time);
         });
 
-        materialTimePicker.show(getSupportFragmentManager(), "MaterialTimePicker");
+        timePicker.show(getSupportFragmentManager(), "MaterialTimePicker");
     }
 
     private void getLocationList() {
@@ -235,11 +235,10 @@ public class TutorRegisterActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     Map<String, Object> campusLocations = documentSnapshot.getData();
                     for (Map.Entry<String, Object> entry : campusLocations.entrySet()) {
-//                        String key = entry.getKey();
                         Object value = entry.getValue();
                         locationList.add(value.toString());
                     }
-                    Log.d("MainAct", "location:" + locationList.toString());
+
                     spinnerAdapter.notifyDataSetChanged();
                 }
             }
@@ -251,7 +250,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
         autoCompleteTextView = findViewById(R.id.officeLocationId);
         spinnerAdapter = new ArrayAdapter<>(this, R.layout.location_dropdown_item, locationList);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         autoCompleteTextView.setAdapter(spinnerAdapter);
     }
 
@@ -261,6 +259,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
     }
 
+    //  Camera Permission: https://www.youtube.com/watch?v=OJpceQqXIjY
     private void reqCameraPermission() {
         if (ActivityCompat.checkSelfPermission(TutorRegisterActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             openCamera();
@@ -301,9 +300,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
                                 dialogInterface.dismiss();
                             }))
                             .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
-                    // User has denied permission and selected "Never ask again"
-                    // Show a dialog explaining why the permission is needed
-//                    showPermissionDeniedDialog();
                 } else {
                     reqCameraPermission();
                 }
@@ -312,7 +308,7 @@ public class TutorRegisterActivity extends AppCompatActivity {
     }
 
     public void openDrawer(View view) {
-        Log.d("MainAct", "opened");
+        //bottom sheet https://www.youtube.com/watch?v=sp9j0e-Kzc8
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_drawable_layout);
@@ -362,7 +358,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
 
     public void onSubmit(View view) {
         loader.startLoading();
-        Log.d("MainAct", "uri:" + ImageUri);
         if (ImageUri != null) {
             uploadImageStorage();
         } else {
@@ -480,7 +475,6 @@ public class TutorRegisterActivity extends AppCompatActivity {
         userData.put("check_in", "");
         userData.put("token", "");
 
-        Log.d("MainAct", userData.toString());
         if (departmentInput.equals("")) {
             setBorderRed(departmentId);
         }

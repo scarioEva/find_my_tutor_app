@@ -52,7 +52,6 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                             if (document.getDocuments().size() != 0) {
                                 getToken();
                                 studentName = document.getDocuments().get(0).get("name").toString();
-                                Log.w("Cll", studentName);
                                 profile_img=document.getDocuments().get(0).get("profile_pic").toString();
                                 loadFragment(new StudentHomeFragment());
                             } else {
@@ -74,7 +73,6 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
 
 
     private void getToken() {
-//        Log.w("Cll token", userId.toString());
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -126,6 +124,7 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
         return true;
     }
 
+//    Bottom navigation with fragment: https://www.youtube.com/watch?v=1GkSLwcGZhc&t=466s
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
