@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,8 +52,11 @@ public class Setting extends Fragment {
     }
 
     private void onSignOut() {
+        Log.d("Student", studentName);
+        Log.d("Student", id);
         Map<String, Object> userData = new HashMap<>();
-        db.collection(studentName==null?"tutor":"student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        userData.put("token", "");
+        db.collection(studentName == null||studentName.equals("")? "tutor" : "student").whereEqualTo("uId", id).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -82,6 +86,7 @@ public class Setting extends Fragment {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
+        requireActivity().finish();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class Setting extends Fragment {
         Bundle bundle = getArguments();
         id = bundle.getString("user_id");
         layoutId = bundle.getInt("layoutId");
-        studentName=bundle.getString("studentName");
+        studentName = bundle.getString("studentName");
 
         Button accSetting = view.findViewById(R.id.accSetting);
         Button logout = view.findViewById(R.id.logout);
