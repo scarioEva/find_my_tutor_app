@@ -4,9 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -36,10 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         mAuth = FirebaseAuth.getInstance();
-
-
     }
 
     public void setErrorMessage(String msg) {
@@ -50,19 +51,17 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            //User is signed in use an intent to move to another activity
         }
     }
 
-    private void redirectPage(String user, String userId, String documentId) {
-        Intent intent = new Intent(RegisterActivity.this, user.equals("Tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
-        intent.putExtra(userIdValue, userId);
-        intent.putExtra("docId",documentId);
-        startActivity(intent);
-    }
+//    private void redirectPage(String user, String userId, String documentId) {
+//        Intent intent = new Intent(RegisterActivity.this, user.equals("Tutor") ? TutorRegisterActivity.class : StudentRegisterActivity.class);
+//        intent.putExtra(userIdValue, userId);
+//        intent.putExtra("docId",documentId);
+//        startActivity(intent);
+//    }
 
 
     public void onSignIn(View view) {
@@ -70,33 +69,62 @@ public class RegisterActivity extends AppCompatActivity {
         startActivity(intentLogin);
     }
 
-    private void addDb(String uid, String type, String sName) {
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("name", sName);
-        userData.put("uId", uid);
-        String path=type.toLowerCase();
+    private void redirectVerificationPage(String email) {
+        Intent intent = new Intent(RegisterActivity.this, EmailVerificationActivity.class);
+//        intent.putExtra("uId", user.getUid());
+        intent.putExtra("email", email);
+        startActivity(intent);
+    }
 
-        db.collection(path).add(userData)
+
+    private void addDb(String type, String sName, FirebaseUser userData) {
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", sName);
+        data.put("uId", userData.getUid().toString());
+        if (type.equals("Tutor")) {
+            data.put("department", "");
+        }
+        String path = type.toLowerCase();
+
+        db.collection(path).add(data)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("MainActivity", "DocumentSnapshot addedwith ID: " + documentReference.getId());
-                        String documentId=documentReference.getId();
-                        redirectPage(type, uid, documentId);
+                        userData.sendEmailVerification();
+                        redirectVerificationPage(userData.getEmail());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        setErrorMessage("Something went wrong. Please try again.");
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
     }
 
+    private void addUser(String type, String name) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        Map<String, Object> data = new HashMap<>();
+        data.put("type", type.toLowerCase());
+        data.put("uid", user.getUid());
+        db.collection("users").add(data)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        addDb(type, name, user);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        setErrorMessage("Something went wrong. Please try again.");
+                    }
+                });
+    }
+
     private void signup(String email, String password, String uType, String name) {
-
-
-        Log.w("MainActivity", "called" + email + ", " + password);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -104,13 +132,9 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.w("MainActivity", task.toString());
                         if (task.isSuccessful()) {
                             Log.d("MainActivity", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(RegisterActivity.this,
-                                    "Authentication success. Use an intent to move to a new activity",
-                                    Toast.LENGTH_SHORT).show();
-                            //user has been signed in, use an intent to move to the next activity
+
                             setErrorMessage("");
-                            addDb(user.getUid(), uType, name);
+                            addUser(uType, name);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -124,6 +148,14 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
+    private void setBorderRed(TextInputLayout textInput) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setStroke(1, Color.RED);
+        borderDrawable.setCornerRadius(8);
+        EditText editText = textInput.getEditText();
+        editText.setBackground(borderDrawable);
+    }
+
     public void signupButtonClicked(View view) {
         TextInputLayout email = findViewById(R.id.emailId);
         TextInputLayout password = findViewById(R.id.passId);
@@ -133,7 +165,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int selectedId = radioGroup.getCheckedRadioButtonId();
-        Log.w("MainAct", selectedId + "sad");
 
         RadioButton radioButton = findViewById(selectedId);
 
@@ -144,14 +175,32 @@ public class RegisterActivity extends AppCompatActivity {
         String sPassword = password.getEditText().getText().toString();
         String cPassword = confirmPassword.getEditText().getText().toString();
 
-        Log.w("MainAct", sEmail);
 
+        if (sEmail.equals("")) {
+            setBorderRed(email);
+        }
+        if (sName.equals("")) {
+            setBorderRed(name);
+        }
+        if (sPassword.equals("")) {
+            setBorderRed(password);
+        }
+        if (cPassword.equals("")) {
+            setBorderRed(confirmPassword);
+        }
 
         if (!sEmail.equals("") && !sPassword.equals("") && !cPassword.equals("") && !sName.equals("")) {
-            if (sPassword.equals(cPassword)) {
-                signup(sEmail, sPassword, userType, sName);
-            } else {
-                setErrorMessage("Password and Confirm Password did not match.");
+//            Email Validation
+//            https://stackoverflow.com/questions/12947620/email-address-validation-in-android-on-edittext
+            if(Patterns.EMAIL_ADDRESS.matcher(sEmail).matches()) {
+                if (sPassword.equals(cPassword)) {
+                    signup(sEmail, sPassword, userType, sName);
+                } else {
+                    setErrorMessage("Password and Confirm Password did not match.");
+                }
+            }
+            else{
+                setErrorMessage("Please enter valid email");
             }
         } else {
             setErrorMessage("Please enter all the required fileds");

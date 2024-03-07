@@ -5,33 +5,42 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -57,7 +66,9 @@ public class StudentRegisterActivity extends AppCompatActivity {
     StorageReference storageRef = storage.getReference();
     public final int CAMERA_REQ_CODE = 100;
     public final int GALLERY_REQ_CODE = 200;
+    final int CAMERA_PERMISSION_CODE = 1001;
     CommonClass commonClass = new CommonClass();
+    Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,25 +76,106 @@ public class StudentRegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_student_register);
 
         Intent intent = getIntent();
-        this.userId = intent.getStringExtra(RegisterActivity.userIdValue);
+        userId = intent.getStringExtra("uId");
         documentId = getIntent().getStringExtra("docId");
 
         imageView = findViewById(R.id.imageView);
+        loader = new Loader(StudentRegisterActivity.this);
+
+        Button loginBtn = findViewById(R.id.loginBtn);
+
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent loginIntent = new Intent(StudentRegisterActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+            }
+        });
+    }
+
+    private void openCamera() {
+        Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(iCamera, CAMERA_REQ_CODE);
+
+    }
+
+    //  Camera Permission: https://www.youtube.com/watch?v=OJpceQqXIjY
+    private void reqCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(StudentRegisterActivity.this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            openCamera();
+
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(StudentRegisterActivity.this, android.Manifest.permission.CAMERA)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(StudentRegisterActivity.this);
+            builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                    .setTitle("PermissionRequired")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", ((dialogInterface, i) -> {
+                        ActivityCompat.requestPermissions(StudentRegisterActivity.this, new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+                        dialogInterface.dismiss();
+                    }))
+                    .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+
+        } else {
+            ActivityCompat.requestPermissions(StudentRegisterActivity.this, new String[]{android.Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openCamera();
+            } else {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(StudentRegisterActivity.this, Manifest.permission.CAMERA)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StudentRegisterActivity.this);
+                    builder.setMessage("This app requires CAMERA permission for this feature to use.")
+                            .setTitle("PermissionRequired")
+                            .setCancelable(false)
+                            .setPositiveButton("Settings", ((dialogInterface, i) -> {
+                                Intent intent_i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri u = Uri.fromParts("package", StudentRegisterActivity.this.getPackageName(), null);
+                                intent_i.setData(u);
+                                startActivity(intent_i);
+                                dialogInterface.dismiss();
+                            }))
+                            .setNegativeButton("Cancel", (((dialogInterface, i) -> dialogInterface.dismiss())));
+
+                } else {
+                    reqCameraPermission();
+                }
+            }
+        }
     }
 
     public void openDrawer(View view) {
-        Log.d("MainAct", "opened");
+        //bottom sheet https://www.youtube.com/watch?v=sp9j0e-Kzc8
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_drawable_layout);
         LinearLayout captureLayout = dialog.findViewById(R.id.drawableItm1ID);
         LinearLayout fileLayout = dialog.findViewById(R.id.drawableItm2ID);
+        LinearLayout removeLayout = dialog.findViewById(R.id.drawableItm3ID);
+        removeLayout.setVisibility(View.GONE);
+        if (ImageUri != null) {
+            removeLayout.setVisibility(View.VISIBLE);
+            removeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ImageUri = null;
+                    imageView.setImageDrawable(getResources().getDrawable(R.drawable.user_new));
+                    dialog.hide();
+                }
+            });
+        } else {
+            removeLayout.setVisibility(View.GONE);
+        }
 
         captureLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(iCamera, CAMERA_REQ_CODE);
+                reqCameraPermission();
                 dialog.hide();
             }
         });
@@ -108,6 +200,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
     }
 
     public void onSubmit(View view) {
+        loader.startLoading();
         Log.d("MainAct", "uri:" + ImageUri);
         if (ImageUri != null) {
             uploadImageStorage();
@@ -116,41 +209,76 @@ public class StudentRegisterActivity extends AppCompatActivity {
         }
     }
 
+    private void setBorderRed(TextInputLayout textInput) {
+        GradientDrawable borderDrawable = new GradientDrawable();
+        borderDrawable.setStroke(1, Color.RED);
+        borderDrawable.setCornerRadius(8);
+        EditText editText = textInput.getEditText();
+        editText.setBackground(borderDrawable);
+    }
+
     private void updateDatabase(String profileUrl) {
+        loader.stopLoading();
         TextInputLayout courseId = findViewById(R.id.studentCourseId);
         TextInputLayout phoneId = findViewById(R.id.contactId);
         TextInputLayout accYrId = findViewById(R.id.accYrId);
         TextInputLayout bioId = findViewById(R.id.bioId);
+        TextInputLayout studentId = findViewById(R.id.student);
 
         String courseInput = courseId.getEditText().getText().toString();
         String phoneInput = phoneId.getEditText().getText().toString();
-        String accademicInout = accYrId.getEditText().getText().toString();
+        String accademicInput = accYrId.getEditText().getText().toString();
         String bioInput = bioId.getEditText().getText().toString();
+        String studentIdInput = studentId.getEditText().getText().toString();
 
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("course", courseInput);
-        userData.put("accademic_year", accademicInout);
-        userData.put("phone", phoneInput);
-        userData.put("bio", bioInput);
 
-        userData.put("profile_pic", profileUrl);
+        if (courseInput.equals("")) {
+            setBorderRed(courseId);
+        }
 
-        Log.d("MainAct", "uploadSuccess");
-        db.collection("student").document(documentId).update(userData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void Void) {
-                        Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
-                        intent.putExtra("uId", userId);
-                        startActivity(intent);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("MainActivity", "Error adding document", e);
-                    }
-                });
+        if (accademicInput.equals("")) {
+            setBorderRed(accYrId);
+        }
+
+        if (studentIdInput.equals("")) {
+            setBorderRed(studentId);
+        }
+
+        TextView errMsg = findViewById(R.id.errMsg);
+
+        if (!courseInput.equals("") && !accademicInput.equals("") && !studentIdInput.equals("")) {
+
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("course", courseInput);
+            userData.put("student_id", studentIdInput);
+            userData.put("accademic_year", accademicInput);
+            userData.put("phone", phoneInput);
+            userData.put("bio", bioInput);
+            userData.put("token", "");
+            userData.put("profile_pic", profileUrl);
+
+            db.collection("student").document(documentId).update(userData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void Void) {
+                            Toast.makeText(StudentRegisterActivity.this, "Registered", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(StudentRegisterActivity.this, StudentMainActivity.class);
+                            intent.putExtra("uId", userId);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            errMsg.setText("Something went wrong. Please try again");
+                            Log.w("MainActivity", "Error adding document", e);
+                        }
+                    });
+        } else {
+            errMsg.setText("Enter all the required fields.");
+        }
     }
 
 
@@ -172,6 +300,7 @@ public class StudentRegisterActivity extends AppCompatActivity {
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                loader.stopLoading();
                                 Log.d("MainAct", e.getMessage());
                                 Toast.makeText(StudentRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
@@ -181,8 +310,8 @@ public class StudentRegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("MainAct2", e.getMessage());
+                loader.stopLoading();
 
-                Toast.makeText(StudentRegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -197,43 +326,17 @@ public class StudentRegisterActivity extends AppCompatActivity {
             if (requestCode == CAMERA_REQ_CODE) {
                 Bitmap img = (Bitmap) (data.getExtras().get("data"));
                 imageView.setImageBitmap(img);
-                ImageUri = saveImage(img, StudentRegisterActivity.this);
+                ImageUri = commonClass.saveImage(img, StudentRegisterActivity.this);
 
             } else if (requestCode == GALLERY_REQ_CODE) {
                 if (data != null & data.getData() != null) {
                     ImageUri = data.getData();
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(
-                                getContentResolver(), ImageUri
-                        );
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (ImageUri != null) {
+                    int orientation = commonClass.getImageOrientation(ImageUri, StudentRegisterActivity.this);
+                    bitmap = commonClass.getRotatedBitmap(ImageUri, orientation, StudentRegisterActivity.this);
                     imageView.setImageBitmap(bitmap);
                 }
             }
         }
-    }
-
-    private Uri saveImage(Bitmap image, Context context) {
-        File imageFolder = new File(context.getCacheDir(), "images");
-        Uri uri = null;
-
-        try {
-            imageFolder.mkdirs();
-            File file = new File(imageFolder, "capture_images.jpg");
-            FileOutputStream stream = new FileOutputStream(file);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-            stream.flush();
-            stream.close();
-            uri = FileProvider.getUriForFile(context.getApplicationContext(), "com.example.assignment" + ".provider", file);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return uri;
     }
 
 

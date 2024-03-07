@@ -16,14 +16,33 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.checkerframework.checker.units.qual.C;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class TutorMainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -43,34 +62,107 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         userId = getIntent().getStringExtra("uId");
+        getTutorDatabase(false);
 
-        getTutorDatabase();
+        getToken();
+
     }
+
+    private void getToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    String token = task.getResult();
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("token", token);
+                    db.collection("tutor").whereEqualTo("uId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().getDocuments().size() != 0) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        document.getReference().update(userData)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+
 
     public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             Bundle mBundle = new Bundle();
-//            mBundle.putString("studentData",data);
+            mBundle.putString("user_id", userId);
+
+            mBundle.putString("studentName", "");  //empty in tutor profile
+            mBundle.putInt("layoutId", R.id.frameLayouts);
             fragment.setArguments(mBundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayouts, fragment).commit();
         }
 
         return true;
     }
 
-    private void getTutorDatabase() {
+
+    private void updateCheckToStudents(QuerySnapshot doc, String student_token) {
+        String title = "Check in";
+        String body = doc.getDocuments().get(0).get("name") + " has entered in " + doc.getDocuments().get(0).get("check_in");
+        String token = student_token;
+        CommonClass commonClass = new CommonClass();
+        commonClass.sendNotification(userId, title, body, token, doc.getDocuments().get(0).get("profile_pic").toString());
+    }
+
+    private void getStudentList(QuerySnapshot tutorDoc) {
+        db.collection("student").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot docs : task.getResult()) {
+                        if (docs.contains("token")) {
+                            if (!docs.get("token").toString().equals("")) {
+                                updateCheckToStudents(tutorDoc, docs.get("token").toString());
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void getTutorDatabase(Boolean checkin) {
         db.collection("tutor").whereEqualTo("uId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
-                                Log.d("MainActivity", " data: " + document.getDocuments().get(0).getId());
+                                loadFragment(new TutorHomeFragment());
+
                                 docId = document.getDocuments().get(0).getId();
-                                Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
-                                String name = "Welcome " + document.getDocuments().get(0).get("name");
+//                                String name = "Welcome " + document.getDocuments().get(0).get("name");
                                 if (document.getDocuments().get(0).get("check_in") != null) {
                                     checkIn = document.getDocuments().get(0).get("check_in").toString();
+                                    if (!checkIn.equals("") && checkin) {
+                                        getStudentList(document);
+                                    }
                                 } else {
                                     checkIn = "";
                                 }
@@ -90,15 +182,17 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
     }
 
     private void updateTutorCheckIn(String val) {
-        Log.d("MainAct", "valye:"+ val);
-        Log.d("MainAct", "checking:"+ checkIn);
         Map<String, Object> tutorData = new HashMap<>();
         tutorData.put("check_in", val.equals(checkIn) ? "" : val);
+        String status = (val.equals(checkIn) ? "Check out" : "Check in") + ": " + val.toString();
+        Toast.makeText(this, status, Toast.LENGTH_LONG).show();
         db.collection("tutor").document(docId).update(tutorData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void Void) {
-                   getTutorDatabase();
+                        getTutorDatabase(true);
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -116,15 +210,10 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-//                        if (document.getData().get(value) != null) {
-//                            Log.d("MainActivity", "DocumentSnapshot data: " +
-//                                    document.getData().get(value));
-//                            updateTutorCheckIn(document.getData().get(value).toString());
-//                        }
-
-                        if (document.getData().get("data") != null) {
-
+                        if (document.contains(value)) {
                             updateTutorCheckIn(document.getData().get(value).toString());
+                        } else {
+                            Toast.makeText(TutorMainActivity.this, "Invalid QR code!", Toast.LENGTH_SHORT).show();
                         }
 
                     } else {
@@ -157,26 +246,29 @@ public class TutorMainActivity extends AppCompatActivity implements BottomNaviga
                 Toast.makeText(this, "Scan cancelled", Toast.LENGTH_LONG).show();
             } else {
                 onScanQr(result.getContents());
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
+    //    Bottom navigation with fragment: https://www.youtube.com/watch?v=1GkSLwcGZhc&t=466s
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
         int id = item.getItemId();
 
         if (id == R.id.home) {
+            fragment = new TutorHomeFragment();
 
         } else if (id == R.id.qrIcon) {
             initQRCodeScanner();
         } else if (id == R.id.profileIcon) {
+            fragment = new TutorProfileFragment();
 
         } else if (id == R.id.settingIcon) {
-
+            fragment = new Setting();
         }
         return loadFragment(fragment);
     }

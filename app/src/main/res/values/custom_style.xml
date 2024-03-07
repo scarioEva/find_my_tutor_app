@@ -3,4 +3,6 @@
     <style name="Circular">
         <item name="cornerSize">50%</item>
     </style>
+
+    <style name="Test" ><item name="colorPrimary">@color/danger</item></style>
 </resources>

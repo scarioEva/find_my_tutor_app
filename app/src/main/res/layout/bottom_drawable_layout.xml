@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bottom_dialog_bg"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <LinearLayout
         android:id="@+id/drawableItm1ID"
@@ -22,6 +23,7 @@
             android:text="Take photo"
             android:textSize="16sp"
             android:layout_marginStart="30dp"
+            android:textColor="@color/text_color"
             />
     </LinearLayout>
 
@@ -43,6 +45,7 @@
             android:text="Upload from file"
             android:textSize="16sp"
             android:layout_marginStart="30dp"
+            android:textColor="@color/text_color"
             />
     </LinearLayout>
 
@@ -64,6 +67,7 @@
             android:text="Remove Photo"
             android:textSize="16sp"
             android:layout_marginStart="30dp"
+            android:textColor="@color/text_color"
             />
     </LinearLayout>
 </LinearLayout>

@@ -7,19 +7,27 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StudentMainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     String userId;
-    String data;
+    String studentName;
+    String profile_img;
 
     BottomNavigationView bottomNavigationView;
 
@@ -42,8 +50,9 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                         if (task.isSuccessful()) {
                             QuerySnapshot document = task.getResult();
                             if (document.getDocuments().size() != 0) {
-                                Log.d("MainActivity", "DocumentSnapshot data: " + document.getDocuments().get(0));
-                                data = "Welcome student " + document.getDocuments().get(0).get("name");
+                                getToken();
+                                studentName = document.getDocuments().get(0).get("name").toString();
+                                profile_img=document.getDocuments().get(0).get("profile_pic").toString();
                                 loadFragment(new StudentHomeFragment());
                             } else {
                                 Log.d("MainActivity", "No such document");
@@ -58,20 +67,64 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
                         Log.w("MainActivity", "Error adding document", e);
                     }
                 });
+
+
     }
+
+
+    private void getToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    String token = task.getResult();
+                    Map<String, Object> userData = new HashMap<>();
+                    userData.put("token", token);
+                    db.collection("student").whereEqualTo("uId", userId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().getDocuments().size() != 0) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        document.getReference().update(userData)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                    }
+                                                });
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+
 
     public boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             Bundle mBundle = new Bundle();
-            mBundle.putString("studentData",data);
-            mBundle.putInt("layoutId",R.id.frameLayout);
+            mBundle.putString("user_id", userId);
+            mBundle.putString("studentName", studentName);
+            mBundle.putString("studentProfile", profile_img);
+            mBundle.putInt("layoutId", R.id.frameLayout);
             fragment.setArguments(mBundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragment).addToBackStack(null).commit();
         }
 
         return true;
     }
 
+//    Bottom navigation with fragment: https://www.youtube.com/watch?v=1GkSLwcGZhc&t=466s
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment fragment = null;
@@ -79,8 +132,12 @@ public class StudentMainActivity extends AppCompatActivity implements BottomNavi
 
         if (id == R.id.home) {
             fragment = new StudentHomeFragment();
-        } else if (id == R.id.profile) {
+        } else if (id == R.id.search) {
             fragment = new StudentSearchFragment();
+        } else if (id == R.id.profile) {
+            fragment = new StudentProfileFragment();
+        } else if (id == R.id.setting) {
+            fragment = new Setting();
         }
         return loadFragment(fragment);
     }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Setting">
+    <TextView
+        android:id="@+id/header_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginBottom="10sp"
+        android:textColor="@color/text_color"
+        />
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:orientation="vertical"
+      >
+      <com.google.android.material.button.MaterialButton
+          android:id="@+id/accSetting"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="20dp"
+          android:backgroundTint="@color/button_primary"
+          android:textColor="@color/button_primary_text"
+          android:textAllCaps="false"
+          android:paddingTop="13sp"
+          android:paddingBottom="13sp"
+          style="@style/Widget.MaterialComponents.Button.TextButton"
+          android:text="Account Setting" />
+
+      <com.google.android.material.button.MaterialButton
+          android:id="@+id/logout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="10dp"
+          android:backgroundTint="@color/button_secondary"
+          android:textColor="@color/button_secondary_text"
+          android:textAllCaps="false"
+          android:paddingTop="13sp"
+          android:paddingBottom="13sp"
+          style="@style/Widget.MaterialComponents.Button.TextButton"
+          android:text="Logout" />
+
+  </LinearLayout>
+
+</FrameLayout>

@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="grey">#a09298</color>
+    <color name="black">#2e282a</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary">#254E70</color>
+    <color name="danger">#C33C54</color>
+    <color name="success">#4BB543</color>
+    <color name="card">#f7f3f2</color>
+    <color name="layout_background">#fffbff</color>
+    <color name="text_color">#2b2220</color>
+    <color name="button_primary">#5d865d</color>
+    <color name="button_primary_text">#f7f3f2</color>
+    <color name="button_secondary">#2b2220</color>
+    <color name="button_secondary_text">#ebbcac</color>
+    <color name="text_light">#7a5649</color>
+
 </resources>

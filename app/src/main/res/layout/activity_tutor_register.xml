@@ -6,310 +6,446 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context=".TutorRegisterActivity">
+    tools:context=".TutorRegisterActivity"
+    android:background="@color/layout_background"
+    >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:orientation="vertical"
+        android:layout_height="match_parent">
 
-        >
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/imageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            app:shapeAppearanceOverlay="@style/Circular"
-            android:src="@drawable/_184159_3094350"
-            android:onClick="openDrawer"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Lets setup your account"
-        android:textSize="20sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:orientation="vertical">
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/departmentId"
-            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Departement">
+            android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/bioId"
-            style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Bio">
+                >
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:onClick="openDrawer"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/user_new"
+                    app:shapeAppearanceOverlay="@style/Circular" />
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:text="Schedule Availability"
-            android:textColor="@color/black"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circle"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="-30dp"
+                    android:padding="2sp"
+                    android:layout_gravity="bottom"
+                    >
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/upload_white"
+                        />
+                </LinearLayout>
+            </LinearLayout>
 
-            />
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20sp"
+                android:text="Lets setup your tutor account"
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
 
-                <TableLayout
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/departmentId"
+                    style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:hint="Departement*">
 
-                    <TableRow android:padding="5dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:textColor="@color/text_color"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="0"
-                            android:layout_marginEnd="30dp"
-                            android:text="Monday" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/mainLocationInput"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:hint="Office Location*">
 
-                        <EditText
-                            android:id="@+id/monFromId"
-                            android:layout_column="1"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="09:00"
-                            android:textSize="14dp" />
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/officeLocationId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:textColor="@color/text_color"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="2"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="30dp"
-                            android:text="-" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                        <EditText
-                            android:id="@+id/monToId"
-                            android:layout_column="3"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="17:00"
-                            android:textSize="14dp" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/bioId"
+                    style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:hint="Bio">
 
-                    </TableRow>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
 
-                    <TableRow android:padding="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="Schedule Availability"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold" />
 
-                        <TextView
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="0"
-                            android:layout_marginEnd="30dp"
-                            android:text="Tuesday" />
+                    >
 
-                        <EditText
-                            android:id="@+id/tueFromId"
-                            android:layout_column="1"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="09:00"
-                            android:textSize="14dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:background="@color/layout_background"
+                        >
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="2"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="30dp"
-                            android:text="-" />
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
-                        <EditText
-                            android:id="@+id/tueToId"
-                            android:layout_column="3"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="17:00"
-                            android:textSize="14dp" />
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
-                    </TableRow>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="0"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="Monday"
+                                    android:textColor="@color/text_color"
+                                    />
 
+                                <TextView
+                                    android:id="@+id/monFromId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="09:00"
+                                    android:textColor="@color/text_color"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    />
 
-                    <TableRow android:padding="5dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="2"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="0"
-                            android:layout_marginEnd="30dp"
-                            android:text="Wednesday" />
+                                <TextView
+                                    android:id="@+id/monToId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
 
-                        <EditText
-                            android:id="@+id/wedFromId"
-                            android:layout_column="1"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="09:00"
-                            android:textSize="14dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_column="2"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="30dp"
-                            android:text="-" />
-
-                        <EditText
-                            android:id="@+id/wedToId"
-                            android:layout_column="3"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="17:00"
-                            android:textSize="14dp" />
-
-                    </TableRow>
+                            </TableRow>
 
 
-                    <TableRow android:padding="5dp">
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="30dp"
-                            android:text="Thursday" />
+                                <TextView
 
-                        <EditText
-                            android:id="@+id/thuFromId"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="09:00"
-                            android:textSize="14dp" />
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="0"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="Tuesday"
+                                    android:textColor="@color/text_color"
+                                    />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="30dp"
-                            android:text="-" />
+                                <TextView
+                                    android:id="@+id/tueFromId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
 
-                        <EditText
-                            android:id="@+id/thuToId"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="17:00"
-                            android:textSize="14dp" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="2"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
 
-                    </TableRow>
+                                <TextView
+                                    android:id="@+id/tueToId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
 
-
-                    <TableRow android:padding="5dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="30dp"
-                            android:text="Friday" />
-
-                        <EditText
-                            android:id="@+id/friFromId"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="09:00"
-                            android:textSize="14dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="20dp"
-                            android:layout_marginEnd="30dp"
-                            android:text="-" />
-
-                        <EditText
-                            android:id="@+id/friToId"
-                            android:background="@drawable/edit_text_border"
-                            android:inputType="datetime"
-                            android:padding="3dp"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:text="17:00"
-                            android:textSize="14dp" />
-
-                    </TableRow>
+                            </TableRow>
 
 
-                </TableLayout>
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
 
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="0"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="Wednesday"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/wedFromId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_column="2"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/wedToId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
+
+                            </TableRow>
+
+
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="Thursday"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/thuFromId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/thuToId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                            </TableRow>
+
+
+                            <TableRow android:padding="5dp"
+                                android:gravity="center_vertical"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="Friday"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/friFromId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="09:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="20dp"
+                                    android:layout_marginEnd="30dp"
+                                    android:text="-"
+                                    android:textColor="@color/text_color"
+                                    />
+
+                                <TextView
+                                    android:id="@+id/friToId"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/edit_text_border"
+                                    android:gravity="center_vertical"
+                                    android:text="17:00"
+                                    android:paddingLeft="20dp"
+                                    android:paddingTop="10dp"
+                                    android:paddingRight="20dp"
+                                    android:paddingBottom="10dp"
+                                    android:textColor="@color/text_color" />
+
+                            </TableRow>
+
+
+                        </TableLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/errMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="center"
+                    android:textColor="#D70040" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:backgroundTint="@color/button_primary"
+                    android:textColor="@color/button_primary_text"
+                    android:textAllCaps="false"
+                    android:paddingTop="13sp"
+                    android:paddingBottom="13sp"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:onClick="onSubmit"
+                    android:text="Submit" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/loginBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_margin="5dp"
+                    android:background="#00000000"
+                    android:elevation="0dp"
+                    android:text="Back to Login"
+                    android:textColor="@color/text_color" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="#000"
-            android:onClick="onSubmit"
-
-            android:text="Submit" />
-
-    </LinearLayout>
-
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
